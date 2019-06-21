@@ -1,0 +1,150 @@
+<div class="row variablerow">
+	<div class="col-md-3">
+		<p class="h4">Dataset Info</p>
+	</div>
+	<div class="col-md-5" style="text-align:center;">
+		<div class="col-sm-6" style="text-align:center;">
+			<h2 class="text-center">{{ values['nvar'] }}</h2>
+			<p style="text-align:center;line-height:1">Columns</p>
+		</div>
+		<div class="col-sm-6" style="text-align:center;">
+			<h2 class="text-center">{{ values['n'] }}</h2>
+			<p style="text-align:center;line-height:1">Rows</p>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<table class="stats" style="margin-top:14px;">
+			<tbody>
+				<tr>
+					<th style="width: 210px;">Total size in memory</th>
+					<td style="width: 66px;">{{ values['memsize'] }} </td>
+				</tr>
+				<tr>
+					<th style="width: 210px;">Average record size in memory</th>
+					<td style="width: 66px;">{{ values['recordsize'] }} </td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row variablerow">
+	<div class="col-md-3">
+        <p class="h4">Variables Types</p>
+	</div>
+	<div class="col-md-5">
+		<svg class="VariableTypesChart" style="transform:translate(-20px,0);">
+			<script>
+				var data = [
+					{name: "Numeric", number: {{ values['NUM'] }}}, 
+					{name: "Categorical", number: {{ values['CAT'] }}}, 
+					{name: "Boolean", number: {{ values['BOOL'] }}}, 
+					{name: "Date", number: {{ values['DATE'] }}}, 
+					{name: "Text (Unique)", number: {{ values['UNIQUE'] }}}, 
+					{name: "Rejected", number: {{ values['REJECTED'] }}}, 
+					{name: "Unsupported", number: {{ values['UNSUPPORTED'] }}}
+				];
+				var svg = d3.select("svg.VariableTypesChart");
+				svg.attr("class", "VariableTypesChart"+id);
+				plotVaribleTypesChart(svg, data);
+			</script>
+		</svg>
+	</div>
+	<div class="col-md-4">
+		<table class="stats">
+			<tbody class="variableTypesTable">
+				<script>
+					var table = d3.select("tbody.variableTypesTable");
+					table.attr("class", "variableTypesTable"+id);
+					var color = d3.scaleOrdinal()
+						.domain(data.map(d => d.name))
+						.range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), data.length).reverse());
+					var join = table.selectAll("tr")
+						.data(data)
+						.join("tr");
+					join.append("svg")
+						.attr("width", 13)
+						.attr("height", 13)
+						.append("circle")
+						.attr("cy", 6.5)
+						.attr("cx", 6.5)
+						.attr("r", 6)
+						.attr("stroke", "black")
+						.attr("stroke-width", 0.5)
+						.attr("fill", d => color(d.name));
+					join.append("th")
+						.text(d => d.name);
+					join.append("td")
+						.text(d => d.number);
+				</script>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row variablerow">
+    <div class="col-md-3">
+		<p class="h4">Missing Values</p>
+	</div>
+	<div class="col-md-5">
+        <svg class="MissingValuesBigBar" style="margin-top:35px;">
+			<script>
+				var svg = d3.select("svg.MissingValuesBigBar");
+				svg.attr("class", "MissingValuesBigBar"+id);
+				plotMissingValuesBar(svg, "{{ values['total_missing'] }}", 350, 50);
+			</script>
+		</svg>
+    </div>
+	{% if values['missing_count']['n/a'] != 0 or values['missing_count']['na'] != 0 or values['missing_count']['?'] != 0 or values['missing_count']['empty'] != 0 or values['missing_count']['null'] != 0 %}
+	<div class="col-md-4">
+		<p style="font-size:12px;font-weight: bold;margin-top:5px">Breakdown of Types</p>
+		<table class="stats" style="width: 100px">
+			<tr>
+				<th>n/a</th>
+				<td>{{values['missing_count']['n/a']}}</td>
+			</tr>
+			<tr>
+				<th>na</th>
+				<td>{{values['missing_count']['na']}}</td>
+			</tr>
+			<tr>
+				<th>?</th>
+				<td>{{values['missing_count']['?']}}</td>
+			</tr>
+			<tr>
+				<th>Empty</th>
+				<td>{{values['missing_count']['empty']}}</td>
+			</tr>
+			<tr>
+				<th>Null</th>
+				<td>{{values['missing_count']['null']}}</td>
+			</tr>
+		</table>
+	</div>
+	{% endif %}
+    {% if messages %}
+</div>
+<div class="row variablerow">
+	<script>
+		d3.select("#warningsToggle").attr("data-target", "#warnings"+id).attr("id", "warningsToggle"+id);
+		d3.select("#warnings").attr("id", "warnings"+id);
+	</script>
+    <div class="col-md-6">
+		<div class="panel-heading" style="padding:0">
+			<p class="h4">Warnings <button id="warningsToggle" data-toggle="collapse" data-target="#warnings" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button></p>
+		</div>
+		<ul id="warnings" class="pannel-collapse list-unstyled collapse">{{ messages }} </ul>
+    </div>
+	<script>
+		d3.select("#recommendationsToggle").attr("data-target", "#recommendations"+id).attr("id", "recommendationsToggle"+id);
+		d3.select("#recommendations").attr("id", "recommendations"+id);
+	</script>
+    <div class="col-md-6">
+        <div class="panel-heading" style="padding:0">
+			<p class="h4">Recommendations <button id="recommendationsToggle" data-toggle="collapse" data-target="#recommendations" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button></p>
+		</div>
+		<ul id="recommendations" class="pannel-collapse list-unstyled collapse">
+			<li>Which are good practices for data wrangling?</li>
+			<li>Based on warnings what would be the next steps?</li>
+		</ul>
+    </div>
+    {% endif %}
+</div>

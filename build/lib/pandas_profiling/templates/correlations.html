@@ -1,0 +1,32 @@
+<div class="row variablerow">
+	<script>
+		d3.select("#pearsonLink").attr("href", "#pearson"+id).attr("aria-controls", "pearson"+id).attr("id", "pearsonLink"+id);
+		d3.select("#spearmanLink").attr("href", "#spearman"+id).attr("aria-controls", "spearman"+id).attr("id", "spearmanLink"+id);
+		d3.select("#pearson").attr("id", "pearson"+id);
+		d3.select("#spearman").attr("id", "spearman"+id);
+	</script>
+	<ul class="nav nav-tabs" role="tablist">
+		<li role="presentation" class="active"><a id="pearsonLink" href="#pearson"
+												  aria-controls="pearson" role="tab"
+												  data-toggle="tab">Pearson</a></li>
+		<li role="presentation"><a id="spearmanLink" href="#spearman" aria-controls="spearman"
+								   role="tab" data-toggle="tab">Spearman</a></li>
+	</ul>
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="pearson">
+			<img src="{{ values['pearson_matrix'] }}" class="center-img">
+			<div class="panel-heading">
+				<p style="text-align: right; font-size: 12px; margin-right: 153.5px;">
+					Show Details
+					<button id="pearsonNumericToggle" data-toggle="collapse" data-target="#pearsonNumeric" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button>
+				</p>
+			</div>
+			<div id="pearsonNumeric" class="pannel-collapse collapse" align="center" style="overflow:auto; overflow-y: hidden;">
+				{{ values['pearson_numeric'] }}
+			</div>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="spearman">
+			<img src="{{ values['spearman_matrix'] }}" class="center-img">
+		</div>
+	</div>
+</div>

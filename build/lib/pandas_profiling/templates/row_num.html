@@ -1,0 +1,186 @@
+{% include '_row_header.html' %}
+<div class="col-md-3">
+	<svg class="MissingValuesBar{{ values['varid'] }}">
+		<script>
+			var svg = d3.select("svg.MissingValuesBar{{ values['varid'] }}");
+			plotMissingValuesBar(svg, "{{ values['p_missing'] }}", 143, 40)
+		</script>
+	</svg>
+    <table class="stats ">
+        <tr>
+            <th>Distinct count</th>
+            <td>{{ values['distinct_count'] }}</td>
+        </tr>
+        <tr>
+            <th>Unique (%)</th>
+            <td>{{ values['p_unique'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_missing'] }}">
+            <th>Missing (%)</th>
+            <td>{{ values['p_missing'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_missing'] }}">
+            <th>Missing (n)</th>
+            <td>{{ values['n_missing'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_infinite'] }}">
+            <th>Infinite (%)</th>
+            <td>{{ values['p_infinite'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_infinite'] }}">
+            <th>Infinite (n)</th>
+            <td>{{ values['n_infinite'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_zeros'] }}">
+            <th>Zeros (%)</th>
+            <td>{{ values['p_zeros'] }}</td>
+        </tr>
+    </table>
+</div>
+<div class="col-md-6 collapse in" id="minihistogram{{ values['varid'] }}" style="text-align:right;">
+	<svg class="minihistogram{{ values['varid'] }}">
+		<script>
+			var data = {{ values['column_values'] }};
+			var bins = d3.histogram()(data);
+			var svg = d3.select("svg.minihistogram{{ values['varid'] }}");
+			plotHistogramNum(svg, bins, 400, 200);
+		</script>
+	</svg>
+</div>
+<div class="panel-heading col-md-12 text-right" style="padding:0;">
+    <p style="text-align: right; font-size: 12px;">
+        Show details
+		<button id="toggleDetails{{ values['varid'] }}" data-toggle="collapse" data-target="#descriptives{{ values['varid'] }},#minihistogram{{ values['varid'] }}" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button>
+		<script>
+			d3.select("#toggleDetails{{ values['varid'] }}").on("click", function() {d3.select(this).classed("collapsed", d3.select(this).classed("collapsed") ? false : true);});
+		</script>
+    </p>
+</div>
+<div class="pannel-collapse collapse row col-md-12" id="descriptives{{ values['varid'] }}">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#quantiles{{ values['varid'] }}"
+                                                  aria-controls="quantiles{{ values['varid'] }}" role="tab"
+                                                  data-toggle="tab">Statistics</a></li>
+        <li role="presentation"><a href="#histogram{{ values['varid'] }}" aria-controls="histogram{{ values['varid'] }}"
+                                   role="tab" data-toggle="tab">Histogram</a></li>
+        <li role="presentation"><a href="#common{{ values['varid'] }}" aria-controls="common{{ values['varid'] }}"
+                                   role="tab" data-toggle="tab">Common Values</a></li>
+        <li role="presentation"><a href="#extreme{{ values['varid'] }}" aria-controls="extreme{{ values['varid'] }}"
+                                   role="tab" data-toggle="tab">Extreme Values</a></li>
+        <li role="presentation"><a href="#boxplot{{ values['varid'] }}" aria-controls="boxplot{{ values['varid'] }}"
+                                   role="tab" data-toggle="tab">Box Plot</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active row" id="quantiles{{ values['varid'] }}">
+            <div class="col-md-4 col-md-offset-1">
+                <p style="font-size:12px;font-weight: bold;margin-top:5px">Quantile statistics</p>
+                <table class="stats indent">
+                    <tr>
+                        <th>Minimum</th>
+                        <td>{{ values['min'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>5-th percentile</th>
+                        <td>{{ values['5%'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Q1</th>
+                        <td>{{ values['25%'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Median</th>
+                        <td>{{ values['50%'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Q3</th>
+                        <td>{{ values['75%'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>95-th percentile</th>
+                        <td>{{ values['95%'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Maximum</th>
+                        <td>{{ values['max'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Range</th>
+                        <td>{{ values['range'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Interquartile range</th>
+                        <td>{{ values['iqr'] }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4 col-md-offset-2">
+                <p style="font-size:12px;font-weight: bold;margin-top:5px">Descriptive statistics</p>
+                <table class="stats indent">
+                    <tr>
+                        <th>Standard deviation</th>
+                        <td>{{ values['std'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Coef of variation</th>
+                        <td>{{ values['cv'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Kurtosis</th>
+                        <td>{{ values['kurtosis'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mean</th>
+                        <td>{{ values['mean'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>MAD</th>
+                        <td>{{ values['mad'] }}</td>
+                    </tr>
+                    <tr class="{{ row_classes['skewness'] }}">
+                        <th>Skewness</th>
+                        <td>{{ values['skewness'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sum</th>
+                        <td>{{ values['sum'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Variance</th>
+                        <td>{{ values['variance'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Memory size</th>
+                        <td>{{ values['memorysize'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane col-md-10 col-md-offset-1" id="histogram{{ values['varid'] }}" style="margin-top:20px;">
+            <svg class="histogram{{ values['varid'] }}">
+				<script>
+					var svg = d3.select("svg.histogram{{ values['varid'] }}");
+					plotHistogramNum(svg, bins, 700, 350);
+				</script>
+			</svg>
+        </div>
+        <div role="tabpanel" class="tab-pane col-md-12" id="common{{ values['varid'] }}">
+            {{ values['freqtable'] }}
+        </div>
+        <div role="tabpanel" class="tab-pane col-md-12"  id="extreme{{ values['varid'] }}">
+            <p style="font-size:12px;font-weight: bold;margin-top:5px">Minimum 5 values</p>
+            {{ values['firstn_expanded'] }}
+            <p style="font-size:12px;font-weight: bold;margin-top:5px">Maximum 5 values</p>
+            {{ values['lastn_expanded'] }}
+        </div>
+		<div role="tabpanel" class="tab-pane col-md-12 text-center" id="boxplot{{ values['varid'] }}">
+			<svg class="boxplot{{ values['varid'] }}">
+				<script>
+					var svg = d3.select(".boxplot{{ values['varid'] }}");
+					plotBox(svg, data);
+				</script>
+			</svg>
+		</div>
+    </div>
+</div>
+{% include '_row_footer.html' %}

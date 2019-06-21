@@ -1,0 +1,41 @@
+{% include '_row_header.html' %}
+<div class="col-md-3">
+	<svg class="MissingValuesBar{{ values['varid'] }}">
+		<script>
+			var svg = d3.select("svg.MissingValuesBar{{ values['varid'] }}");
+			plotMissingValuesBar(svg, "{{ values['p_missing'] }}", 143, 40)
+		</script>
+	</svg>
+    <table class="stats ">
+        <tr class="{{ row_classes['distinct_count'] }}">
+            <th>Distinct count</th>
+            <td>{{ values['distinct_count'] }}</td>
+        </tr>
+        <tr>
+            <th>Unique (%)</th>
+            <td>{{ values['p_unique'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_missing'] }}">
+            <th>Missing (%)</th>
+            <td>{{ values['p_missing'] }}</td>
+        </tr>
+        <tr class="{{ row_classes['p_missing'] }}">
+            <th>Missing (n)</th>
+            <td>{{ values['n_missing'] }}</td>
+        </tr>
+    </table>
+</div>
+{{ values['minifreqtable'] }}
+<div class="panel-heading col-md-12 text-right" style="padding:0;">
+    <p style="text-align: right; font-size: 12px;">
+        Show details
+		<button id="toggleDetails{{ values['varid'] }}" data-toggle="collapse" data-target="#freqtable{{ values['varid'] }},#minifreqtable{{ values['varid'] }}" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button>
+		<script>
+			d3.select("#toggleDetails{{ values['varid'] }}").on("click", function() {d3.select(this).classed("collapsed", d3.select(this).classed("collapsed") ? false : true);});
+		</script>
+    </p>
+</div>
+<div class="col-md-12 extrapadding collapse" id="freqtable{{ values['varid']  }}">
+    {{ values['freqtable'] }}
+</div>
+{% include '_row_footer.html' %}

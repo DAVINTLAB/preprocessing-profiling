@@ -1,0 +1,47 @@
+<div class="row variablerow">
+	<div class="row col-md-12" id="descriptives">
+		<script>
+			d3.select("#matrixLink").attr("href", "#matrix"+id).attr("aria-controls", "matrix"+id).attr("id", "matrixLink"+id);
+			d3.select("#barLink").attr("href", "#bar"+id).attr("aria-controls", "bar"+id).attr("id", "barLink"+id);
+			d3.select("#heatLink").attr("href", "#heat"+id).attr("aria-controls", "heat"+id).attr("id", "heatLink"+id);
+			d3.select("#dendrogramLink").attr("href", "#dendrogram"+id).attr("aria-controls", "dendrogram"+id).attr("id", "dendrogramLink"+id);
+			d3.select("#matrix").attr("id", "matrix"+id);
+			d3.select("#bar").attr("id", "bar"+id);
+			d3.select("#heat").attr("id", "heat"+id);
+			d3.select("#dendrogram").attr("id", "dendrogram"+id);
+		</script>
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a id="matrixLink" href="#matrix"
+													  aria-controls="matrix" role="tab"
+													  data-toggle="tab">Matrix</a></li>
+			<li role="presentation"><a id="barLink" href="#bar" aria-controls="bar"
+									   role="tab" data-toggle="tab">Bar Chart</a></li>
+			<li role="presentation"><a id="heatLink" href="#heat" aria-controls="heat"
+									   role="tab" data-toggle="tab">Heat Map</a></li>
+			<li role="presentation"><a id="dendrogramLink" href="#dendrogram" aria-controls="dendrogram"
+									   role="tab" data-toggle="tab">Dendrogram</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="matrix">
+				<img src="{{ values['matrix'] }}" class="center-img">
+				<p style="font-size:11px">Note: The nullity matrix is a data-dense display to support visually identify patterns in data completion.</p>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="bar">
+				<img src="{{ values['bar'] }}" class="center-img">
+				<p style="font-size:11px">Note: Simple bar visualization of nullity by column. On top of each bar is informed the total count of valid values. The proportion of missing values can be noted when seing the total amount of records on axis y at right or the proportion at left.</p>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="heat">
+				<img src="{{ values['heat'] }}" class="center-img">
+				<p style="font-size:11px">Note: The correlation heatmap measures nullity correlation. With that we can evaluate how strongly the presence or absence of one variable affects the presence of another. Only the variables with missing values will be displayed.</p>
+				<p style="font-size:11px">Note 2: Nullity correlation ranges from -1 (if one variable appears the other definitely does not) to 0 (variables appearing or not appearing have no effect on one another) to 1 (if one variable appears the other definitely also does). Additionally, entries marked <1 or >-1 are have a correlation that is close to being exactingly negative or positive, but is still not quite perfectly so.</p>
+				<p style="font-size:11px">Note 3: Variables that are always full or always empty have no meaningful correlation, and so are silently removed from the visualization.</p>
+			</div>
+			<div role="tabpanel" class="tab-pane"  id="dendrogram">
+				<img src="{{ values['dendrogram'] }}" class="center-img">
+				<p style="font-size:11px">Note: The dendrogram chart support revealing trends deeper than the pairwise ones visible in the correlation heatmap.</p>
+				<p style="font-size:11px">Note 2: To interpret this graph, read it from a top-down perspective. The dendrogram uses a hierarchical clustering algorithm to bin variables against one another by their nullity correlation (measured in terms of binary distance).</p>
+			</div>
+		</div>
+	</div>
+</div>

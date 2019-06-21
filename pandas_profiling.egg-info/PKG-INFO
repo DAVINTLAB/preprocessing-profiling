@@ -1,0 +1,26 @@
+Metadata-Version: 1.1
+Name: pandas-profiling
+Version: 1.4.1
+Summary: Generate profile report for pandas DataFrame
+Home-page: http://github.com/jospolfliet/pandas-profiling
+Author: Jos Polfliet
+Author-email: jos.polfliet+panpro@gmail.com
+License: MIT
+Description: UNKNOWN
+Keywords: pandas data-science data-analysis python jupyter ipython
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Environment :: Console
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Scientific/Engineering
+Classifier: Framework :: IPython
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
