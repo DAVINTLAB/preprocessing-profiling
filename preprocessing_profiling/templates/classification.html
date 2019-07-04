@@ -1,0 +1,52 @@
+<div class="row variablerow">
+	<p class="h4">{{ strategy }}</p>
+	<p> <pre>{{ plots['classificationReportText'] }}</pre> </p>
+	<div class="row col-md-12" id="descriptives">
+		<script>
+			d3.select("#classificationReportLink{{stratCode}}").attr("href", "#classificationReport{{stratCode}}"+id).attr("aria-controls", "classificationReport{{stratCode}}"+id).attr("id", "classificationReportLink{{stratCode}}"+id);
+			d3.select("#classificationReport{{stratCode}}").attr("id", "classificationReport{{stratCode}}"+id);
+			d3.select("#confusionMatrixLink{{stratCode}}").attr("href", "#confusionMatrix{{stratCode}}"+id).attr("aria-controls", "confusionMatrix{{stratCode}}"+id).attr("id", "confusionMatrixLink{{stratCode}}"+id);
+			d3.select("#confusionMatrix{{stratCode}}").attr("id", "confusionMatrix{{stratCode}}"+id);
+			d3.select("#errorDistributionLink{{stratCode}}").attr("href", "#errorDistribution{{stratCode}}"+id).attr("aria-controls", "errorDistribution{{stratCode}}"+id).attr("id", "errorDistributionLink{{stratCode}}"+id);
+			d3.select("#errorDistribution{{stratCode}}").attr("id", "errorDistribution{{stratCode}}"+id);
+			d3.select("#precisionRecallLink{{stratCode}}").attr("href", "#precisionRecall{{stratCode}}"+id).attr("aria-controls", "precisionRecall{{stratCode}}"+id).attr("id", "precisionRecallLink{{stratCode}}"+id);
+			d3.select("#precisionRecall{{stratCode}}").attr("id", "precisionRecall{{stratCode}}"+id);
+			d3.select("#precisionRecallIndLink{{stratCode}}").attr("href", "#precisionRecallInd{{stratCode}}"+id).attr("aria-controls", "precisionRecallInd{{stratCode}}"+id).attr("id", "precisionRecallIndLink{{stratCode}}"+id);
+			d3.select("#precisionRecallInd{{stratCode}}").attr("id", "precisionRecallInd{{stratCode}}"+id);
+		</script>
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active">
+				<a id="classificationReportLink{{stratCode}}" href="#classificationReport{{stratCode}}" aria-controls="classificationReport{{stratCode}}" role="tab" data-toggle="tab">Classification Report</a>
+			</li>
+			<li role="presentation">
+				<a id="confusionMatrixLink{{stratCode}}" href="#confusionMatrix{{stratCode}}" aria-controls="confusionMatrix{{stratCode}}" role="tab" data-toggle="tab">Confusion Matrix</a>
+			</li>
+			<li role="presentation">
+				<a id="errorDistributionLink{{stratCode}}" href="#errorDistribution{{stratCode}}" aria-controls="errorDistribution{{stratCode}}" role="tab" data-toggle="tab">Error Distribution</a>
+			</li>
+			<li role="presentation">
+				<a id="precisionRecallLink{{stratCode}}" href="#precisionRecall{{stratCode}}" aria-controls="precisionRecall{{stratCode}}" role="tab" data-toggle="tab">Precision-Recall Curves</a>
+			</li>
+			<li role="presentation">
+				<a id="precisionRecallIndLink{{stratCode}}" href="#precisionRecallInd{{stratCode}}" aria-controls="precisionRecallInd{{stratCode}}" role="tab" data-toggle="tab">Precision-Recall Curves (Individual)</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="classificationReport{{stratCode}}">
+				<img src="{{ plots['classificationReport'] }}" class="center-img">
+			</div>
+			<div role="tabpanel" class="tab-pane" id="confusionMatrix{{stratCode}}">
+				<img src="{{ plots['confusionMatrix'] }}" class="center-img">
+			</div>
+			<div role="tabpanel" class="tab-pane" id="errorDistribution{{stratCode}}">
+				<img src="{{ plots['errorDistribution'] }}" class="center-img">
+			</div>
+			<div role="tabpanel" class="tab-pane"  id="precisionRecall{{stratCode}}">
+				<img src="{{ plots['precisionRecall'] }}" class="center-img">
+			</div>
+			<div role="tabpanel" class="tab-pane"  id="precisionRecallInd{{stratCode}}">
+				<img src="{{ plots['precisionRecallInd'] }}" class="center-img">
+			</div>
+		</div>
+	</div>
+</div>

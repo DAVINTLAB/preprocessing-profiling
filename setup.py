@@ -8,14 +8,9 @@ except ImportError:
     from distutils.core import setup
 
 setup(
-    name='pandas-profiling',
-    version='1.4.1',
-    author='Jos Polfliet',
-    author_email='jos.polfliet+panpro@gmail.com',
-    packages=['pandas_profiling'],
-    url='http://github.com/jospolfliet/pandas-profiling',
-    license='MIT',
-    description='Generate profile report for pandas DataFrame',
+    name='preprocessing-profiling',
+    version='0.1',
+    packages=['preprocessing_profiling'],
     install_requires=[
         "pandas>=0.19",
         "matplotlib>=1.4",
