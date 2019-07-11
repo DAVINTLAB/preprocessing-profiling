@@ -1,29 +1,20 @@
 # -*- coding: utf-8 -*-
 """Compute statistical description of datasets"""
-import multiprocessing
-import itertools
-from functools import partial
 import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
-import missingno as msno
 from sklearn.impute import SimpleImputer
 from sklearn import tree
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.utils.multiclass import unique_labels
 from yellowbrick.classifier import ClassificationReport
 from yellowbrick.classifier import ConfusionMatrix
 from yellowbrick.classifier import ClassPredictionError
 from yellowbrick.classifier import PrecisionRecallCurve
 from pkg_resources import resource_filename
-import preprocessing_profiling.formatters as formatters
 import preprocessing_profiling.base as base
-from preprocessing_profiling.plot import histogram, mini_histogram
 from preprocessing_profiling.plot import yellowbrick_to_img
-import random
 
 def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, classes):
 	'''
@@ -57,6 +48,8 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	#Showing the Classification Report (Text)
 	result['classificationReportText'] = classification_report(y_test, y_pred)
 	
+	result['accuracy'] = round(accuracy_score(y_test, y_pred) * 100, 1)
+	
 	'''
 		The yellowbrick_to_img and plt.close methods 
 		shouldn't be called from here. Unfortunately, 
@@ -77,7 +70,7 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	cm = ConfusionMatrix(model, classes=classes, cmap='RdBu')
 	cm.fit(x_train, y_train)  # Fit the visualizer and the model
 	cm.score(x_test, y_test)  # Evaluate the model on the test data
-	result['confusionMatrix'] = yellowbrick_to_img(cm)
+	result['confusionMatrix'] = yellowbrick_to_img(cm, rearrange_x_labels = True)
 	plt.close()
 	
 	# The Class Prediction Error Distribution
@@ -101,6 +94,18 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 		pc2.score(x_test, y_test)  # Evaluate the model on the test data
 		result['precisionRecallInd'] = yellowbrick_to_img(pc2)
 		plt.close()
+	
+	# Dictionary used to generate the sankey diagram
+	nodes = []
+	for e in cp._ClassificationScoreVisualizer__classes:
+		nodes.append({"name": e})
+	nodes += nodes
+	links = []
+	for i in range(0, len(cp.predictions_)):
+		for j in range(0, len(cp.predictions_[i])):
+			if cp.predictions_[i][j] != 0:
+				links.append({"source": i, "target": len(cp.predictions_) + j, "value": cp.predictions_[i][j]})
+	result['errorDistributionDict'] = {"nodes": nodes, "links": links}
 	
 	#Showing the confusion matrix (Chart) ***Alternative to YellowBrick code above
 	#print('--------------------------------------------------------------------------------')  

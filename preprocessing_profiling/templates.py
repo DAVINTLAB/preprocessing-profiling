@@ -11,7 +11,9 @@ jinja2_env = Environment(lstrip_blocks=True, trim_blocks=True, loader=pl)
 templates = {'info': 'info.html',
 			 'base': 'base.html',
 			 'classification': 'classification.html',
-			 'overview': 'overview.html'
+			 'overview': 'overview.html',
+			 'more_classifications_header': 'more_classifications_header.html',
+			 'more_classifications_footer': 'more_classifications_footer.html'
 			 }
 
 # Mapping between row type and var type

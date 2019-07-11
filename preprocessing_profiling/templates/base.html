@@ -264,7 +264,16 @@
 			.overviewTable tr {
 				background-color: #f5f5f5 !important;
 			}
+			
+			.overviewTable td {
+				text-align: center;
+			}
+			
+			img {
+				margin-top: 0;
+			}
 </style>
+{% include 'plot.html' %}
 <div class="container preprocessing-profiling"> 
 	<script>
 		if (typeof id !== 'undefined') {
@@ -274,7 +283,7 @@
 		}
 	</script>
 	<div class="row headerrow highlight">
-		<h1 style="font-size: 36px;">Data Profiling</h1>
+		<h1 style="font-size: 36px;">Preprocessing Profiling</h1>
 	</div>
 	<script>
 		d3.select("#infoLink").attr("href", "#info"+id).attr("id", "infoLink"+id);
@@ -287,17 +296,13 @@
 	<div class="row variablerow">
 		<p class="h4" style="font-weight: bold;">Contents</p>
 		<ul>
-			<li><a id="infoLink" href="#info">Info</a></li>
-		</ul>
-		<ul>
+			<li><a id="infoLink" href="#info">Dataset (dataframe) Details</a></li>
 			<li><a id="overviewLink" href="#overview">Overview</a></li>
-		</ul>
-		<ul>
-			<li><a id="classificationsLink" href="#classifications">Classifications</a></li>
+			<li><a id="classificationsLink" href="#classifications">Results of Classification for each Imputation Strategy</a></li>
 		</ul>
 	</div>
     <div id="info" class="row headerrow highlight">
-		<h1>Info</h1>
+		<h1>Dataset (dataframe) Details</h1>
     </div>
     {{ info_html }}
     <div id="overview" class="row headerrow highlight">
@@ -305,7 +310,7 @@
     </div>
     {{ overview_html }}
     <div id="classifications" class="row headerrow highlight">
-		<h1>Classifications</h1>
+		<h1>Results of Classification for each Imputation Strategy</h1>
     </div>
     {{ classifications_html }}
 </div>

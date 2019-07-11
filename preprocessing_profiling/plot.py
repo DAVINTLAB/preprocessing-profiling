@@ -25,7 +25,9 @@ try:
 except ImportError:
 	from urllib.parse import quote
 
-def yellowbrick_to_img(plot):
+def yellowbrick_to_img(plot, **kwargs):
+	if kwargs.get("rearrange_x_labels", False):
+		plt.xticks(rotation=0)
 	imgdata = BytesIO()
 	plot.poof(outpath=imgdata)
 	imgdata.seek(0)

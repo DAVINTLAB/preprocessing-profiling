@@ -1,101 +1,86 @@
 <div class="variablerow">
+	<p class="h4">Summary table of Classification Reports</p>
 	<table class="overviewTable">
 		<tr>
 			<th>Strategy</th>
 			<td>Classification Report</td>
 			<td>Confusion Matrix</td>
 			<td>Class Prediction Error Distribution</td>
-			<td>Precision-Recall Curves</td>
-			<td>Precision-Recall Curves (Individual)</td>
+			<td>Accuracy</td>
 		</tr>
 		<tr>
-			<th>Baseline</th>
+			<th>Baseline (without missing values)</th>
 			<td>
-				<img src="{{ plots['baseline']['classificationReport'] }}" class="center-img">
+				<img src="{{ values['baseline']['classificationReport'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['baseline']['confusionMatrix'] }}" class="center-img">
+				<img src="{{ values['baseline']['confusionMatrix'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['baseline']['errorDistribution'] }}" class="center-img">
+				<img src="{{ values['baseline']['errorDistribution'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['baseline']['precisionRecall'] }}" class="center-img">
-			</td>
-			<td>
-				<img src="{{ plots['baseline']['precisionRecallInd'] }}" class="center-img">
+				<p class="h4">{{ values['baseline']['accuracy'] }}%</p>
 			</td>
 		</tr>
 		<tr>
 			<th>Constant Imputation (=zero)</th>
 			<td>
-				<img src="{{ plots['constant']['classificationReport'] }}" class="center-img">
+				<img src="{{ values['constant']['classificationReport'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['constant']['confusionMatrix'] }}" class="center-img">
+				<img src="{{ values['constant']['confusionMatrix'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['constant']['errorDistribution'] }}" class="center-img">
+				<img src="{{ values['constant']['errorDistribution'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['constant']['precisionRecall'] }}" class="center-img">
-			</td>
-			<td>
-				<img src="{{ plots['constant']['precisionRecallInd'] }}" class="center-img">
+				<p class="h4">{{ values['constant']['accuracy'] }}%</p>
 			</td>
 		</tr>
 		<tr>
 			<th>Mean Imputation</th>
 			<td>
-				<img src="{{ plots['mean']['classificationReport'] }}" class="center-img">
+				<img src="{{ values['mean']['classificationReport'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['mean']['confusionMatrix'] }}" class="center-img">
+				<img src="{{ values['mean']['confusionMatrix'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['mean']['errorDistribution'] }}" class="center-img">
+				<img src="{{ values['mean']['errorDistribution'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['mean']['precisionRecall'] }}" class="center-img">
-			</td>
-			<td>
-				<img src="{{ plots['mean']['precisionRecallInd'] }}" class="center-img">
+				<p class="h4">{{ values['mean']['accuracy'] }}%</p>
 			</td>
 		</tr>
 		<tr>
 			<th>Median Imputation</th>
 			<td>
-				<img src="{{ plots['median']['classificationReport'] }}" class="center-img">
+				<img src="{{ values['median']['classificationReport'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['median']['confusionMatrix'] }}" class="center-img">
+				<img src="{{ values['median']['confusionMatrix'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['median']['errorDistribution'] }}" class="center-img">
+				<img src="{{ values['median']['errorDistribution'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['median']['precisionRecall'] }}" class="center-img">
-			</td>
-			<td>
-				<img src="{{ plots['median']['precisionRecallInd'] }}" class="center-img">
+				<p class="h4">{{ values['median']['accuracy'] }}%</p>
 			</td>
 		</tr>
 		<tr>
 			<th>Most Frequent Value Imputation</th>
 			<td>
-				<img src="{{ plots['mostFrequent']['classificationReport'] }}" class="center-img">
+				<img src="{{ values['mostFrequent']['classificationReport'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['mostFrequent']['confusionMatrix'] }}" class="center-img">
+				<img src="{{ values['mostFrequent']['confusionMatrix'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['mostFrequent']['errorDistribution'] }}" class="center-img">
+				<img src="{{ values['mostFrequent']['errorDistribution'] }}" class="center-img">
 			</td>
 			<td>
-				<img src="{{ plots['mostFrequent']['precisionRecall'] }}" class="center-img">
-			</td>
-			<td>
-				<img src="{{ plots['mostFrequent']['precisionRecallInd'] }}" class="center-img">
+				<p class="h4">{{ values['mostFrequent']['accuracy'] }}%</p>
 			</td>
 		</tr>
 	</table>

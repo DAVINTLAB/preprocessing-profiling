@@ -2,7 +2,7 @@
 """Common parts to all other modules, mainly utility functions.
 """
 import pandas as pd
-from io import StringIO
+import numpy
 
 TYPE_CAT = 'CAT'
 """String: A categorical variable"""
@@ -126,3 +126,8 @@ def clear_cache():
 	global _MEMO, _VALUE_COUNTS_MEMO
 	_MEMO = {}
 	_VALUE_COUNTS_MEMO = {}
+
+
+def default(o):
+	if isinstance(o, numpy.int32): return int(o)  
+	raise TypeError

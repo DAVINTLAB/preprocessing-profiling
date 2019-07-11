@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-import pandas as pd
-import numpy as np
 import codecs
 import preprocessing_profiling.templates as templates
 from .describe import describe
 from .report import to_html
-from io import StringIO
 
 NO_OUTPUTFILE = "preprocessing_profiling.no_outputfile"
 DEFAULT_OUTPUTFILE = "preprocessing_profiling.default_outputfile"

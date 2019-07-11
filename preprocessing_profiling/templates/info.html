@@ -1,10 +1,11 @@
 <div class="row variablerow">
-    <div class="col-md-12" align="center" style="overflow:auto; width: 100%%; overflow-y: hidden;">
-	<p class="h4" style="text-align:center;">Sample</p>
+    <div class="col-md-12" style="overflow:auto; width: 100%%; overflow-y: hidden;">
+	<p class="h4">Sample</p>
         {{ sample_table_html }}
     </div>
     <div class="col-md-12">
-	<p class="h4" style="text-align:center;">Missing Values Matrix</p>
-        <img src="{{ missingMatrix }}" class="center-img">
+	<p class="h4">Matrix visualization of the nullity of the given dataset</p>
+	<p>(Missing values were added randomly in 75% of the lines)</p>
+        <img src="{{ missingMatrix }}" class="img">
     </div>
 </div>
