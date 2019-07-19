@@ -7,13 +7,12 @@ from preprocessing_profiling.base import default
 
 def to_html(sample, stats_object):
 	
-	info_html = templates.template('info').render(sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']))
+	info_html = templates.template('info').render(sankey_data = json.dumps(stats_object['classifications']['baseline']['errorDistributionDict'], default = default), sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']))
 	
 	overview_html = templates.template('overview').render(values = stats_object['classifications'])
 	
 	# Baseline
 	stats_object['classifications']['baseline']['errorDistributionDict'] = json.dumps(stats_object['classifications']['baseline']['errorDistributionDict'], default = default)
-	print(stats_object['classifications']['baseline']['errorDistributionDict'])
 	classifications_html = templates.template('classification').render(stratCode = "0", strategy = "Baseline", plots = stats_object['classifications']['baseline'])
 	
 	# Constant Imputation

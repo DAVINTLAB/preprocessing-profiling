@@ -2,18 +2,20 @@
 	<p class="h4">{{ strategy }}</p>
 	<div class="row col-md-12" id="descriptives">
 		<script>
-			d3.select("#classificationReportLink{{stratCode}}").attr("href", "#classificationReport{{stratCode}}"+id).attr("aria-controls", "classificationReport{{stratCode}}"+id).attr("id", "classificationReportLink{{stratCode}}"+id);
-			d3.select("#classificationReport{{stratCode}}").attr("id", "classificationReport{{stratCode}}"+id);
-			d3.select("#confusionMatrixLink{{stratCode}}").attr("href", "#confusionMatrix{{stratCode}}"+id).attr("aria-controls", "confusionMatrix{{stratCode}}"+id).attr("id", "confusionMatrixLink{{stratCode}}"+id);
-			d3.select("#confusionMatrix{{stratCode}}").attr("id", "confusionMatrix{{stratCode}}"+id);
-			d3.select("#errorDistributionLink{{stratCode}}").attr("href", "#errorDistribution{{stratCode}}"+id).attr("aria-controls", "errorDistribution{{stratCode}}"+id).attr("id", "errorDistributionLink{{stratCode}}"+id);
-			d3.select("#errorDistribution{{stratCode}}").attr("id", "errorDistribution{{stratCode}}"+id);
-			d3.select("#precisionRecallLink{{stratCode}}").attr("href", "#precisionRecall{{stratCode}}"+id).attr("aria-controls", "precisionRecall{{stratCode}}"+id).attr("id", "precisionRecallLink{{stratCode}}"+id);
-			d3.select("#precisionRecall{{stratCode}}").attr("id", "precisionRecall{{stratCode}}"+id);
-			d3.select("#precisionRecallIndLink{{stratCode}}").attr("href", "#precisionRecallInd{{stratCode}}"+id).attr("aria-controls", "precisionRecallInd{{stratCode}}"+id).attr("id", "precisionRecallIndLink{{stratCode}}"+id);
-			d3.select("#precisionRecallInd{{stratCode}}").attr("id", "precisionRecallInd{{stratCode}}"+id);
-			d3.select("#classificationReportText{{stratCode}}").attr("id", "classificationReportText{{stratCode}}"+id);
-			d3.select("#classificationReportTextToggle{{stratCode}}").attr("data-target", "#classificationReportText{{stratCode}}"+id).attr("id", "classificationReportTextToggle{{stratCode}}"+id);
+			require(['d3'], function(d3){
+				d3.select("#classificationReportLink{{stratCode}}").attr("href", "#classificationReport{{stratCode}}"+id).attr("aria-controls", "classificationReport{{stratCode}}"+id).attr("id", "classificationReportLink{{stratCode}}"+id);
+				d3.select("#classificationReport{{stratCode}}").attr("id", "classificationReport{{stratCode}}"+id);
+				d3.select("#confusionMatrixLink{{stratCode}}").attr("href", "#confusionMatrix{{stratCode}}"+id).attr("aria-controls", "confusionMatrix{{stratCode}}"+id).attr("id", "confusionMatrixLink{{stratCode}}"+id);
+				d3.select("#confusionMatrix{{stratCode}}").attr("id", "confusionMatrix{{stratCode}}"+id);
+				d3.select("#errorDistributionLink{{stratCode}}").attr("href", "#errorDistribution{{stratCode}}"+id).attr("aria-controls", "errorDistribution{{stratCode}}"+id).attr("id", "errorDistributionLink{{stratCode}}"+id);
+				d3.select("#errorDistribution{{stratCode}}").attr("id", "errorDistribution{{stratCode}}"+id);
+				d3.select("#precisionRecallLink{{stratCode}}").attr("href", "#precisionRecall{{stratCode}}"+id).attr("aria-controls", "precisionRecall{{stratCode}}"+id).attr("id", "precisionRecallLink{{stratCode}}"+id);
+				d3.select("#precisionRecall{{stratCode}}").attr("id", "precisionRecall{{stratCode}}"+id);
+				d3.select("#precisionRecallIndLink{{stratCode}}").attr("href", "#precisionRecallInd{{stratCode}}"+id).attr("aria-controls", "precisionRecallInd{{stratCode}}"+id).attr("id", "precisionRecallIndLink{{stratCode}}"+id);
+				d3.select("#precisionRecallInd{{stratCode}}").attr("id", "precisionRecallInd{{stratCode}}"+id);
+				d3.select("#classificationReportText{{stratCode}}").attr("id", "classificationReportText{{stratCode}}"+id);
+				d3.select("#classificationReportTextToggle{{stratCode}}").attr("data-target", "#classificationReportText{{stratCode}}"+id).attr("id", "classificationReportTextToggle{{stratCode}}"+id);
+			});
 		</script>
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active">
