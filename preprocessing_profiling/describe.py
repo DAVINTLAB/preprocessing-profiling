@@ -108,7 +108,7 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	result['errorDistributionDict'] = {"nodes": nodes, "links": links}
 	
 	#Showing the confusion matrix (Chart) ***Alternative to YellowBrick code above
-	#print('--------------------------------------------------------------------------------')  
+	#print('--------------------------------------------------------------------------------')
 	#plot_confusion_matrix(y_test, y_pred, title='Confusion matrix, without normalization:')
 	#print(' ')
 	#plot_confusion_matrix(y_test, y_pred, normalize=True, title='Normalized confusion matrix:')
@@ -128,9 +128,9 @@ def get_ComparisonDecisionTree(dataset):
 	@return: none (it is using print + the output of other functions)
 	'''	   
 	
-	#---------------------------------------------------------------------------	   
+	#---------------------------------------------------------------------------
 	# Pending implementation:
-	# *** confirm if the y label is string, in case yes, then change to numbers 
+	# *** confirm if the y label is string, in case yes, then change to numbers
 	# *** review the code for classes variable  
 	#---------------------------------------------------------------------------
 	
@@ -146,61 +146,63 @@ def get_ComparisonDecisionTree(dataset):
 	# *** review after the latest code changes!
 	y = pd.DataFrame(y_full)
 	classes = y[0].unique()
-		   
-		
-	#---------------------------------------------------------------------------	
-	# Baseline	
+	
+	
+	#---------------------------------------------------------------------------
+	# Baseline
 	# The Baseline are running with a different split of train and test data!!!!
-	#---------------------------------------------------------------------------	
+	#---------------------------------------------------------------------------
 	
 	# Check if the original dataset has missing values
 	if (is_missing==False):
-		
+
 		# In case of the original dataset without missing (e.g., iris) then use it as is to run the baseline
 		x_trainB, x_testB, y_trainB, y_testB = train_test_split(X_full, y_full, test_size=0.30)
 		x_train0 = pd.DataFrame(x_trainB)
-		x_test0 = pd.DataFrame(x_testB)		  
-		classifications['baseline'] = get_classificationReportDecisionTree(x_train0, x_test0, y_trainB, y_testB, classes)				 
-		
+		x_test0 = pd.DataFrame(x_testB)
+		classifications['baseline'] = get_classificationReportDecisionTree(x_train0, x_test0, y_trainB, y_testB, classes)
+		classifications['baseline']['stratName'] = "Baseline (without missing values)"
+		classifications['baseline']['stratCode'] = "0"
 		#---------------------------------------------------------------------------
-		# Add missing values in 75% of the lines randomly 
-		#---------------------------------------------------------------------------		
+		# Add missing values in 75% of the lines randomly
+		#---------------------------------------------------------------------------
 		n_samples = X_full.shape[0]
 		n_features = X_full.shape[1]
-		rng = np.random.RandomState(0)	  
+		rng = np.random.RandomState(0)
 		missing_rate = 0.75
 		
 		n_missing_samples = int(np.floor(n_samples * missing_rate))
-		missing_samples = np.hstack((np.zeros(n_samples - n_missing_samples, dtype=np.bool),
-										 np.ones(n_missing_samples,dtype=np.bool)))
+		missing_samples = np.hstack((np.zeros(n_samples - n_missing_samples, dtype=np.bool), np.ones(n_missing_samples,dtype=np.bool)))
 		rng.shuffle(missing_samples)
 		missing_features = rng.randint(0, n_features, n_missing_samples)
 		X_missing = X_full.copy()
-		X_missing[np.where(missing_samples)[0], missing_features] = np.nan	
+		X_missing[np.where(missing_samples)[0], missing_features] = np.nan
 	
 	else:
 
 		# If originall missing data then clean all this lines and run baseline
 		df_clean = dataset.dropna()
 		X_baseline = np.array(df_clean.iloc[:,:-1])
-		y_baseline = np.array(df_clean.iloc[:,-1])  
+		y_baseline = np.array(df_clean.iloc[:,-1])
 		x_trainB, x_testB, y_trainB, y_testB = train_test_split(X_baseline, y_baseline, test_size=0.30)
 		#*** review after the latest code changes! acho que nao precisa mais disso - pode passar direto!
 		x_train0 = pd.DataFrame(x_trainB)
-		x_test0 = pd.DataFrame(x_testB)  
+		x_test0 = pd.DataFrame(x_testB)
 		classifications['baseline'] = get_classificationReportDecisionTree(x_train0, x_test0, y_trainB, y_testB, classes)
-				
+		classifications['baseline']['stratName'] = "Baseline (without missing values)"
+		classifications['baseline']['stratCode'] = "0"
+		
 		#All the other tests will continue with the same variable name
 		X_missing = X_full.copy()
-				
-	#No Changes to the class/label column   
+		
+	#No Changes to the class/label column
 	y_missing = y_full.copy()
 	
 	
-	#---------------------------------------------------------------------------  
+	#---------------------------------------------------------------------------
 	# Spliting the data of training (70%) and test (30%)
 	# Same set of data for all preprocessing comparisons! =)
-	#---------------------------------------------------------------------------	
+	#---------------------------------------------------------------------------
 	x_train, x_test, y_train, y_test = train_test_split(X_missing, y_missing, test_size=0.30)
 
 	#---------------------------------------------------------------------------
@@ -211,28 +213,32 @@ def get_ComparisonDecisionTree(dataset):
 	x_train1 = pd.DataFrame(imp1.fit_transform(x_train)) # Rever!! pq transforma pandas?
 	x_test1 = pd.DataFrame(imp1.fit_transform(x_test)) 
 	classifications['constant'] = get_classificationReportDecisionTree(x_train1, x_test1, y_train, y_test, classes)
+	classifications['constant']['stratName'] = "Constant Imputation (= zero)"
+	classifications['constant']['stratCode'] = "1"
+
+	if(not base.has_bool(dataset)):
+		#---------------------------------------------------------------------------
+		# Imputation (mean strategy) of the missing values
+		# If “mean”, then replace missing values using the mean along each column. Can only be used with numeric data.
+		#---------------------------------------------------------------------------
+		imp2 = SimpleImputer(missing_values=np.nan, strategy="mean")
+		x_train2 = pd.DataFrame(imp2.fit_transform(x_train)) # Rever!! pq transforma pandas?
+		x_test2 = pd.DataFrame(imp2.fit_transform(x_test))
+		classifications['mean'] = get_classificationReportDecisionTree(x_train2, x_test2, y_train, y_test, classes)
+		classifications['mean']['stratName'] = "Mean Imputation"
+		classifications['mean']['stratCode'] = "2"
 
 
-	#---------------------------------------------------------------------------
-	# Imputation (mean strategy) of the missing values
-	# If “mean”, then replace missing values using the mean along each column. Can only be used with numeric data.
-	#---------------------------------------------------------------------------
-	imp2 = SimpleImputer(missing_values=np.nan, strategy="mean")
-	x_train2 = pd.DataFrame(imp2.fit_transform(x_train)) # Rever!! pq transforma pandas?
-	x_test2 = pd.DataFrame(imp2.fit_transform(x_test))
-	classifications['mean'] = get_classificationReportDecisionTree(x_train2, x_test2, y_train, y_test, classes)
-
-
-	#---------------------------------------------------------------------------
-	# Estimate the score after imputation (median strategy) of the missing values
-	# If “median”, then replace missing values using the median along each column. Can only be used with numeric data.
-	#---------------------------------------------------------------------------
-	imp3 = SimpleImputer(missing_values=np.nan, strategy="median")
-	x_train3 = pd.DataFrame(imp3.fit_transform(x_train)) # Rever!! pq transforma pandas?
-	x_test3 = pd.DataFrame(imp3.fit_transform(x_test))	 
-	classifications['median'] = get_classificationReportDecisionTree(x_train3, x_test3, y_train, y_test, classes)
-	
-
+		#---------------------------------------------------------------------------
+		# Estimate the score after imputation (median strategy) of the missing values
+		# If “median”, then replace missing values using the median along each column. Can only be used with numeric data.
+		#---------------------------------------------------------------------------
+		imp3 = SimpleImputer(missing_values=np.nan, strategy="median")
+		x_train3 = pd.DataFrame(imp3.fit_transform(x_train)) # Rever!! pq transforma pandas?
+		x_test3 = pd.DataFrame(imp3.fit_transform(x_test))
+		classifications['median'] = get_classificationReportDecisionTree(x_train3, x_test3, y_train, y_test, classes)
+		classifications['median']['stratName'] = "Median Imputation"
+		classifications['median']['stratCode'] = "3"
 
 	#---------------------------------------------------------------------------
 	# Estimate the score after imputation (most_frequent strategy) of the missing values
@@ -240,8 +246,10 @@ def get_ComparisonDecisionTree(dataset):
 	#---------------------------------------------------------------------------
 	imp4 = SimpleImputer(missing_values=np.nan, strategy="most_frequent")
 	x_train4 = pd.DataFrame(imp4.fit_transform(x_train)) # Rever!! pq transforma pandas?
-	x_test4 = pd.DataFrame(imp4.fit_transform(x_test))	
+	x_test4 = pd.DataFrame(imp4.fit_transform(x_test))
 	classifications['mostFrequent'] = get_classificationReportDecisionTree(x_train4, x_test4, y_train, y_test, classes)
+	classifications['mostFrequent']['stratName'] = "Most Frequent Imputation"
+	classifications['mostFrequent']['stratCode'] = "4"
 	
 	df = pd.DataFrame(X_missing)
 	df['y'] = y_missing

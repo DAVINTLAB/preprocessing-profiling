@@ -121,6 +121,12 @@ def get_vartype(data):
 
 	return vartype
 
+def has_bool(df):
+	for column in df.columns[1:-1]:
+		if(get_vartype(df[column]) == TYPE_BOOL):
+			return True
+	return False
+
 def clear_cache():
 	"""Clear the cache stored as global variables"""
 	global _MEMO, _VALUE_COUNTS_MEMO
@@ -129,5 +135,5 @@ def clear_cache():
 
 
 def default(o):
-	if isinstance(o, numpy.int32): return int(o)  
-	raise TypeError
+	if isinstance(o, numpy.int32) or isinstance(o, numpy.int64): return int(o)
+	raise TypeError(str(type(o)) + " is not a valid type")

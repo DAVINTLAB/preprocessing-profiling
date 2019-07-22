@@ -1,64 +1,70 @@
 <div class="row variablerow">
-	<p class="h4">{{ strategy }}</p>
+	<p class="h4">{{ classification['stratName'] }}</p>
 	<div class="row col-md-12" id="descriptives">
 		<script>
 			require(['d3'], function(d3){
-				d3.select("#classificationReportLink{{stratCode}}").attr("href", "#classificationReport{{stratCode}}"+id).attr("aria-controls", "classificationReport{{stratCode}}"+id).attr("id", "classificationReportLink{{stratCode}}"+id);
-				d3.select("#classificationReport{{stratCode}}").attr("id", "classificationReport{{stratCode}}"+id);
-				d3.select("#confusionMatrixLink{{stratCode}}").attr("href", "#confusionMatrix{{stratCode}}"+id).attr("aria-controls", "confusionMatrix{{stratCode}}"+id).attr("id", "confusionMatrixLink{{stratCode}}"+id);
-				d3.select("#confusionMatrix{{stratCode}}").attr("id", "confusionMatrix{{stratCode}}"+id);
-				d3.select("#errorDistributionLink{{stratCode}}").attr("href", "#errorDistribution{{stratCode}}"+id).attr("aria-controls", "errorDistribution{{stratCode}}"+id).attr("id", "errorDistributionLink{{stratCode}}"+id);
-				d3.select("#errorDistribution{{stratCode}}").attr("id", "errorDistribution{{stratCode}}"+id);
-				d3.select("#precisionRecallLink{{stratCode}}").attr("href", "#precisionRecall{{stratCode}}"+id).attr("aria-controls", "precisionRecall{{stratCode}}"+id).attr("id", "precisionRecallLink{{stratCode}}"+id);
-				d3.select("#precisionRecall{{stratCode}}").attr("id", "precisionRecall{{stratCode}}"+id);
-				d3.select("#precisionRecallIndLink{{stratCode}}").attr("href", "#precisionRecallInd{{stratCode}}"+id).attr("aria-controls", "precisionRecallInd{{stratCode}}"+id).attr("id", "precisionRecallIndLink{{stratCode}}"+id);
-				d3.select("#precisionRecallInd{{stratCode}}").attr("id", "precisionRecallInd{{stratCode}}"+id);
-				d3.select("#classificationReportText{{stratCode}}").attr("id", "classificationReportText{{stratCode}}"+id);
-				d3.select("#classificationReportTextToggle{{stratCode}}").attr("data-target", "#classificationReportText{{stratCode}}"+id).attr("id", "classificationReportTextToggle{{stratCode}}"+id);
+				d3.select("#classificationReportLink{{ classification['stratCode'] }}").attr("href", "#classificationReport{{ classification['stratCode'] }}-"+id).attr("aria-controls", "classificationReport{{ classification['stratCode'] }}-"+id).attr("id", "classificationReportLink{{ classification['stratCode'] }}-"+id);
+				d3.select("#classificationReport{{ classification['stratCode'] }}").attr("id", "classificationReport{{ classification['stratCode'] }}-"+id);
+				d3.select("#confusionMatrixLink{{ classification['stratCode'] }}").attr("href", "#confusionMatrix{{ classification['stratCode'] }}-"+id).attr("aria-controls", "confusionMatrix{{ classification['stratCode'] }}-"+id).attr("id", "confusionMatrixLink{{ classification['stratCode'] }}-"+id);
+				d3.select("#confusionMatrix{{ classification['stratCode'] }}").attr("id", "confusionMatrix{{ classification['stratCode'] }}-"+id);
+				d3.select("#errorDistributionLink{{ classification['stratCode'] }}").attr("href", "#errorDistribution{{ classification['stratCode'] }}-"+id).attr("aria-controls", "errorDistribution{{ classification['stratCode'] }}-"+id).attr("id", "errorDistributionLink{{ classification['stratCode'] }}-"+id);
+				d3.select("#errorDistribution{{ classification['stratCode'] }}").attr("id", "errorDistribution{{ classification['stratCode'] }}-"+id);
+				d3.select("#precisionRecallLink{{ classification['stratCode'] }}").attr("href", "#precisionRecall{{ classification['stratCode'] }}-"+id).attr("aria-controls", "precisionRecall{{ classification['stratCode'] }}-"+id).attr("id", "precisionRecallLink{{ classification['stratCode'] }}-"+id);
+				d3.select("#precisionRecall{{ classification['stratCode'] }}").attr("id", "precisionRecall{{ classification['stratCode'] }}-"+id);
+				{% if('precisionRecallInd' in classification) %}
+				d3.select("#precisionRecallIndLink{{ classification['stratCode'] }}").attr("href", "#precisionRecallInd{{ classification['stratCode'] }}-"+id).attr("aria-controls", "precisionRecallInd{{ classification['stratCode'] }}-"+id).attr("id", "precisionRecallIndLink{{ classification['stratCode'] }}-"+id);
+				d3.select("#precisionRecallInd{{ classification['stratCode'] }}").attr("id", "precisionRecallInd{{ classification['stratCode'] }}-"+id);
+				{% endif %}
+				d3.select("#classificationReportText{{ classification['stratCode'] }}").attr("id", "classificationReportText{{ classification['stratCode'] }}-"+id);
+				d3.select("#classificationReportTextToggle{{ classification['stratCode'] }}").attr("data-target", "#classificationReportText{{ classification['stratCode'] }}-"+id).attr("id", "classificationReportTextToggle{{ classification['stratCode'] }}-"+id);
 			});
 		</script>
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active">
-				<a id="classificationReportLink{{stratCode}}" href="#classificationReport{{stratCode}}" aria-controls="classificationReport{{stratCode}}" role="tab" data-toggle="tab">Classification Report</a>
+				<a id="classificationReportLink{{ classification['stratCode'] }}" href="#classificationReport{{ classification['stratCode'] }}" aria-controls="classificationReport{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Classification Report</a>
 			</li>
 			<li role="presentation">
-				<a id="confusionMatrixLink{{stratCode}}" href="#confusionMatrix{{stratCode}}" aria-controls="confusionMatrix{{stratCode}}" role="tab" data-toggle="tab">Confusion Matrix</a>
+				<a id="confusionMatrixLink{{ classification['stratCode'] }}" href="#confusionMatrix{{ classification['stratCode'] }}" aria-controls="confusionMatrix{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Confusion Matrix</a>
 			</li>
 			<li role="presentation">
-				<a id="errorDistributionLink{{stratCode}}" href="#errorDistribution{{stratCode}}" aria-controls="errorDistribution{{stratCode}}" role="tab" data-toggle="tab">Error Distribution</a>
+				<a id="errorDistributionLink{{ classification['stratCode'] }}" href="#errorDistribution{{ classification['stratCode'] }}" aria-controls="errorDistribution{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Error Distribution</a>
 			</li>
 			<li role="presentation">
-				<a id="precisionRecallLink{{stratCode}}" href="#precisionRecall{{stratCode}}" aria-controls="precisionRecall{{stratCode}}" role="tab" data-toggle="tab">Precision-Recall Curves</a>
+				<a id="precisionRecallLink{{ classification['stratCode'] }}" href="#precisionRecall{{ classification['stratCode'] }}" aria-controls="precisionRecall{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Precision-Recall Curves</a>
 			</li>
+			{% if('precisionRecallInd' in classification) %}
 			<li role="presentation">
-				<a id="precisionRecallIndLink{{stratCode}}" href="#precisionRecallInd{{stratCode}}" aria-controls="precisionRecallInd{{stratCode}}" role="tab" data-toggle="tab">Precision-Recall Curves (Individual)</a>
+				<a id="precisionRecallIndLink{{ classification['stratCode'] }}" href="#precisionRecallInd{{ classification['stratCode'] }}" aria-controls="precisionRecallInd{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Precision-Recall Curves (Individual)</a>
 			</li>
+			{% endif %}
 		</ul>
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="classificationReport{{stratCode}}">
-				<img src="{{ plots['classificationReport'] }}" class="center-img">
+			<div role="tabpanel" class="tab-pane active" id="classificationReport{{ classification['stratCode'] }}">
+				<img src="{{ classification['classificationReport'] }}" class="center-img">
 				<div class="panel-heading">
 					<p style="text-align: right; font-size: 12px; margin-right: 153.5px;">
 						Show Details
-						<button id="classificationReportTextToggle{{stratCode}}" data-toggle="collapse" data-target="#classificationReportText{{stratCode}}" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button>
+						<button id="classificationReportTextToggle{{ classification['stratCode'] }}" data-toggle="collapse" data-target="#classificationReportText{{ classification['stratCode'] }}" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button>
 					</p>
 				</div>
-				<div id="classificationReportText{{stratCode}}" class="pannel-collapse collapse" align="center" style="overflow:auto; overflow-y: hidden;">
-					<p><pre>{{ plots['classificationReportText'] }}</pre></p>
+				<div id="classificationReportText{{ classification['stratCode'] }}" class="pannel-collapse collapse" align="center" style="overflow:auto; overflow-y: hidden;">
+					<p><pre>{{ classification['classificationReportText'] }}</pre></p>
 				</div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="confusionMatrix{{stratCode}}">
-				<img src="{{ plots['confusionMatrix'] }}" class="center-img">
+			<div role="tabpanel" class="tab-pane" id="confusionMatrix{{ classification['stratCode'] }}">
+				<img src="{{ classification['confusionMatrix'] }}" class="center-img">
 			</div>
-			<div role="tabpanel" class="tab-pane" id="errorDistribution{{stratCode}}">
-				<img src="{{ plots['errorDistribution'] }}" class="center-img">
+			<div role="tabpanel" class="tab-pane" id="errorDistribution{{ classification['stratCode'] }}">
+				<img src="{{ classification['errorDistribution'] }}" class="center-img">
 			</div>
-			<div role="tabpanel" class="tab-pane"  id="precisionRecall{{stratCode}}">
-				<img src="{{ plots['precisionRecall'] }}" class="center-img">
+			<div role="tabpanel" class="tab-pane"  id="precisionRecall{{ classification['stratCode'] }}">
+				<img src="{{ classification['precisionRecall'] }}" class="center-img">
 			</div>
-			<div role="tabpanel" class="tab-pane"  id="precisionRecallInd{{stratCode}}">
-				<img src="{{ plots['precisionRecallInd'] }}" class="center-img">
+			{% if('precisionRecallInd' in classification) %}
+			<div role="tabpanel" class="tab-pane"  id="precisionRecallInd{{ classification['stratCode'] }}">
+				<img src="{{ classification['precisionRecallInd'] }}" class="center-img">
 			</div>
+			{% endif %}
 		</div>
 	</div>
 </div>

@@ -13,7 +13,8 @@ templates = {'info': 'info.html',
 			 'classification': 'classification.html',
 			 'overview': 'overview.html',
 			 'more_classifications_header': 'more_classifications_header.html',
-			 'more_classifications_footer': 'more_classifications_footer.html'
+			 'more_classifications_footer': 'more_classifications_footer.html',
+			 'overview_row': 'overview_row.html'
 			 }
 
 # Mapping between row type and var type
