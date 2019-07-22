@@ -253,7 +253,8 @@ def get_ComparisonDecisionTree(dataset):
 	
 	df = pd.DataFrame(X_missing)
 	df['y'] = y_missing
-	return classifications, df
+	generated_missing_values = not is_missing
+	return classifications, df, generated_missing_values
 
 def describe(df):
 
@@ -274,9 +275,10 @@ def describe(df):
 	# Clearing the cache before computing stats
 	base.clear_cache()
 	
-	classifications, df_missing = get_ComparisonDecisionTree(df)
+	classifications, df_missing, generated_missing_values = get_ComparisonDecisionTree(df)
 
 	return {
-		'dataframe': df_missing, 
-		'classifications': classifications
+		'dataframe': df_missing,
+		'classifications': classifications,
+		'generated_missing_values': generated_missing_values
 	}

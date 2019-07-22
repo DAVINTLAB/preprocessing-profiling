@@ -5,7 +5,9 @@
 	</div>
 	<div class="col-md-12">
 		<p class="h4">Matrix visualization of the nullity of the given dataset</p>
+		{% if(generated_missing_values) %}
 		<p>(Missing values were added randomly in 75% of the lines)</p>
+		{% endif %}
 		<img src="{{ missingMatrix }}" class="img">
 	</div>
 </div>
