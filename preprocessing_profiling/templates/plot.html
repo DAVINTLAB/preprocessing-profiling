@@ -9,7 +9,8 @@
 			var sankey = d3sankey.sankey()
 				.extent([[nodePadding/2 + margin.left, nodePadding/2], [width + margin.left - nodePadding/2, height - nodePadding/2]])
 				.nodeWidth(nodeWidth)
-				.nodePadding(nodePadding);
+				.nodePadding(nodePadding)
+				.nodeSort(null);
 			
 			svg.attr("height", height)
 				.attr("width", width + margin.left + margin.right);
@@ -45,7 +46,6 @@
 			
 			var nodes = data.nodes;
 			var links = data.links;
-			console.log(links);
 			
 			svg.append("g")
 				.attr("stroke", "#000")
@@ -77,7 +77,7 @@
 				.data(links)
 				.enter()
 				.append("text")
-				.text(d => d.value)
+				.text(d => parseFloat(((d.value / d.source.value) * 100).toFixed(2)) + "%")
 				.attr("x", d => margin.left + nodePadding + nodeWidth)
 				.attr("y", d => d.y0 + 5)
 				.attr("font-size", 10)
@@ -88,7 +88,7 @@
 				.enter()
 				.append("text")
 				.attr("text-anchor", "end")
-				.text(d => d.value)
+				.text(d => parseFloat(((d.value / d.target.value) * 100).toFixed(2)) + "%")
 				.attr("x", d => margin.left + width - nodePadding - nodeWidth)
 				.attr("y", d => d.y1 + 5)
 				.attr("font-size", 10)

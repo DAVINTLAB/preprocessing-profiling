@@ -15,6 +15,8 @@
 				d3.select("#precisionRecallIndLink{{ classification['stratCode'] }}").attr("href", "#precisionRecallInd{{ classification['stratCode'] }}-"+id).attr("aria-controls", "precisionRecallInd{{ classification['stratCode'] }}-"+id).attr("id", "precisionRecallIndLink{{ classification['stratCode'] }}-"+id);
 				d3.select("#precisionRecallInd{{ classification['stratCode'] }}").attr("id", "precisionRecallInd{{ classification['stratCode'] }}-"+id);
 				{% endif %}
+				d3.select("#sankeyLink{{ classification['stratCode'] }}").attr("href", "#sankey{{ classification['stratCode'] }}-"+id).attr("aria-controls", "sankey{{ classification['stratCode'] }}-"+id).attr("id", "sankeyLink{{ classification['stratCode'] }}-"+id);
+				d3.select("#sankey{{ classification['stratCode'] }}").attr("id", "sankey{{ classification['stratCode'] }}-"+id);
 				d3.select("#classificationReportText{{ classification['stratCode'] }}").attr("id", "classificationReportText{{ classification['stratCode'] }}-"+id);
 				d3.select("#classificationReportTextToggle{{ classification['stratCode'] }}").attr("data-target", "#classificationReportText{{ classification['stratCode'] }}-"+id).attr("id", "classificationReportTextToggle{{ classification['stratCode'] }}-"+id);
 			});
@@ -34,9 +36,12 @@
 			</li>
 			{% if('precisionRecallInd' in classification) %}
 			<li role="presentation">
-				<a id="precisionRecallIndLink{{ classification['stratCode'] }}" href="#precisionRecallInd{{ classification['stratCode'] }}" aria-controls="precisionRecallInd{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Precision-Recall Curves (Individual)</a>
+				<a id="precisionRecallIndLink{{ classification['stratCode'] }}" href="#precisionRecallInd{{ classification['stratCode'] }}" aria-controls="precisionRecallInd{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Precision 2</a>
 			</li>
 			{% endif %}
+			<li role="presentation">
+				<a id="sankeyLink{{ classification['stratCode'] }}" href="#sankey{{ classification['stratCode'] }}" aria-controls="sankey{{ classification['stratCode'] }}" role="tab" data-toggle="tab">Sankey Diagram</a>
+			</li>
 		</ul>
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="classificationReport{{ classification['stratCode'] }}">
@@ -65,6 +70,17 @@
 				<img src="{{ classification['precisionRecallInd'] }}" class="center-img">
 			</div>
 			{% endif %}
+			<div role="tabpanel" class="tab-pane"  id="sankey{{ classification['stratCode'] }}">
+				<svg>
+					<script>
+						require(['d3'], function(d3){
+							var svg = d3.select("#sankey{{ classification['stratCode'] }}-"+id+" svg");
+							var data = {{ classification['errorDistributionDict'] }};
+							plotSankey(data, svg);
+						});
+					</script>
+				<svg>
+			</div>
 		</div>
 	</div>
 </div>

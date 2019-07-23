@@ -7,7 +7,7 @@ from preprocessing_profiling.base import default
 
 def to_html(sample, stats_object):
 	
-	info_html = templates.template('info').render(sankey_data = json.dumps(stats_object['classifications']['baseline']['errorDistributionDict'], default = default), sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']), generated_missing_values = stats_object['generated_missing_values'])
+	info_html = templates.template('info').render(sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']), generated_missing_values = stats_object['generated_missing_values'])
 	
 	overview_rows_html = ""
 	for strategy in stats_object['classifications']:
