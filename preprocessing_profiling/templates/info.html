@@ -10,4 +10,16 @@
 		{% endif %}
 		<img src="{{ missingMatrix }}" class="img">
 	</div>
+	<div class="col-md-12">
+		<p class="h4">Flow of Classes</p>
+		<svg id="multiSankey">
+			<script>
+				require(['d3', 'sankey'], function(d3, d3sankey){
+					var data = {{ error_distribution_dicts }};
+					var svg = d3.select("#multiSankey");
+					plotMultiSankey(data, svg);
+				});
+			</script>
+		</svg>
+	</div>
 </div>

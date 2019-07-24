@@ -6,8 +6,12 @@ from preprocessing_profiling.base import default
 
 
 def to_html(sample, stats_object):
+	error_distribution_dicts = []
+	for strategy in stats_object['classifications']:
+		error_distribution_dicts.append(stats_object['classifications'][strategy]['errorDistributionDict'])
+		error_distribution_dicts[-1]['strategy'] = stats_object['classifications'][strategy]['stratName']
 	
-	info_html = templates.template('info').render(sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']), generated_missing_values = stats_object['generated_missing_values'])
+	info_html = templates.template('info').render(sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']), generated_missing_values = stats_object['generated_missing_values'], error_distribution_dicts = error_distribution_dicts)
 	
 	overview_rows_html = ""
 	for strategy in stats_object['classifications']:

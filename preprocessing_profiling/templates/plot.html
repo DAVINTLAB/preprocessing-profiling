@@ -120,4 +120,103 @@
 				.text(d => d.name);
 		});
 	}
+		
+	function plotMultiSankey(data, svg) {
+		require(['d3', 'sankey'], function(d3, d3sankey){
+			var margin = {left: 40, right: 40};
+			var height = 150;
+			var width = 100;
+			var nodeWidth = 5;
+			var nodePadding = 10;
+			var sankeyPadding = 10;
+			var diagram = svg.append("g");
+			
+			diagram.append("rect")
+				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75)
+				.attr("y", nodePadding/4)
+				.attr("width", nodeWidth + nodePadding/2)
+				.attr("height", height * data.length - nodePadding/2)
+				.attr("fill", "#ddd");
+			
+			for(var i = 0; i < data.length; i++) {
+				diagram.append("rect")
+					.attr("x", nodePadding/4 + margin.left)
+					.attr("y", height * i + nodePadding/4)
+					.attr("width", nodeWidth + nodePadding/2)
+					.attr("height", height - nodePadding/2)
+					.attr("fill", "#ddd");
+				svg.append("text")
+					.text(data[i].strategy)
+					.attr("x", height * (i + 0.5))
+					.attr("y", margin.right + width + 11)
+					.attr("font-size", 10)
+					.attr("font-family", "sans-serif")
+					.attr("text-anchor", "middle");
+				
+				var sankey = d3sankey.sankey()
+					.extent([[nodePadding/2 + margin.left, nodePadding/2 + height * i + sankeyPadding], [width + margin.left - nodePadding/2, height * (i + 1) - nodePadding/2 - sankeyPadding]])
+					.nodeWidth(nodeWidth)
+					.nodePadding(nodePadding)
+					.nodeSort(null);
+				data[i] = sankey(data[i]);
+				var nodes = data[i].nodes;
+				var links = data[i].links;
+				
+				diagram.append("g")
+					.attr("stroke", "#000")
+					.selectAll("rect")
+					.data(nodes)
+					.enter()
+					.append("rect")
+					.attr("x", d => d.x0)
+					.attr("y", d => d.y0)
+					.attr("height", d => d.y1 - d.y0)
+					.attr("width", d => d.x1 - d.x0)
+					.attr("fill", d => "#777")
+					.append("title")
+					.text(d => `${d.name}\n${d.value}`);
+				
+				var link = diagram.append("g")
+					.attr("fill", "none")
+					.attr("stroke-opacity", 0.5)
+					.selectAll("g")
+					.data(links)
+					.enter()
+					.append("g")
+					.style("mix-blend-mode", "multiply");
+				
+				link.append("path")
+					.attr("d", d3sankey.sankeyLinkHorizontal())
+					.attr("stroke", function(d) {
+						if(d.target.name === d.source.name) {
+							return "#1565c0";
+						}
+						return "#e6ac00";
+					})
+					.attr("stroke-width", d => Math.max(1, d.width));
+				link.append("title")
+					.text(d => `${d.source.name} → ${d.target.name}\n${parseFloat(((d.value / d.source.value) * 100).toFixed(2))}%`);
+			}
+			
+			svg.append("text")
+				.text("Actual Class")
+				.attr("x", (height * data.length)/2)
+				.attr("y", margin.right/2 + 7)
+				.attr("font-size", 14)
+				.attr("font-family", "sans-serif")
+				.attr("text-anchor", "middle");
+			svg.append("text")
+				.text("Predicted Class")
+				.attr("x", (height * data.length)/2)
+				.attr("y", margin.right + width + margin.left/2 + 7)
+				.attr("font-size", 14)
+				.attr("font-family", "sans-serif")
+				.attr("text-anchor", "middle");
+			
+			diagram.attr("transform", "rotate(-90) translate("+(width + margin.left + margin.right)*-1+" 0)");
+			
+			svg.attr("width", height * data.length)
+				.attr("height", width + margin.left + margin.right);
+		});
+	}
 </script>
