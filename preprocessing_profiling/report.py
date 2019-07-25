@@ -6,12 +6,7 @@ from preprocessing_profiling.base import default
 
 
 def to_html(sample, stats_object):
-	error_distribution_dicts = []
-	for strategy in stats_object['classifications']:
-		error_distribution_dicts.append(stats_object['classifications'][strategy]['errorDistributionDict'])
-		error_distribution_dicts[-1]['strategy'] = stats_object['classifications'][strategy]['stratName']
-	
-	info_html = templates.template('info').render(sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']), generated_missing_values = stats_object['generated_missing_values'], error_distribution_dicts = error_distribution_dicts)
+	info_html = templates.template('info').render(sample_table_html=sample.to_html(classes="sample"), missingMatrix = missing_matrix(stats_object['dataframe']), generated_missing_values = stats_object['generated_missing_values'])
 	
 	overview_rows_html = ""
 	for strategy in stats_object['classifications']:
@@ -24,9 +19,16 @@ def to_html(sample, stats_object):
 		count += 1
 		if(count == 4):
 			classifications_html += templates.template('more_classifications_header').render()
-		stats_object['classifications'][strategy]['errorDistributionDict'] = json.dumps(stats_object['classifications'][strategy]['errorDistributionDict'], default = default)
-		classifications_html += templates.template('classification').render(classification = stats_object['classifications'][strategy])
+		classification = stats_object['classifications'][strategy].copy()
+		classification['errorDistributionDict'] = json.dumps(stats_object['classifications'][strategy]['errorDistributionDict'], default = default)
+		classifications_html += templates.template('classification').render(classification = classification)
 	if(count >=4):
 		classifications_html += templates.template('more_classifications_footer').render()
 	
-	return templates.template('base').render(info_html = info_html, overview_html = overview_html, classifications_html = classifications_html)
+	error_distribution_dicts = []
+	for strategy in stats_object['classifications']:
+		error_distribution_dicts.append(stats_object['classifications'][strategy]['errorDistributionDict'])
+		error_distribution_dicts[-1]['strategy'] = stats_object['classifications'][strategy]['stratName']
+	diving_html = templates.template('diving').render(error_distribution_dicts = error_distribution_dicts)
+	
+	return templates.template('base').render(info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html)
