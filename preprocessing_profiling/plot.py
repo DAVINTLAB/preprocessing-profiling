@@ -172,7 +172,7 @@ def correlation_matrix(corrdf, title, **kwargs):
 	plt.close(matrix_image.figure)
 	return result_string
 
-def missing_matrix(df):
+def missing_matrix(df, predictions = False):
 	"""Plot a missingno matrix
 
 	Parameters
@@ -186,7 +186,10 @@ def missing_matrix(df):
 		The resulting image encoded as a string.
 	"""
 	imgdata = BytesIO()
-	plot = msno.matrix(df)
+	if(predictions):
+		plot = msno.matrix(df, predictions = True)
+	else:
+		plot = msno.matrix(df)
 	plot.figure.savefig(imgdata)
 	imgdata.seek(0)
 	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))

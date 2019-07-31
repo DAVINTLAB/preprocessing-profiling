@@ -29,6 +29,11 @@ def to_html(sample, stats_object):
 	for strategy in stats_object['classifications']:
 		error_distribution_dicts.append(stats_object['classifications'][strategy]['errorDistributionDict'])
 		error_distribution_dicts[-1]['strategy'] = stats_object['classifications'][strategy]['stratName']
-	diving_html = templates.template('diving').render(error_distribution_dicts = error_distribution_dicts)
+	try:
+		missingMatrix = missing_matrix(stats_object['test_results'], predictions=True)
+	except:
+		missingMatrix = missing_matrix(stats_object['test_results'])
+	
+	diving_html = templates.template('diving').render(error_distribution_dicts = error_distribution_dicts, missingMatrix = missingMatrix)
 	
 	return templates.template('base').render(info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html)

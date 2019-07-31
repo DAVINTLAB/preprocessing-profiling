@@ -34,7 +34,7 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	@param classes: contains the list of classes/labels   
 	
 	@return: none (it is using print + yellowbrick plot)
-	'''	
+	'''
 	
 	result ={}
 	
@@ -211,7 +211,7 @@ def get_ComparisonDecisionTree(dataset):
 	#---------------------------------------------------------------------------
 	imp1 = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
 	x_train1 = pd.DataFrame(imp1.fit_transform(x_train)) # Rever!! pq transforma pandas?
-	x_test1 = pd.DataFrame(imp1.fit_transform(x_test)) 
+	x_test1 = pd.DataFrame(imp1.fit_transform(x_test))
 	classifications['constant'] = get_classificationReportDecisionTree(x_train1, x_test1, y_train, y_test, classes)
 	classifications['constant']['stratName'] = "Constant Imputation (= zero)"
 	classifications['constant']['stratCode'] = "1"
@@ -254,7 +254,13 @@ def get_ComparisonDecisionTree(dataset):
 	df = pd.DataFrame(X_missing)
 	df['y'] = y_missing
 	generated_missing_values = not is_missing
-	return classifications, df, generated_missing_values
+	model=tree.tree.DecisionTreeClassifier()
+	model.fit(x_train1, y_train)
+	y_pred = model.predict(x_test1)
+	test_results = pd.DataFrame(x_test)
+	test_results['y'] = y_test
+	test_results['yPred'] = y_pred
+	return classifications, df, generated_missing_values, test_results
 
 def describe(df):
 
@@ -275,10 +281,11 @@ def describe(df):
 	# Clearing the cache before computing stats
 	base.clear_cache()
 	
-	classifications, df_missing, generated_missing_values = get_ComparisonDecisionTree(df)
+	classifications, df_missing, generated_missing_values, test_results = get_ComparisonDecisionTree(df)
 
 	return {
 		'dataframe': df_missing,
 		'classifications': classifications,
-		'generated_missing_values': generated_missing_values
+		'generated_missing_values': generated_missing_values,
+		'test_results': test_results
 	}
