@@ -1,6 +1,18 @@
 <script>
 	function plotSankey(data, svg) {
 		require(['d3', 'sankey'], function(d3, d3sankey){
+			var tooltip = d3.select("body")
+				.append("div")
+				.style("position", "absolute")
+				.style("z-index", "10")
+				.style("visibility", "hidden")
+				.style("background-color", "white")
+				.style("border-radius", "3px")
+				.style("border-style", "solid")
+				.style("border-color", "black")
+				.style("border-width", "thin")
+				.style("padding", "2px");
+			
 			var margin = {left: 80, right: 80};
 			var height = 300;
 			var width = 400;
@@ -123,7 +135,18 @@
 		
 	function plotMultiSankey(data, svg) {
 		require(['d3', 'sankey'], function(d3, d3sankey){
-			var margin = {left: 40, right: 40};
+			var tooltip = d3.select("body")
+				.append("div")
+				.style("position", "absolute")
+				.style("z-index", "10")
+				.style("visibility", "hidden")
+				.style("background-color", "white")
+				.style("border-radius", "3px")
+				.style("border-style", "solid")
+				.style("border-color", "black")
+				.style("border-width", "thin")
+				.style("padding", "2px");
+			var margin = {left: 55, right: 40};
 			var height = 150;
 			var width = 100;
 			var nodeWidth = 5;
@@ -148,7 +171,7 @@
 				svg.append("text")
 					.text(data[i].strategy)
 					.attr("x", height * (i + 0.5))
-					.attr("y", margin.right + width + 11)
+					.attr("y", margin.right + width + 25)
 					.attr("font-size", 10)
 					.attr("font-family", "sans-serif")
 					.attr("text-anchor", "middle");
@@ -173,8 +196,21 @@
 					.attr("height", d => d.y1 - d.y0)
 					.attr("width", d => d.x1 - d.x0)
 					.attr("fill", d => "#777")
-					.append("title")
-					.text(d => `${d.name}\n${d.value}`);
+					.on("mouseover", d => tooltip.style("visibility", "visible").html(d.name+"<br/>"+d.value))
+					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+				
+				svg.append("g")
+					.selectAll("text")
+					.data(nodes)
+					.enter()
+					.append("text")
+					.text(d => d.name)
+					.attr("x", d => ((d.y0 + d.y1)/2))
+					.attr("y", function(d) {if(d.targetLinks.length == 0){return margin.right + width + 6}else{return margin.right - 1}})
+					.attr("font-size", 10)
+					.attr("font-family", "sans-serif")
+					.attr("text-anchor", "middle");
 				
 				var link = diagram.append("g")
 					.attr("fill", "none")
@@ -194,24 +230,27 @@
 						return "#e6ac00";
 					})
 					.attr("stroke-width", d => Math.max(1, d.width));
-				link.append("title")
-					.text(d => `${d.source.name} → ${d.target.name}\n${parseFloat(((d.value / d.source.value) * 100).toFixed(2))}%`);
+				link.on("mouseover", d => tooltip.style("visibility", "visible").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
+					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
 			}
 			
 			svg.append("text")
 				.text("Actual Class")
 				.attr("x", (height * data.length)/2)
-				.attr("y", margin.right/2 + 7)
+				.attr("y", 20)
 				.attr("font-size", 14)
 				.attr("font-family", "sans-serif")
-				.attr("text-anchor", "middle");
+				.attr("text-anchor", "middle")
+				.attr("font-weight", "bold");
 			svg.append("text")
 				.text("Predicted Class")
 				.attr("x", (height * data.length)/2)
-				.attr("y", margin.right + width + margin.left/2 + 7)
+				.attr("y", margin.right + width + margin.left - 6)
 				.attr("font-size", 14)
 				.attr("font-family", "sans-serif")
-				.attr("text-anchor", "middle");
+				.attr("text-anchor", "middle")
+				.attr("font-weight", "bold");
 			
 			diagram.attr("transform", "rotate(-90) translate("+(width + margin.left + margin.right)*-1+" 0)");
 			
