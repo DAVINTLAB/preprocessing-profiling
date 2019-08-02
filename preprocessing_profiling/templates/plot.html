@@ -152,10 +152,12 @@
 			var nodeWidth = 5;
 			var nodePadding = 10;
 			var sankeyPadding = 10;
-			var diagram = svg.append("g");
+			var all = svg.append("g")
+			var diagram = all.append("g");
+			var scale = 1.2
 			
 			diagram.append("rect")
-				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75)
+				.attr("x", nodePadding/4)
 				.attr("y", nodePadding/4)
 				.attr("width", nodeWidth + nodePadding/2)
 				.attr("height", height * data.length - nodePadding/2)
@@ -163,12 +165,12 @@
 			
 			for(var i = 0; i < data.length; i++) {
 				diagram.append("rect")
-					.attr("x", nodePadding/4 + margin.left)
+					.attr("x", width - nodeWidth - nodePadding*0.75)
 					.attr("y", height * i + nodePadding/4)
 					.attr("width", nodeWidth + nodePadding/2)
 					.attr("height", height - nodePadding/2)
 					.attr("fill", "#ddd");
-				svg.append("text")
+				all.append("text")
 					.text(data[i].strategy)
 					.attr("x", height * (i + 0.5))
 					.attr("y", margin.right + width + 25)
@@ -177,7 +179,7 @@
 					.attr("text-anchor", "middle");
 				
 				var sankey = d3sankey.sankey()
-					.extent([[nodePadding/2 + margin.left, nodePadding/2 + height * i + sankeyPadding], [width + margin.left - nodePadding/2, height * (i + 1) - nodePadding/2 - sankeyPadding]])
+					.extent([[nodePadding/2, nodePadding/2 + height * i + sankeyPadding], [width - nodePadding/2, height * (i + 1) - nodePadding/2 - sankeyPadding]])
 					.nodeWidth(nodeWidth)
 					.nodePadding(nodePadding)
 					.nodeSort(null);
@@ -200,17 +202,20 @@
 					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
 					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 				
-				svg.append("g")
+				all.append("g")
 					.selectAll("text")
 					.data(nodes)
 					.enter()
 					.append("text")
-					.text(d => d.name)
+					.text(function(d) {if(d.name.length > 4){return d.name.substr(0, 3) + ".";}else{return d.name;}})
 					.attr("x", d => ((d.y0 + d.y1)/2))
-					.attr("y", function(d) {if(d.targetLinks.length == 0){return margin.right + width + 6}else{return margin.right - 1}})
+					.attr("y", function(d) {if(d.targetLinks.length != 0){return margin.right + width + 6}else{return margin.right - 1}})
 					.attr("font-size", 10)
 					.attr("font-family", "sans-serif")
-					.attr("text-anchor", "middle");
+					.attr("text-anchor", "middle")
+					.on("mouseover", d => tooltip.style("visibility", "visible").html(d.name+"<br/>"+d.value))
+					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 				
 				var link = diagram.append("g")
 					.attr("fill", "none")
@@ -235,7 +240,7 @@
 					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
 			}
 			
-			svg.append("text")
+			all.append("text")
 				.text("Actual Class")
 				.attr("x", (height * data.length)/2)
 				.attr("y", 20)
@@ -243,7 +248,7 @@
 				.attr("font-family", "sans-serif")
 				.attr("text-anchor", "middle")
 				.attr("font-weight", "bold");
-			svg.append("text")
+			all.append("text")
 				.text("Predicted Class")
 				.attr("x", (height * data.length)/2)
 				.attr("y", margin.right + width + margin.left - 6)
@@ -252,10 +257,11 @@
 				.attr("text-anchor", "middle")
 				.attr("font-weight", "bold");
 			
-			diagram.attr("transform", "rotate(-90) translate("+(width + margin.left + margin.right)*-1+" 0)");
+			diagram.attr("transform", "scale(-1, 1) translate(0 "+margin.right+") rotate(90)");
+			all.attr("transform", "scale("+scale+", "+scale+")");
 			
-			svg.attr("width", height * data.length)
-				.attr("height", width + margin.left + margin.right);
+			svg.attr("width", (height * data.length) * scale)
+				.attr("height", (width + margin.left + margin.right) * scale);
 		});
 	}
 </script>
