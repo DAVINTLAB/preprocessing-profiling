@@ -163,7 +163,7 @@
 				.attr("height", height * data.length - nodePadding/2)
 				.attr("fill", "#ddd");
 			
-			for(var i = 0; i < data.length; i++) {
+			for(let i = 0; i < data.length; i++) {
 				diagram.append("rect")
 					.attr("x", width - nodeWidth - nodePadding*0.75)
 					.attr("y", height * i + nodePadding/4)
@@ -225,7 +225,6 @@
 					.enter()
 					.append("g")
 					.style("mix-blend-mode", "multiply");
-				
 				link.append("path")
 					.attr("d", d3sankey.sankeyLinkHorizontal())
 					.attr("stroke", function(d) {
@@ -237,7 +236,8 @@
 					.attr("stroke-width", d => Math.max(1, d.width));
 				link.on("mouseover", d => tooltip.style("visibility", "visible").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
 					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+					.on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+					.on("click", function(d) {d3.selectAll("#classFlow"+id+" table").style("display", "none");d3.select("#table"+d.source.index+"-"+d.target.index+"-"+i+"-"+id).style("display", "block");});
 			}
 			
 			all.append("text")

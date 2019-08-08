@@ -20,10 +20,28 @@
 			<div role="tabpanel" class="tab-pane active" id="classFlow">
 				<svg>
 					<script>
-						require(['d3', 'sankey'], function(d3, d3sankey){
+						require(['d3'], function(d3){
 							var data = {{ error_distribution_dicts }};
 							var svg = d3.select("#classFlow"+id+" svg");
 							plotMultiSankey(data, svg);
+							for(var i = 0; i < data.length; i++) {
+								for(var j = 0; j < data[i].links.length; j++) {
+									var table = d3.select("#classFlow"+id)
+										.append("table");
+									table.attr("border", 1)
+										.attr("class", "dataframe sample")
+										.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
+										.style("display", "none");
+									table = table.append("tbody");
+									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
+										var tr = table.append("tr");
+										for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
+											tr.append("td")
+												.text(data[i].links[j].occurences[k][l]);
+										}
+									}
+								}
+							}
 						});
 					</script>
 				</svg>

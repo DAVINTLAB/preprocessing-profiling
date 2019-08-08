@@ -101,10 +101,12 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 		nodes.append({"name": e})
 	nodes += nodes
 	links = []
+	y_pred = cp.estimator.predict(x_test)
+	
 	for i in range(0, len(cp.predictions_)):
 		for j in range(0, len(cp.predictions_[i])):
 			if cp.predictions_[i][j] != 0:
-				links.append({"source": i, "target": len(cp.predictions_) + j, "value": cp.predictions_[i][j]})
+				links.append({"source": i, "target": len(cp.predictions_) + j, "value": cp.predictions_[i][j], "occurences": x_test[(y_test == nodes[i]['name']) & (y_pred == nodes[len(cp.predictions_) + j]['name'])].values.tolist()})
 	result['errorDistributionDict'] = {"nodes": nodes, "links": links}
 	
 	#Showing the confusion matrix (Chart) ***Alternative to YellowBrick code above
