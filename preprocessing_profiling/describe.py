@@ -36,8 +36,6 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	@return: none (it is using print + yellowbrick plot)
 	'''
 	
-	result ={}
-	
 	#Creating the model
 	model=tree.tree.DecisionTreeClassifier()
 	model.fit(x_train, y_train)
@@ -46,8 +44,8 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	y_pred = model.predict(x_test)
 
 	#Showing the Classification Report (Text)
+	result ={}
 	result['classificationReportText'] = classification_report(y_test, y_pred)
-	
 	result['accuracy'] = round(accuracy_score(y_test, y_pred) * 100, 1)
 	
 	'''
@@ -60,7 +58,6 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	
 	#Showing the Classification Report (Chart)
 	visualizer = ClassificationReport(model, classes=classes, cmap='RdBu', support=True)
-	visualizer.fit(x_train, y_train)  # Fit the visualizer and the model
 	visualizer.score(x_test, y_test)  # Evaluate the model on the test data
 	result['classificationReport'] = yellowbrick_to_img(visualizer)
 	plt.close()
@@ -68,14 +65,12 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	# The ConfusionMatrix visualizer taxes a model
 	#cm = ConfusionMatrix(model, classes=classes, label_encoder={0: 'setosa', 1: 'versicolor', 2: 'virginica'})
 	cm = ConfusionMatrix(model, classes=classes, cmap='RdBu')
-	cm.fit(x_train, y_train)  # Fit the visualizer and the model
 	cm.score(x_test, y_test)  # Evaluate the model on the test data
 	result['confusionMatrix'] = yellowbrick_to_img(cm, rearrange_x_labels = True)
 	plt.close()
 	
 	# The Class Prediction Error Distribution
 	cp = ClassPredictionError(model, classes=classes)
-	cp.fit(x_train, y_train)  # Fit the visualizer and the model
 	cp.score(x_test, y_test)  # Evaluate the model on the test data
 	result['errorDistribution'] = yellowbrick_to_img(cp)
 	plt.close()
@@ -101,19 +96,12 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 		nodes.append({"name": e})
 	nodes += nodes
 	links = []
-	y_pred = cp.estimator.predict(x_test)
-	
 	for i in range(0, len(cp.predictions_)):
 		for j in range(0, len(cp.predictions_[i])):
 			if cp.predictions_[i][j] != 0:
 				links.append({"source": i, "target": len(cp.predictions_) + j, "value": cp.predictions_[i][j], "occurences": x_test[(y_test == nodes[i]['name']) & (y_pred == nodes[len(cp.predictions_) + j]['name'])].values.tolist()})
 	result['errorDistributionDict'] = {"nodes": nodes, "links": links}
 	
-	#Showing the confusion matrix (Chart) ***Alternative to YellowBrick code above
-	#print('--------------------------------------------------------------------------------')
-	#plot_confusion_matrix(y_test, y_pred, title='Confusion matrix, without normalization:')
-	#print(' ')
-	#plot_confusion_matrix(y_test, y_pred, normalize=True, title='Normalized confusion matrix:')
 	return result
 
 def get_ComparisonDecisionTree(dataset):
@@ -255,13 +243,19 @@ def get_ComparisonDecisionTree(dataset):
 	
 	df = pd.DataFrame(X_missing)
 	df['y'] = y_missing
+	
 	generated_missing_values = not is_missing
+	
 	model=tree.tree.DecisionTreeClassifier()
 	model.fit(x_train1, y_train)
 	y_pred = model.predict(x_test1)
-	test_results = pd.DataFrame(x_test)
-	test_results['y'] = y_test
-	test_results['yPred'] = y_pred
+	test_results = {"default": pd.DataFrame(x_test)}
+	test_results['default']['y'] = y_test
+	test_results['default']['yPred'] = y_pred
+	for classA in classes:
+		for classB in classes:
+			if classA != classB and np.any((test_results['default']['y'] == classA) & (test_results['default']['yPred'] == classB)):
+				test_results[str(classA)+"->"+str(classB)] = test_results['default'][((test_results['default']['y'] == classA) & (test_results['default']['yPred'] == classB))].append(test_results['default'][((test_results['default']['y'] != classA) | (test_results['default']['yPred'] != classB))], ignore_index=True)
 	return classifications, df, generated_missing_values, test_results
 
 def describe(df):

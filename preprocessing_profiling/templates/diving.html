@@ -47,7 +47,17 @@
 				</svg>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="matrix">
-				<img src="{{ missingMatrix }}" class="center-img">
+				<script>
+					require(['d3'], function(d3){
+						var matrixes = {{ missingMatrixes }}
+						var div = d3.select("#matrix"+id);
+						for(let i = 0; i < matrixes.length; i++) {
+							div.append("br");
+							div.append("a").text(matrixes[i].name).style("cursor", "pointer").on("click", function() {d3.select("#matrix"+id+" img").attr("src", matrixes[i].matrix)});
+						}
+						div.append("img").attr("src", matrixes[0].matrix);
+					});
+				</script>
 			</div>
 		</div>
 	</div>
