@@ -31,11 +31,10 @@ def to_html(sample, stats_object):
 		error_distribution_dicts[-1]['strategy'] = stats_object['classifications'][strategy]['stratName']
 	
 	missingMatrixes = []
-	try:
-		for k in stats_object['test_results']:
-			missingMatrixes.append({"name": k, "matrix": missing_matrix(stats_object['test_results'][k], predictions=True)})
-	except:
-		missingMatrixes = [{"name": "default", "matrix": missing_matrix(stats_object['test_results']['default'])}]
+	for strategy in stats_object['classifications']:
+		missingMatrixes.append({"name": stats_object['classifications'][strategy]['stratName'], "missingMatrixes": []})
+		for k in stats_object['classifications'][strategy]['test_results']:
+			missingMatrixes[-1]['missingMatrixes'].append({"name": k, "matrix": missing_matrix(stats_object['classifications'][strategy]['test_results'][k], predictions=True)})
 	
 	diving_html = templates.template('diving').render(error_distribution_dicts = error_distribution_dicts, missingMatrixes = json.dumps(missingMatrixes))
 	

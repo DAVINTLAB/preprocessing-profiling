@@ -48,6 +48,8 @@ def get_classificationReportDecisionTree(x_train, x_test, y_train, y_test, class
 	result['classificationReportText'] = classification_report(y_test, y_pred)
 	result['accuracy'] = round(accuracy_score(y_test, y_pred) * 100, 1)
 	
+	result['y_pred'] = y_pred
+	
 	'''
 		The yellowbrick_to_img and plt.close methods 
 		shouldn't be called from here. Unfortunately, 
@@ -246,17 +248,23 @@ def get_ComparisonDecisionTree(dataset):
 	
 	generated_missing_values = not is_missing
 	
-	model=tree.tree.DecisionTreeClassifier()
-	model.fit(x_train1, y_train)
-	y_pred = model.predict(x_test1)
-	test_results = {"default": pd.DataFrame(x_test)}
-	test_results['default']['y'] = y_test
-	test_results['default']['yPred'] = y_pred
-	for classA in classes:
-		for classB in classes:
-			if classA != classB and np.any((test_results['default']['y'] == classA) & (test_results['default']['yPred'] == classB)):
-				test_results[str(classA)+"->"+str(classB)] = test_results['default'][((test_results['default']['y'] == classA) & (test_results['default']['yPred'] == classB))].append(test_results['default'][((test_results['default']['y'] != classA) | (test_results['default']['yPred'] != classB))], ignore_index=True)
-	return classifications, df, generated_missing_values, test_results
+	for strategy in classifications:
+		y_pred = classifications[strategy]['y_pred']
+		if(strategy == "baseline"):
+			test_results = {"Original Dataset": pd.DataFrame(x_test0)}
+			test_results['Original Dataset']['y'] = y_testB
+			test_results['Original Dataset']['yPred'] = y_pred
+		else:
+			test_results = {"Original Dataset": pd.DataFrame(x_test)}
+			test_results['Original Dataset']['y'] = y_test
+			test_results['Original Dataset']['yPred'] = y_pred
+			
+		for classA in classes:
+			for classB in classes:
+				if classA != classB and np.any((test_results['Original Dataset']['y'] == classA) & (test_results['Original Dataset']['yPred'] == classB)):
+					test_results[str(classA)+"→"+str(classB)] = test_results['Original Dataset'][((test_results['Original Dataset']['y'] == classA) & (test_results['Original Dataset']['yPred'] == classB))].append(test_results['Original Dataset'][((test_results['Original Dataset']['y'] != classA) | (test_results['Original Dataset']['yPred'] != classB))], ignore_index=True)
+		classifications[strategy]['test_results'] = test_results
+	return classifications, df, generated_missing_values
 
 def describe(df):
 
@@ -277,11 +285,12 @@ def describe(df):
 	# Clearing the cache before computing stats
 	base.clear_cache()
 	
-	classifications, df_missing, generated_missing_values, test_results = get_ComparisonDecisionTree(df)
+	np.seterr(divide='ignore', invalid='ignore')
+	
+	classifications, df_missing, generated_missing_values = get_ComparisonDecisionTree(df)
 
 	return {
 		'dataframe': df_missing,
 		'classifications': classifications,
-		'generated_missing_values': generated_missing_values,
-		'test_results': test_results
+		'generated_missing_values': generated_missing_values
 	}
