@@ -300,6 +300,7 @@
 			var margin = {left: 80, right: 80};
 			var height = 300;
 			var width = 400;
+			var textSize = 14;
 			var nodeWidth = 5;
 			var nodePadding = 20;
 			var sankey = d3sankey.sankey()
@@ -328,14 +329,14 @@
 				.attr("x", nodePadding/4 + margin.left + (nodeWidth + nodePadding/2)/2)
 				.attr("y", height)
 				.attr("font-family", "sans-serif")
-				.attr("font-size", "10px")
+				.attr("font-size", textSize)
 				.text("Actual");
 			svg.append("text")
 				.attr("text-anchor", "middle")
 				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75 + (nodeWidth + nodePadding/2)/2)
 				.attr("y", height)
 				.attr("font-family", "sans-serif")
-				.attr("font-size", "10px")
+				.attr("font-size", textSize)
 				.text("Predicted");
 			
 			data = sankey(data);
@@ -375,8 +376,8 @@
 				.append("text")
 				.text(d => parseFloat(((d.value / d.source.value) * 100).toFixed(2)) + "%")
 				.attr("x", d => margin.left + nodePadding + nodeWidth)
-				.attr("y", d => d.y0 + 5)
-				.attr("font-size", 10)
+				.attr("y", d => d.y0 + textSize / 2)
+				.attr("font-size", textSize)
 				.attr("font-family", "sans-serif");
 			svg.append("g")
 				.selectAll("text")
@@ -386,8 +387,8 @@
 				.attr("text-anchor", "end")
 				.text(d => parseFloat(((d.value / d.target.value) * 100).toFixed(2)) + "%")
 				.attr("x", d => margin.left + width - nodePadding - nodeWidth)
-				.attr("y", d => d.y1 + 5)
-				.attr("font-size", 10)
+				.attr("y", d => d.y1 + textSize / 2)
+				.attr("font-size", textSize)
 				.attr("font-family", "sans-serif");
 			
 			link.append("path")
@@ -404,14 +405,13 @@
 				.text(d => `${d.source.name} → ${d.target.name}\n${d.value}`);
 
 			svg.append("g")
-				.style("font", "10px sans-serif")
+				.style("font", textSize + "px sans-serif")
 				.selectAll("text")
 				.data(nodes)
 				.enter()
 				.append("text")
 				.attr("x", d => d.x0 < width / 2 ? d.x1 - nodeWidth - nodePadding/2 : d.x0 + nodeWidth + nodePadding/2)
-				.attr("y", d => (d.y1 + d.y0) / 2)
-				.attr("dy", "0.35em")
+				.attr("y", d => (d.y1 + d.y0) / 2 + textSize / 2)
 				.attr("text-anchor", d => d.x0 < width / 2 ? "end" : "start")
 				.text(d => d.name);
 		});
