@@ -1,15 +1,52 @@
+<script>
+	require(['d3'], function(d3){
+		d3.select("#miniClassificationReport{{ classification['strat_code'] }}").attr("id", "miniClassificationReport{{ classification['strat_code'] }}-"+id);
+		d3.select("#miniConfusionMatrix{{ classification['strat_code'] }}").attr("id", "miniConfusionMatrix{{ classification['strat_code'] }}-"+id);
+		d3.select("#miniErrorDistribution{{ classification['strat_code'] }}").attr("id", "miniErrorDistribution{{ classification['strat_code'] }}-"+id);
+	});
+</script>
 <tr>
-	<th>{{ content['stratName'] }}</th>
-	<td>
-		<img src="{{ content['classificationReport'] }}" class="center-img">
+	<th>{{ classification['strat_name'] }}</th>
+	<td width="262px">
+		<div id="miniClassificationReport{{ classification['strat_code'] }}" style="background-color:white">
+			<svg>
+				<script>
+					require(['d3'], function(d3){
+						var svg = d3.select("#miniClassificationReport{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['classification_report'] }};
+						plotClassificationReport(data, svg, 250);
+					});
+				</script>
+			</svg>
+		</div>
+	</td>
+	<td width="262px">
+		<div id="miniConfusionMatrix{{ classification['strat_code'] }}" style="background-color:white">
+			<svg>
+				<script>
+					require(['d3'], function(d3){
+						var svg = d3.select("#miniConfusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['error_distribution_dict'] }};
+						plotConfusionMatrix(data, svg, 250);
+					});
+				</script>
+			</svg>
+		</div>
+	</td>
+	<td width="262px">
+		<div id="miniErrorDistribution{{ classification['strat_code'] }}" style="background-color:white">
+			<svg>
+				<script>
+					require(['d3'], function(d3){
+						var svg = d3.select("#miniErrorDistribution{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['error_distribution_dict'] }};
+						plotErrorDistribution(data, svg, 250);
+					});
+				</script>
+			</svg>
+		</div>
 	</td>
 	<td>
-		<img src="{{ content['confusionMatrix'] }}" class="center-img">
-	</td>
-	<td>
-		<img src="{{ content['errorDistribution'] }}" class="center-img">
-	</td>
-	<td>
-		<p class="h4">{{ content['accuracy'] }}%</p>
+		<p class="h4">{{ classification['accuracy'] }}%</p>
 	</td>
 </tr>

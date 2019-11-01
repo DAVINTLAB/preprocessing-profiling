@@ -49,7 +49,7 @@
 			<div role="tabpanel" class="tab-pane" id="matrix">
 				<script>
 					require(['d3'], function(d3){
-						var matrixes = {{ missingMatrixes }};
+						var matrixes = {{ missing_matrixes }};
 						var select2 = [];
 						var outerDiv = d3.select("#matrix"+id);
 						var div = outerDiv.append("div");
@@ -64,7 +64,7 @@
 						div.append("p").text("Order Lines by: ").style("margin-top", "20px").style("font-size", "12px");
 						for(let i = 0; i < matrixes.length; i++) {
 							select2.push(div.append("select").style("font-size", "12px").style("width", "202px").style("visibility", "hidden").on("change", function() {
-								d3.select("#matrix"+id+" img").attr("src", matrixes[i].missingMatrixes[this.selectedIndex].matrix);
+								d3.select("#matrix"+id+" img").attr("src", matrixes[i].missingMatrixes[this.selectedIndex].image);
 							}));
 							select1.append("option").text(matrixes[i].name).attr("value", i);
 							for(let j = 0; j < matrixes[i].missingMatrixes.length; j++) {
@@ -72,7 +72,7 @@
 							}
 						}
 						select2[0].style("visibility", "visible").style("float", "left");
-						outerDiv.append("img").attr("src", matrixes[0].missingMatrixes[0].matrix);
+						outerDiv.append("img").attr("src", matrixes[0].missingMatrixes[0].image);
 						outerDiv.append("p").style("font-size", "10px").text("Class Prediction Error is presented as Actual Class → Wrong Predicted Class")
 					});
 				</script>

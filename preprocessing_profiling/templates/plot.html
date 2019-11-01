@@ -1,6 +1,283 @@
 <script>
+	function plotErrorDistribution(data, svg, width) {
+		require(['d3'], function(d3) {
+			function mostPredicted(data) {
+				var sums = Array(data.nodes.length / 2).fill(0);
+				for(var i = 0; i < data.links.length; i++) {
+					sums[data.links[i].target - data.nodes.length / 2] += data.links[i].value;
+				}
+				var highest = 0;
+				for(var i = 0; i < sums.length; i++) {
+					if(sums[i] > sums[highest]) {
+						highest = i;
+					}
+				}
+				return sums[highest];
+			}
+			
+			var spectral = (t) => d3.interpolateSpectral((t / ((data.nodes.length / 2) - 1)) * 0.8 + 0.1);
+			
+			var scale = width / 1000;
+			width = 1000;
+			var height = 750;
+			svg.attr("width", width * scale)
+				.attr("height", height * scale);
+			var all = svg.append("g")
+				.attr("transform", "scale("+scale+", "+scale+")");
+			
+			var margin = {"top": 50, "left": 100, "bottom": 100, "right": 200};
+			var textSize = 20;
+			
+			all.append("text")
+				.text("Predicted Class")
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", width / 2)
+				.attr("y", height - 3);
+			all.append("text")
+				.text("Actual Class")
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", textSize + 3)
+				.attr("y", height / 2)
+				.attr("transform", "rotate("+(-90)+", "+(textSize + 3)+", "+(height / 2)+")");
+			
+			var y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, mostPredicted(data)]);
+			all.append("g")
+				.attr("transform", "translate("+margin.left+",0)")
+				.call(d3.axisLeft(y));
+			
+			var bar = {"width": ((width - margin.left - margin.right)/ (data.nodes.length / 2)) * 0.8, "margin": ((width - margin.left - margin.right)/ (data.nodes.length / 2)) * 0.1}
+			
+			var sums = Array(data.nodes.length / 2).fill(0);
+			for(var i = 0; i < data.links.length; i++) {
+				var column = data.links[i].target - (data.nodes.length / 2);
+				all.append("rect")
+					.attr("x", margin.left + bar.width * column + bar.margin * (2 * column + 1))
+					.attr("y", y(sums[column] + data.links[i].value))
+					.attr("width", bar.width)
+					.attr("height", y(0) - y(data.links[i].value))
+					.attr("fill", spectral(data.links[i].source));
+				sums[column] += data.links[i].value;
+			}
+			
+			for(var i = 0; i < data.nodes.length / 2; i++) {
+				all.append("text")
+					.text(data.nodes[i].name)
+					.attr("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize)
+					.attr("x", margin.left + ((2 * i) + 1) * bar.margin + (i + 0.5) * bar.width)
+					.attr("y", height - margin.bottom + textSize + 20);
+				
+				all.append("rect")
+					.attr("x", (width - margin.right) + 20)
+					.attr("y", height / 2 + i * (textSize + 20))
+					.attr("width", 40)
+					.attr("height", textSize)
+					.attr("fill", spectral(i));
+				
+				all.append("text")
+					.text(data.nodes[i].name)
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize)
+					.attr("x", (width - margin.right) + 65)
+					.attr("y", height / 2 + i * (textSize + 20) + textSize - 3);
+			}
+		});
+	}
+	
+	function plotClassificationReport(data, svg, width) {
+		require(['d3'], function(d3) {
+			delete data["macro avg"];
+			delete data["micro avg"];
+			delete data["weighted avg"];
+			
+			var scale = width / 1000;
+			width = 1000;
+			var height = 750;
+			svg.attr("width", width * scale)
+				.attr("height", height * scale);
+			var all = svg.append("g")
+				.attr("transform", "scale("+scale+", "+scale+")");
+			
+			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 150};
+			var textSize = 20;
+			
+			var rwb = d3.interpolateRdBu;
+			var rwbLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+			rwbLegend.element = all.append("g");
+			for(var i = 0; i < rwbLegend.nColors; i++) {
+				rwbLegend.element.append("rect")
+					.attr("x", rwbLegend.x)
+					.attr("y", rwbLegend.yScale((i+1) / rwbLegend.nColors))
+					.attr("width", rwbLegend.width)
+					.attr("height", rwbLegend.height / rwbLegend.nColors)
+					.attr("fill", rwb(i / (rwbLegend.nColors - 1)));
+			}
+			rwbLegend.element.append("g")
+				.attr("transform", "translate("+(rwbLegend.x + rwbLegend.width)+",0)")
+				.call(d3.axisRight(rwbLegend.yScale));
+			
+			var cell = {"height": (height - margin.top - margin.bottom) / Object.keys(data).length, "width": (width - margin.left - margin.right) / 4}
+			
+			var i = 0;
+			for(stat in data[Object.keys(data)[0]]) {
+				all.append("text")
+					.text(stat)
+					.attr("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize)
+					.attr("x", margin.left + (i + 0.5) * cell.width)
+					.attr("y", margin.top + Object.keys(data).length * cell.height + textSize + 20);
+				i++;
+			}
+			
+			var i = 0;
+			for(var classification in data) {
+				all.append("text")
+					.text(classification)
+					.attr("text-anchor", "end")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize)
+					.attr("x", margin.left - 20)
+					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+				var j = 0;
+				for(var stat in data[classification]) {
+					all.append("rect")
+						.attr("x", margin.left + j * cell.width)
+						.attr("y", margin.top + i * cell.height)
+						.attr("width", cell.width)
+						.attr("height", cell.height)
+						.attr("fill", function() {if(stat != "support"){return rwb(data[classification][stat]);} else {return "#ddd";}});
+					all.append("text")
+						.text(parseFloat((data[classification][stat]).toFixed(2)))
+						.attr("text-anchor", "middle")
+						.attr("font-family", "sans-serif")
+						.attr("font-size", textSize)
+						.attr("x", margin.left + (j + 0.5) * cell.width)
+						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+					j++;
+				}
+				i++;
+			}
+		});
+	}
+	
+	function plotConfusionMatrix(data, svg, width) {
+		require(['d3'], function(d3) {			
+			var scale = width / 1000;
+			width = 1000;
+			var height = 750;
+			svg.attr("width", width * scale)
+				.attr("height", height * scale);
+			var all = svg.append("g")
+				.attr("transform", "scale("+scale+", "+scale+")");
+			
+			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 160};
+			var textSize = 20;
+			
+			all.append("text")
+				.text("Predicted Class")
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", width / 2)
+				.attr("y", height - 3);
+			all.append("text")
+				.text("Actual Class")
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", textSize + 3)
+				.attr("y", height / 2)
+				.attr("transform", "rotate("+(-90)+", "+(textSize + 3)+", "+(height / 2)+")");
+			
+			var links = data.links;
+			var nodes = data.nodes;
+			
+			var matrixSize = nodes.length / 2;
+			var matrix = [];
+			for(var i = 0; i < matrixSize; i++) {
+				matrix.push(Array(matrixSize).fill(0));
+			}
+			for(var i = 0; i < links.length; i++) {
+				matrix[links[i].source][links[i].target - matrixSize] = links[i].value;
+			}
+			
+			var reds = d3.interpolateReds;
+			var redsLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+			redsLegend.element = all.append("g");
+			for(var i = 0; i < redsLegend.nColors; i++) {
+				redsLegend.element.append("rect")
+					.attr("x", redsLegend.x)
+					.attr("y", redsLegend.yScale((i+1) / redsLegend.nColors))
+					.attr("width", redsLegend.width)
+					.attr("height", redsLegend.height / redsLegend.nColors)
+					.attr("fill", reds(i / (redsLegend.nColors - 1)));
+			}
+			redsLegend.element.append("g")
+				.attr("transform", "translate("+(redsLegend.x + redsLegend.width)+",0)")
+				.call(d3.axisRight(redsLegend.yScale));
+			var blues = d3.interpolateBlues;
+			var bluesLegend = {"x": (width - margin.right) + 50 + redsLegend.width, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+			bluesLegend.element = all.append("g");
+			for(var i = 0; i < bluesLegend.nColors; i++) {
+				bluesLegend.element.append("rect")
+					.attr("x", bluesLegend.x)
+					.attr("y", bluesLegend.yScale((i+1) / bluesLegend.nColors))
+					.attr("width", bluesLegend.width)
+					.attr("height", bluesLegend.height / bluesLegend.nColors)
+					.attr("fill", blues(i / (bluesLegend.nColors - 1)));
+			}
+			bluesLegend.element.append("g")
+				.attr("transform", "translate("+(bluesLegend.x + bluesLegend.width)+",0)")
+				.call(d3.axisRight(bluesLegend.yScale));
+			
+			var cell = {"height": (height - margin.top - margin.bottom) / matrixSize, "width": (width - margin.left - margin.right) / matrixSize}
+			
+			for(var i = 0; i < matrixSize; i++) {
+				all.append("text")
+					.text(nodes[i].name)
+					.attr("text-anchor", "end")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize)
+					.attr("x", margin.left - 20)
+					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+				all.append("text")
+					.text(nodes[i].name)
+					.attr("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize)
+					.attr("x", margin.left + (i + 0.5) * cell.width)
+					.attr("y", margin.top + matrixSize * cell.height + textSize + 20);
+			}
+			
+			for(var i = 0; i < matrixSize; i++) {
+				for(var j = 0; j < matrixSize; j++) {
+					all.append("rect")
+						.attr("x", margin.left + j * cell.width)
+						.attr("y", margin.top + i * cell.height)
+						.attr("width", cell.width)
+						.attr("height", cell.height)
+						.attr("fill", function() {var total = matrix[i].reduce((sum, element) => sum + element); if(i==j) {return blues(matrix[i][j] / total);} if(matrix[i][j] == 0) {return "#fff";} return reds(matrix[i][j] / total);});
+					
+					all.append("text")
+						.text(matrix[i][j])
+						.attr("text-anchor", "middle")
+						.attr("font-family", "sans-serif")
+						.attr("font-size", textSize)
+						.attr("x", margin.left + (j + 0.5) * cell.width)
+						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+				}
+			}
+		});
+	}
+	
 	function plotSankey(data, svg) {
-		require(['d3', 'sankey'], function(d3, d3sankey){
+		require(['d3', 'sankey'], function(d3, d3sankey) {
 			var tooltip = d3.select("body")
 				.append("div")
 				.style("position", "absolute")
@@ -134,7 +411,7 @@
 	}
 		
 	function plotMultiSankey(data, svg) {
-		require(['d3', 'sankey'], function(d3, d3sankey){
+		require(['d3', 'sankey'], function(d3, d3sankey) {
 			var tooltip = d3.select("body")
 				.append("div")
 				.style("position", "absolute")

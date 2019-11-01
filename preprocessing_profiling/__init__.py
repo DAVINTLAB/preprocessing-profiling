@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import codecs
-from io import StringIO
 import pandas as pd
-import numpy as np
-import preprocessing_profiling.templates as templates
-from .describe import describe
-from .report import to_html
+from .classification import strategy_comparison
+from .html import to_html
+from .base import infer_missing_entries
+from .plot import generate_report_visualizations
 
 NO_OUTPUTFILE = "preprocessing_profiling.no_outputfile"
 DEFAULT_OUTPUTFILE = "preprocessing_profiling.default_outputfile"
@@ -15,42 +14,22 @@ class ProfileReport(object):
 	file = None
 
 	def __init__(self, df, **kwargs):
-		missingCount = {'?' : 0, 'na' : 0, 'n/a' : 0, 'empty' : 0, 'null' : 0}
+		if not isinstance(df, pd.DataFrame):
+			raise TypeError("df must be of type pandas.DataFrame")
+		if df.empty:
+			raise ValueError("df can not be empty")
+		
 		if kwargs.get("format_missing_values", True):
-			is_datetime = []
-			for column in df:
-				if(type(df[column][0]) == str):
-					df[column] = df[column].str.strip()
-			for column in df:
-				for j in range(len(df[column])):
-					if(type(df[column][j]) == str):
-						if(df[column][j] == "?"):
-							missingCount['?'] += 1
-							df.loc[j, column] = np.nan
-						elif(df[column][j].lower() == "na"):
-							missingCount['na'] += 1
-							df.loc[j, column] = np.nan
-						elif(df[column][j].lower() == "n/a"):
-							missingCount['n/a'] += 1
-							df.loc[j, column] = np.nan
-						elif(df[column][j].lower() == "empty"):
-							missingCount['empty'] += 1
-							df.loc[j, column] = np.nan
-						elif(df[column][j].lower() == "null"):
-							missingCount['null'] += 1
-							df.loc[j, column] = np.nan
-			df = pd.read_csv(StringIO(df.to_csv(index=False, date_format='%Y-%m-%d %H:%M:%S')), parse_dates=list(df.select_dtypes(include=[np.datetime64]).columns))
+			df = infer_missing_entries(df)
 		if "format_missing_values" in kwargs:
 			kwargs.pop("format_missing_values")
+
+		report = strategy_comparison(df, **kwargs)
+		report = generate_report_visualizations(report)
 		
-		sample = kwargs.get('sample', df.head())
+		self.html = to_html(report)
 
-		description_set = describe(df, **kwargs)
-
-		self.html = to_html(sample,
-							description_set)
-
-		self.description_set = description_set
+		self.description_set = report
 		
 
 	def get_description(self):

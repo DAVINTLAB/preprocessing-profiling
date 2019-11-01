@@ -4,13 +4,15 @@
 import base64
 from distutils.version import LooseVersion
 import preprocessing_profiling.base as base
+from pkg_resources import resource_filename
 import matplotlib
 import numpy as np
 from matplotlib.colors import ListedColormap
 import missingno as msno
-# Fix #68, this call is not needed and brings side effects in some use cases
-# Backend name specifications are not case-sensitive; e.g., ‘GTKAgg’ and ‘gtkagg’ are equivalent.
-# See https://matplotlib.org/faq/usage_faq.html#what-is-a-backend
+from yellowbrick.classifier import PrecisionRecallCurve
+from sklearn.model_selection import train_test_split
+from sklearn import tree
+
 BACKEND = matplotlib.get_backend()
 if matplotlib.get_backend().lower() != BACKEND.lower():
 	# If backend is not set properly a call to describe will hang
@@ -258,3 +260,50 @@ def missing_dendrogram(df):
 	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))
 	plt.close(plot.figure)
 	return result_string
+
+def generate_report_visualizations(report):
+	# Receives a report and returns it with all the matplotlib based visualizations
+	
+	try:
+		# reset matplotlib style before use
+		# Fails in matplotlib 1.4.x so plot might look bad
+		matplotlib.style.use("default")
+	except:
+		pass
+	matplotlib.style.use(resource_filename(__name__, "preprocessing_profiling.mplstyle"))
+	
+	report['missing_matrix'] = missing_matrix(report['dataframe']['modified'])
+	
+	# Generate the missing matrixes with the color coded prediction errors. For each strategy, a matrixes will be generated for the different ways to order the rows.
+	df = report['baseline']['result']
+	report['baseline']['prediction_matrixes'] = [{"name": "Original Dataset", "image": missing_matrix(df, predictions = True)}]
+	combinations = np.array(df[df.iloc[:, -1] != df.iloc[:, -2]].iloc[:, -2:].drop_duplicates()) # Select every distinct combination in the last two columns where they are not the same(the result is a list with every distinct actual-predicted pair that represents a wrong prediction)
+	for pair in combinations:
+		matrix = {"name": str(pair[0])+"→"+str(pair[1])}
+		matrix['image'] = missing_matrix(df[(df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1])].append(df[~((df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1]))]), predictions = True) # Order the list with the prediction error in question on the top and generate the matrix
+		report['baseline']['prediction_matrixes'].append(matrix)
+	for strategy in report['strategy_classifications']:
+		df = report['dataframe']['test'].copy()
+		df['pred'] = report['strategy_classifications'][strategy]['result']['pred']
+		report['strategy_classifications'][strategy]['prediction_matrixes'] = [{"name": "Original Dataset", "image": missing_matrix(df, predictions = True)}]
+		combinations = np.array(df[df.iloc[:, -1] != df.iloc[:, -2]].iloc[:, -2:].drop_duplicates()) # Select every distinct combination in the last two columns where they are not the same(the result is a list with every distinct actual-predicted pair that represents a wrong prediction)
+		for pair in combinations:
+			matrix = {"name": str(pair[0])+"→"+str(pair[1])}
+			matrix['image'] = missing_matrix(df[(df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1])].append(df[~((df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1]))]), predictions = True) # Order the list with the prediction error in question on the top and generate the matrix
+			report['strategy_classifications'][strategy]['prediction_matrixes'].append(matrix)
+	
+	split = report['baseline'].pop("split")
+	pc = PrecisionRecallCurve(tree.tree.DecisionTreeClassifier(), classes = np.unique(split['y_train']))
+	pc.fit(split['x_train'], split['y_train'])
+	pc.score(split['x_test'], split['y_test'])
+	report['baseline']['precision_recall_curve'] = yellowbrick_to_img(pc)
+	plt.close()
+	for strategy in report['strategy_classifications']:
+		split = report['strategy_classifications'][strategy].pop("split")
+		pc = PrecisionRecallCurve(tree.tree.DecisionTreeClassifier(), classes = np.unique(split['y_train']))
+		pc.fit(split['x_train'], split['y_train'])
+		pc.score(split['x_test'], split['y_test'])
+		report['strategy_classifications'][strategy]['precision_recall_curve'] = yellowbrick_to_img(pc)
+		plt.close()
+	
+	return report

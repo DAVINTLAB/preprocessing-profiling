@@ -2,7 +2,9 @@
 """Common parts to all other modules, mainly utility functions.
 """
 import pandas as pd
-import numpy
+import numpy as np
+import random
+from io import StringIO
 
 TYPE_CAT = 'CAT'
 """String: A categorical variable"""
@@ -122,7 +124,7 @@ def get_vartype(data):
 	return vartype
 
 def has_bool(df):
-	for column in df.columns[1:-1]:
+	for column in df.columns[0:-1]:
 		if(get_vartype(df[column]) == TYPE_BOOL):
 			return True
 	return False
@@ -133,7 +135,44 @@ def clear_cache():
 	_MEMO = {}
 	_VALUE_COUNTS_MEMO = {}
 
+def infer_missing_entries(df):
+	# Finds strings that represent a missing entry and replace them with missing values
+	# TO DO: Rewrite this method without converting the data into a csv and parsing it again
+	missingCount = {'?' : 0, 'na' : 0, 'n/a' : 0, 'empty' : 0, 'null' : 0}
+	is_datetime = []
+	for column in df:
+		if(type(df[column][0]) == str):
+			df[column] = df[column].str.strip()
+	for column in df:
+		for j in range(len(df[column])):
+			if(type(df[column][j]) == str):
+				if(df[column][j] == "?"):
+					missingCount['?'] += 1
+					df.loc[j, column] = np.nan
+				elif(df[column][j].lower() == "na"):
+					missingCount['na'] += 1
+					df.loc[j, column] = np.nan
+				elif(df[column][j].lower() == "n/a"):
+					missingCount['n/a'] += 1
+					df.loc[j, column] = np.nan
+				elif(df[column][j].lower() == "empty"):
+					missingCount['empty'] += 1
+					df.loc[j, column] = np.nan
+				elif(df[column][j].lower() == "null"):
+					missingCount['null'] += 1
+					df.loc[j, column] = np.nan
+	return pd.read_csv(StringIO(df.to_csv(index=False, date_format='%Y-%m-%d %H:%M:%S')), parse_dates=list(df.select_dtypes(include=[np.datetime64]).columns))
 
-def default(o):
-	if isinstance(o, numpy.int32) or isinstance(o, numpy.int64): return int(o)
-	raise TypeError(str(type(o)) + " is not a valid type")
+def generate_missing_values(df, p):
+	# Generates missing values on p(a percentage) of the rows in the received dataframe(maximum of one per row)
+	
+	df = df.copy()
+	
+	to_generate = int(df.shape[0] * p)
+	not_chosen = list(range(0, df.shape[0] - 1))
+	columns = df.columns[:-1] # The y column shouldn't have missing values
+	while(to_generate > 0):
+		chosen = not_chosen.pop(random.randint(0, len(not_chosen) - 1))
+		df.at[chosen, columns[random.randint(0, len(columns) - 1)]] = np.nan
+		to_generate-=1
+	return df
