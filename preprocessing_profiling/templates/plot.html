@@ -60,6 +60,13 @@
 					.attr("width", bar.width)
 					.attr("height", y(0) - y(data.links[i].value))
 					.attr("fill", spectral(data.links[i].source));
+				all.append("text")
+					.text(data.links[i].value)
+					.attr("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize * 0.8)
+					.attr("x", margin.left + bar.width * (column + 0.5) + bar.margin * (2 * column + 1))
+					.attr("y", y(sums[column] + data.links[i].value) + textSize * 0.8 + 3);
 				sums[column] += data.links[i].value;
 			}
 			
