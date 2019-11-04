@@ -9,10 +9,20 @@
 	<th>{{ classification['strat_name'] }}</th>
 	<td>
 		<div id="miniClassificationReport{{ classification['strat_code'] }}" style="background-color:white">
-			<svg>
+			<svg style="cursor: pointer">
 				<script>
 					require(['d3'], function(d3){
 						var svg = d3.select("#miniClassificationReport{{ classification['strat_code'] }}-"+id+" svg");
+						svg.on("click", async function() {
+							{% if(classification['strat_code'] > 2) %}
+							if(d3.select("#moreClassificationsToggle"+id).classed("collapsed")) {
+								$("#moreClassificationsToggle"+id).click();
+								await new Promise(resolve => setTimeout(resolve, 350));
+							}
+							{% endif %}
+							$("#classificationReportLink{{ classification['strat_code'] }}-"+id).click();
+							window.location = "#classificationReportLink{{ classification['strat_code'] }}-"+id;
+						});
 						var data = {{ classification['classification_report'] }};
 						plotClassificationReport(data, svg, 200);
 					});
@@ -22,10 +32,20 @@
 	</td>
 	<td>
 		<div id="miniConfusionMatrix{{ classification['strat_code'] }}" style="background-color:white">
-			<svg>
+			<svg style="cursor: pointer">
 				<script>
 					require(['d3'], function(d3){
 						var svg = d3.select("#miniConfusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
+						svg.on("click", async function() {
+							{% if(classification['strat_code'] > 2) %}
+							if(d3.select("#moreClassificationsToggle"+id).classed("collapsed")) {
+								$("#moreClassificationsToggle"+id).click();
+								await new Promise(resolve => setTimeout(resolve, 350));
+							}
+							{% endif %}
+							$("#confusionMatrixLink{{ classification['strat_code'] }}-"+id).click();
+							window.location = "#confusionMatrixLink{{ classification['strat_code'] }}-"+id;
+						});
 						var data = {{ classification['error_distribution_dict'] }};
 						plotConfusionMatrix(data, svg, 200);
 					});
@@ -35,10 +55,20 @@
 	</td>
 	<td>
 		<div id="miniErrorDistribution{{ classification['strat_code'] }}" style="background-color:white">
-			<svg>
+			<svg style="cursor: pointer">
 				<script>
 					require(['d3'], function(d3){
 						var svg = d3.select("#miniErrorDistribution{{ classification['strat_code'] }}-"+id+" svg");
+						svg.on("click", async function() {
+							{% if(classification['strat_code'] > 2) %}
+							if(d3.select("#moreClassificationsToggle"+id).classed("collapsed")) {
+								$("#moreClassificationsToggle"+id).click();
+								await new Promise(resolve => setTimeout(resolve, 350));
+							}
+							{% endif %}
+							$("#errorDistributionLink{{ classification['strat_code'] }}-"+id).click();
+							window.location = "#errorDistributionLink{{ classification['strat_code'] }}-"+id;
+						});
 						var data = {{ classification['error_distribution_dict'] }};
 						plotErrorDistribution(data, svg, 200);
 					});
