@@ -41,7 +41,7 @@
 										var tr = table.append("tr");
 										for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
 											tr.append("td")
-												.text(data[i].links[j].occurences[k][l]);
+												.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
 										}
 									}
 								}
