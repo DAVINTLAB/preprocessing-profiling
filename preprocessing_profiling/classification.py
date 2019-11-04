@@ -40,7 +40,7 @@ def decision_tree_report(df):
 			occurences = test[(test.iloc[:, -2] == nodes[i]['name']) & (test.iloc[:, -1] == nodes[j]['name'])].iloc[:, :-2]
 			if(len(occurences) > 0):
 				links.append({"source":i, "target": j, "value": len(occurences), "occurences": occurences.values.tolist()})
-	report['error_distribution_dict'] = {"nodes": nodes, "links": links}
+	report['error_distribution_dict'] = {"nodes": nodes, "links": links, "variables": df.columns.tolist()[:-1]}
 	
 	report['classification_report'] = classification_report(y_test, y_pred, output_dict = True)
 	report['accuracy'] = round(accuracy_score(y_test, y_pred) * 100, 1)

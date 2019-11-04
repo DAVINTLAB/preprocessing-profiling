@@ -37,8 +37,13 @@
 									div.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
 										.style("display", "none");
 									table = table.append("tbody");
+									var tr = table.append("tr");
+									for(var k = 0; k < data[0].variables.length; k++) {
+										tr.append("th")
+										.text(data[0].variables[k]);
+									}
 									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
-										var tr = table.append("tr");
+										tr = table.append("tr");
 										for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
 											tr.append("td")
 												.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
