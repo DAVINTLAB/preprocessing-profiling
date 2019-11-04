@@ -26,11 +26,15 @@
 							plotMultiSankey(data, svg);
 							for(var i = 0; i < data.length; i++) {
 								for(var j = 0; j < data[i].links.length; j++) {
-									var table = d3.select("#classFlow"+id)
-										.append("table");
+									var div = d3.select("#classFlow"+id)
+										.append("div")
+										.attr("class", "tableContainer");
+									div.append("p")
+										.text(data[i].strategy+": "+data[i].nodes[data[i].links[j].source].name+" -> "+data[i].nodes[data[i].links[j].target].name);
+									var table = div.append("table");
 									table.attr("border", 1)
-										.attr("class", "dataframe sample")
-										.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
+										.attr("class", "dataframe sample");
+									div.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
 										.style("display", "none");
 									table = table.append("tbody");
 									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
