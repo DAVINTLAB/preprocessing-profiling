@@ -405,8 +405,10 @@
 				})
 				.attr("stroke-width", d => Math.max(1, d.width));
 
-			link.append("title")
-				.text(d => `${d.source.name} → ${d.target.name}\n${d.value}`);
+			link.on("mouseover", d => tooltip.style("visibility", "visible").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
+				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
+				.on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+				.on("click", function(d) {d3.select(svg.node().parentNode).selectAll(".tableContainer").style("display", "none");d3.select(svg.node().parentNode).select("#table"+d.source.index+"-"+d.target.index+"-"+id).style("display", "block");});
 
 			svg.append("g")
 				.style("font", textSize + "px sans-serif")

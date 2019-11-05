@@ -28,19 +28,19 @@
 								for(var j = 0; j < data[i].links.length; j++) {
 									var div = d3.select("#classFlow"+id)
 										.append("div")
-										.attr("class", "tableContainer");
-									div.append("p")
-										.text(data[i].strategy+": "+data[i].nodes[data[i].links[j].source].name+" -> "+data[i].nodes[data[i].links[j].target].name);
-									var table = div.append("table");
-									table.attr("border", 1)
-										.attr("class", "dataframe sample");
-									div.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
+										.attr("class", "tableContainer")
+										.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
 										.style("display", "none");
-									table = table.append("tbody");
+									div.append("p")
+										.text(data[i].strategy+": "+data[i].nodes[data[i].links[j].source].name+" → "+data[i].nodes[data[i].links[j].target].name);
+									var table = div.append("table")
+										.attr("border", 1)
+										.attr("class", "dataframe sample")
+										.append("tbody");
 									var tr = table.append("tr");
 									for(var k = 0; k < data[0].variables.length; k++) {
 										tr.append("th")
-										.text(data[0].variables[k]);
+											.text(data[0].variables[k]);
 									}
 									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
 										tr = table.append("tr");

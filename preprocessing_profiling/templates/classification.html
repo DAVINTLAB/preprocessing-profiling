@@ -107,6 +107,31 @@
 							var svg = d3.select("#sankey{{ classification['strat_code'] }}-"+id+" svg");
 							var data = {{ classification['error_distribution_dict'] }};
 							plotSankey(data, svg);
+							for(var i = 0; i < data.links.length; i++) {
+								var div = d3.select("#sankey{{ classification['strat_code'] }}-"+id)
+									.append("div")
+									.attr("class", "tableContainer")
+									.attr("id", "table" + data.links[i].source + "-" + data.links[i].target + "-" + id)
+									.style("display", "none");
+								div.append("p")
+									.text("{{ classification['strat_name'] }}: " + data.nodes[data.links[i].source].name + " → " + data.nodes[data.links[i].target].name);
+								var table = div.append("table")
+									.attr("border", 1)
+									.attr("class", "dataframe sample")
+									.append("tbody");
+								var tr = table.append("tr");
+								for(var j = 0; j < data.variables.length; j++) {
+									tr.append("th")
+										.text(data.variables[j]);
+								}
+								for(var j = 0; j < data.links[i].occurences.length; j++) {
+									tr = table.append("tr");
+									for(var k = 0; k < data.links[i].occurences[j].length; k++) {
+										tr.append("td")
+											.text(parseFloat((data.links[i].occurences[j][k]).toFixed(2)));
+									}
+								}
+							}
 						});
 					</script>
 				<svg>
