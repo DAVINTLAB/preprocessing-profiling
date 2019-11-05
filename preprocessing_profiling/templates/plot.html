@@ -103,6 +103,10 @@
 			delete data["micro avg"];
 			delete data["weighted avg"];
 			
+			for(row in data) {
+				data[row] = {"precision": data[row].precision, "recall": data[row].recall, "f1-score": data[row]["f1-score"], "support": data[row].support}
+			}
+			
 			var scale = width / 1000;
 			width = 1000;
 			var height = 750;
