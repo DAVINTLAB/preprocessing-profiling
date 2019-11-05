@@ -301,44 +301,44 @@
 				.style("border-width", "thin")
 				.style("padding", "2px");
 			
-			var margin = {left: 80, right: 80};
+			var margin = {left: 80, right: 80, top: 20, bottom: 20};
 			var height = 300;
 			var width = 400;
 			var textSize = 14;
 			var nodeWidth = 5;
 			var nodePadding = 20;
 			var sankey = d3sankey.sankey()
-				.extent([[nodePadding/2 + margin.left, nodePadding/2], [width + margin.left - nodePadding/2, height - nodePadding/2]])
+				.extent([[nodePadding/2 + margin.left, nodePadding/2 + margin.top], [width + margin.left - nodePadding/2, height + margin.top - nodePadding/2]])
 				.nodeWidth(nodeWidth)
 				.nodePadding(nodePadding)
 				.nodeSort(null);
 			
-			svg.attr("height", height)
+			svg.attr("height", height + margin.top + margin.bottom)
 				.attr("width", width + margin.left + margin.right);
 			
 			svg.append("rect")
 				.attr("x", nodePadding/4 + margin.left)
-				.attr("y", nodePadding/4)
+				.attr("y", nodePadding/4 + margin.top)
 				.attr("width", nodeWidth + nodePadding/2)
 				.attr("height", height - nodePadding/2)
 				.attr("fill", "#ddd");
 			svg.append("rect")
 				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75)
-				.attr("y", nodePadding/4)
+				.attr("y", nodePadding/4 + margin.top)
 				.attr("width", nodeWidth + nodePadding/2)
 				.attr("height", height - nodePadding/2)
 				.attr("fill", "#ddd");
 			svg.append("text")
 				.attr("text-anchor", "middle")
 				.attr("x", nodePadding/4 + margin.left + (nodeWidth + nodePadding/2)/2)
-				.attr("y", height)
+				.attr("y", height + margin.top + 10)
 				.attr("font-family", "sans-serif")
 				.attr("font-size", textSize)
 				.text("Actual");
 			svg.append("text")
 				.attr("text-anchor", "middle")
 				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75 + (nodeWidth + nodePadding/2)/2)
-				.attr("y", height)
+				.attr("y", height + margin.top + 10)
 				.attr("font-family", "sans-serif")
 				.attr("font-size", textSize)
 				.text("Predicted");
