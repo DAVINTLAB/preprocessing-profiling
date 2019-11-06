@@ -20,7 +20,7 @@ def to_html(report):
 	if(count >= 4):
 		classifications_html += template('more_classifications_footer').render()
 	
-	missing_matrixes = [{"name": report['baseline']['strat_name'], "missingMatrixes": report['baseline']['prediction_matrixes']}]
+	missing_matrixes = []
 	for strategy in report['strategy_classifications']:
 		missing_matrixes.append({"name": report['strategy_classifications'][strategy]['strat_name'], "missingMatrixes": report['strategy_classifications'][strategy]['prediction_matrixes']})
 	

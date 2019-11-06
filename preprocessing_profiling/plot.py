@@ -275,13 +275,6 @@ def generate_report_visualizations(report):
 	report['missing_matrix'] = missing_matrix(report['dataframe']['modified'])
 	
 	# Generate the missing matrixes with the color coded prediction errors. For each strategy, a matrixes will be generated for the different ways to order the rows.
-	df = report['baseline']['result']
-	report['baseline']['prediction_matrixes'] = [{"name": "Original Dataset", "image": missing_matrix(df, predictions = True)}]
-	combinations = np.array(df[df.iloc[:, -1] != df.iloc[:, -2]].iloc[:, -2:].drop_duplicates()) # Select every distinct combination in the last two columns where they are not the same(the result is a list with every distinct actual-predicted pair that represents a wrong prediction)
-	for pair in combinations:
-		matrix = {"name": str(pair[0])+"→"+str(pair[1])}
-		matrix['image'] = missing_matrix(df[(df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1])].append(df[~((df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1]))]), predictions = True) # Order the list with the prediction error in question on the top and generate the matrix
-		report['baseline']['prediction_matrixes'].append(matrix)
 	for strategy in report['strategy_classifications']:
 		df = report['dataframe']['test'].copy()
 		df['pred'] = report['strategy_classifications'][strategy]['result']['pred']
