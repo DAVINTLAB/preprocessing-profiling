@@ -232,11 +232,17 @@
 					.attr("height", redsLegend.height / redsLegend.nColors)
 					.attr("fill", reds(i / (redsLegend.nColors - 1)));
 			}
-			
 			redsLegend.element.append("g")
 				.attr("transform", "translate("+(redsLegend.x + redsLegend.width)+",0)")
 				.call(d3.axisRight(redsLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
 				.attr("font-size", textSize * 0.6);
+			redsLegend.element.append("text")
+					.text("Incorrect")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize * 0.7)
+					.attr("x", redsLegend.x + redsLegend.width / 2)
+					.attr("y", (height - margin.bottom) + textSize * 0.7)
+					.attr("transform", "rotate(45, "+(redsLegend.x + redsLegend.width / 2)+", "+((height - margin.bottom) + textSize * 0.7)+")");
 			var blues = d3.interpolateBlues;
 			var bluesLegend = {"x": (width - margin.right) + 70 + redsLegend.width, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
 			bluesLegend.element = all.append("g");
@@ -252,6 +258,13 @@
 				.attr("transform", "translate("+(bluesLegend.x + bluesLegend.width)+",0)")
 				.call(d3.axisRight(bluesLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
 				.attr("font-size", textSize * 0.6);
+			bluesLegend.element.append("text")
+					.text("Correct")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", textSize * 0.7)
+					.attr("x", bluesLegend.x + bluesLegend.width / 2)
+					.attr("y", (height - margin.bottom) + textSize * 0.7)
+					.attr("transform", "rotate(45, "+(bluesLegend.x + bluesLegend.width / 2)+", "+((height - margin.bottom) + textSize * 0.7)+")");
 			
 			var cell = {"height": (height - margin.top - margin.bottom) / matrixSize, "width": (width - margin.left - margin.right) / matrixSize}
 			
