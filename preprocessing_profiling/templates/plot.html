@@ -26,7 +26,7 @@
 				.attr("transform", "scale("+scale+", "+scale+")");
 			
 			var margin = {"top": 50, "left": 100, "bottom": 100, "right": 200};
-			var textSize = 20;
+			var textSize = 25;
 			
 			all.append("text")
 				.text("Predicted Class")
@@ -116,7 +116,7 @@
 				.attr("transform", "scale("+scale+", "+scale+")");
 			
 			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 150};
-			var textSize = 20;
+			var textSize = 25;
 			
 			var rwb = d3.interpolateRdBu;
 			var rwbLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
@@ -164,14 +164,15 @@
 						.attr("y", margin.top + i * cell.height)
 						.attr("width", cell.width)
 						.attr("height", cell.height)
-						.attr("fill", function() {if(stat != "support"){return rwb(data[classification][stat]);} else {return "#ddd";}});
+						.attr("fill", () => stat != "support" ? rwb(data[classification][stat]) : "#ddd");
 					all.append("text")
 						.text(parseFloat((data[classification][stat]).toFixed(2)))
 						.attr("text-anchor", "middle")
 						.attr("font-family", "sans-serif")
 						.attr("font-size", textSize)
 						.attr("x", margin.left + (j + 0.5) * cell.width)
-						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
+						.attr("fill", () => stat != "support" && (data[classification][stat] >= 0.9 || data[classification][stat] <= 0.1) ? "white" : "black");
 					j++;
 				}
 				i++;
@@ -189,8 +190,8 @@
 			var all = svg.append("g")
 				.attr("transform", "scale("+scale+", "+scale+")");
 			
-			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 160};
-			var textSize = 20;
+			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 200};
+			var textSize = 25;
 			
 			all.append("text")
 				.text("Predicted Class")
@@ -231,12 +232,13 @@
 					.attr("height", redsLegend.height / redsLegend.nColors)
 					.attr("fill", reds(i / (redsLegend.nColors - 1)));
 			}
+			
 			redsLegend.element.append("g")
 				.attr("transform", "translate("+(redsLegend.x + redsLegend.width)+",0)")
-				.call(d3.axisRight(redsLegend.yScale))
-				.attr("font-size", textSize * 0.7);
+				.call(d3.axisRight(redsLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
+				.attr("font-size", textSize * 0.6);
 			var blues = d3.interpolateBlues;
-			var bluesLegend = {"x": (width - margin.right) + 50 + redsLegend.width, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+			var bluesLegend = {"x": (width - margin.right) + 70 + redsLegend.width, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
 			bluesLegend.element = all.append("g");
 			for(var i = 0; i < bluesLegend.nColors; i++) {
 				bluesLegend.element.append("rect")
@@ -248,8 +250,8 @@
 			}
 			bluesLegend.element.append("g")
 				.attr("transform", "translate("+(bluesLegend.x + bluesLegend.width)+",0)")
-				.call(d3.axisRight(bluesLegend.yScale))
-				.attr("font-size", textSize * 0.7);
+				.call(d3.axisRight(bluesLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
+				.attr("font-size", textSize * 0.6);
 			
 			var cell = {"height": (height - margin.top - margin.bottom) / matrixSize, "width": (width - margin.left - margin.right) / matrixSize}
 			
@@ -271,13 +273,14 @@
 			}
 			
 			for(var i = 0; i < matrixSize; i++) {
+				var total = matrix[i].reduce((sum, element) => sum + element);
 				for(var j = 0; j < matrixSize; j++) {
 					all.append("rect")
 						.attr("x", margin.left + j * cell.width)
 						.attr("y", margin.top + i * cell.height)
 						.attr("width", cell.width)
 						.attr("height", cell.height)
-						.attr("fill", function() {var total = matrix[i].reduce((sum, element) => sum + element); if(i==j) {return blues(matrix[i][j] / total);} if(matrix[i][j] == 0) {return "#fff";} return reds(matrix[i][j] / total);});
+						.attr("fill", function() {if(i==j) {return blues(matrix[i][j] / total);} if(matrix[i][j] == 0) {return "#fff";} return reds(matrix[i][j] / total);});
 					
 					all.append("text")
 						.text(matrix[i][j])
@@ -285,7 +288,8 @@
 						.attr("font-family", "sans-serif")
 						.attr("font-size", textSize)
 						.attr("x", margin.left + (j + 0.5) * cell.width)
-						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
+						.attr("fill", () => matrix[i][j] / total >= 0.8 ? "white" : "black");
 				}
 			}
 		});

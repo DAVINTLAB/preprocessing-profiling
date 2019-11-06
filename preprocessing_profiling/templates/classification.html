@@ -41,7 +41,7 @@
 						require(['d3'], function(d3){
 							var svg = d3.select("#classificationReport{{ classification['strat_code'] }}-"+id+" svg");
 							var data = {{ classification['classification_report'] }};
-							plotClassificationReport(data, svg, 800);
+							plotClassificationReport(data, svg, 700);
 						});
 					</script>
 				</svg>
@@ -81,7 +81,7 @@
 						require(['d3'], function(d3){
 							var svg = d3.select("#confusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
 							var data = {{ classification['error_distribution_dict'] }};
-							plotConfusionMatrix(data, svg, 800);
+							plotConfusionMatrix(data, svg, 700);
 						});
 					</script>
 				</svg>
@@ -92,7 +92,7 @@
 						require(['d3'], function(d3){
 							var svg = d3.select("#errorDistribution{{ classification['strat_code'] }}-"+id+" svg");
 							var data = {{ classification['error_distribution_dict'] }};
-							plotErrorDistribution(data, svg, 800);
+							plotErrorDistribution(data, svg, 700);
 						});
 					</script>
 				</svg>
