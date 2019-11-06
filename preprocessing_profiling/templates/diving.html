@@ -25,14 +25,19 @@
 							var svg = d3.select("#classFlow"+id+" svg");
 							plotMultiSankey(data, svg);
 							for(var i = 0; i < data.length; i++) {
+								var total = data[i].links.map(d => d.value).reduce((sum, element) => sum + element);
 								for(var j = 0; j < data[i].links.length; j++) {
 									var div = d3.select("#classFlow"+id)
 										.append("div")
 										.attr("class", "tableContainer")
 										.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
+										.style("margin-top", "30px")
+										.style("overflow", "auto")
 										.style("display", "none");
 									div.append("p")
-										.text(data[i].strategy+": "+data[i].nodes[data[i].links[j].source].name+" → "+data[i].nodes[data[i].links[j].target].name);
+										.style("font-size", "12px")
+										.style("white-space", "pre")
+										.text("Strategy: "+data[i].strategy+"          "+data[i].nodes[data[i].links[j].source].name+" → "+data[i].nodes[data[i].links[j].target].name+"          "+data[i].links[j].value+" records of "+total+" ("+parseFloat(((data[i].links[j].value / total) * 100).toFixed(2))+"%)");
 									var table = div.append("table")
 										.attr("border", 1)
 										.attr("class", "dataframe sample")

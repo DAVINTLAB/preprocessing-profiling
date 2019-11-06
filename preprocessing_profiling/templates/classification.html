@@ -108,13 +108,18 @@
 							var data = {{ classification['error_distribution_dict'] }};
 							plotSankey(data, svg);
 							for(var i = 0; i < data.links.length; i++) {
+								var total = data.links.map(d => d.value).reduce((sum, element) => sum + element);
 								var div = d3.select("#sankey{{ classification['strat_code'] }}-"+id)
 									.append("div")
 									.attr("class", "tableContainer")
 									.attr("id", "table" + data.links[i].source + "-" + data.links[i].target + "-" + id)
+									.style("margin-top", "30px")
+									.style("overflow", "auto")
 									.style("display", "none");
 								div.append("p")
-									.text("{{ classification['strat_name'] }}: " + data.nodes[data.links[i].source].name + " → " + data.nodes[data.links[i].target].name);
+									.style("font-size", "12px")
+									.style("white-space", "pre")
+									.text("Strategy: {{ classification['strat_name'] }}          " + data.nodes[data.links[i].source].name + " → " + data.nodes[data.links[i].target].name + "          " + data.links[i].value + " records of " + total + " (" + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "%)");
 								var table = div.append("table")
 									.attr("border", 1)
 									.attr("class", "dataframe sample")
