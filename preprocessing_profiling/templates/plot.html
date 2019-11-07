@@ -314,7 +314,7 @@
 				.append("div")
 				.style("position", "absolute")
 				.style("z-index", "10")
-				.style("visibility", "hidden")
+				.style("display", "none")
 				.style("background-color", "white")
 				.style("border-radius", "3px")
 				.style("border-style", "solid")
@@ -426,9 +426,9 @@
 				})
 				.attr("stroke-width", d => Math.max(1, d.width));
 
-			link.on("mouseover", d => tooltip.style("visibility", "visible").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
+			link.on("mouseover", d => tooltip.style("display", "").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
 				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
-				.on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+				.on("mouseout", function(){return tooltip.style("display", "none");})
 				.on("click", function(d) {d3.select(svg.node().parentNode).selectAll(".tableContainer").style("display", "none");d3.select(svg.node().parentNode).select("#table"+d.source.index+"-"+d.target.index+"-"+id).style("display", "block");});
 
 			svg.append("g")
@@ -450,7 +450,7 @@
 				.append("div")
 				.style("position", "absolute")
 				.style("z-index", "10")
-				.style("visibility", "hidden")
+				.style("display", "none")
 				.style("background-color", "white")
 				.style("border-radius", "3px")
 				.style("border-style", "solid")
@@ -509,9 +509,9 @@
 					.attr("height", d => d.y1 - d.y0)
 					.attr("width", d => d.x1 - d.x0)
 					.attr("fill", d => "#777")
-					.on("mouseover", d => tooltip.style("visibility", "visible").html(d.name+"<br/>"+d.value))
+					.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
 					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+					.on("mouseout", function(){return tooltip.style("display", "none");});
 				
 				all.append("g")
 					.selectAll("text")
@@ -524,9 +524,9 @@
 					.attr("font-size", 10)
 					.attr("font-family", "sans-serif")
 					.attr("text-anchor", "middle")
-					.on("mouseover", d => tooltip.style("visibility", "visible").html(d.name+"<br/>"+d.value))
+					.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
 					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-					.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+					.on("mouseout", function(){return tooltip.style("display", "none");});
 				
 				var link = diagram.append("g")
 					.attr("fill", "none")
@@ -545,9 +545,9 @@
 						return "#e6ac00";
 					})
 					.attr("stroke-width", d => Math.max(1, d.width));
-				link.on("mouseover", d => tooltip.style("visibility", "visible").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
+				link.on("mouseover", d => tooltip.style("display", "block").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
 					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
-					.on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+					.on("mouseout", function(){return tooltip.style("display", "none");})
 					.on("click", function(d) {d3.selectAll("#classFlow"+id+" .tableContainer").style("display", "none");d3.select("#table"+d.source.index+"-"+d.target.index+"-"+i+"-"+id).style("display", "block");});
 			}
 			
