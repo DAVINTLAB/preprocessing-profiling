@@ -278,11 +278,13 @@ def generate_report_visualizations(report):
 	for strategy in report['strategy_classifications']:
 		df = report['dataframe']['test'].copy()
 		df['pred'] = report['strategy_classifications'][strategy]['result']['pred']
-		report['strategy_classifications'][strategy]['prediction_matrixes'] = [{"name": "Original Dataset", "image": missing_matrix(df, predictions = True)}]
+		report['strategy_classifications'][strategy]['prediction_matrixes'] = [{"name": "Original Dataset", "image": missing_matrix(df, predictions = True), "quantity": np.count_nonzero(df.iloc[:, -1] != df.iloc[:, -2]), "total": df.shape[0]}]
 		combinations = np.array(df[df.iloc[:, -1] != df.iloc[:, -2]].iloc[:, -2:].drop_duplicates()) # Select every distinct combination in the last two columns where they are not the same(the result is a list with every distinct actual-predicted pair that represents a wrong prediction)
 		for pair in combinations:
 			matrix = {"name": str(pair[0])+"→"+str(pair[1])}
 			matrix['image'] = missing_matrix(df[(df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1])].append(df[~((df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1]))]), predictions = True) # Order the list with the prediction error in question on the top and generate the matrix
+			matrix['quantity'] = df[(df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1])].shape[0]
+			matrix['total'] = df.shape[0]
 			report['strategy_classifications'][strategy]['prediction_matrixes'].append(matrix)
 	
 	split = report['baseline'].pop("split")

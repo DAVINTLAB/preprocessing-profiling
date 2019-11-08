@@ -81,6 +81,7 @@
 						for(let i = 0; i < matrixes.length; i++) {
 							select2.push(div.append("select").style("font-size", "12px").style("width", "202px").style("display", "none").on("change", function() {
 								d3.select("#matrix"+id+" img").attr("src", matrixes[i].missingMatrixes[this.selectedIndex].image);
+								d3.select("#matrix"+id+" #count").text("Total of number of classification error for the selected option is "+matrixes[i].missingMatrixes[this.selectedIndex].quantity+" ("+parseFloat(((matrixes[i].missingMatrixes[this.selectedIndex].quantity / matrixes[i].missingMatrixes[this.selectedIndex].total) * 100).toFixed(2))+"%)");
 							}));
 							select1.append("option").text(matrixes[i].name).attr("value", i);
 							for(let j = 0; j < matrixes[i].missingMatrixes.length; j++) {
@@ -89,7 +90,8 @@
 						}
 						select2[0].style("display", "");
 						outerDiv.append("img").attr("src", matrixes[0].missingMatrixes[0].image).style("margin-top", "0");
-						outerDiv.append("p").style("font-size", "10px").text("Class Prediction Error is presented as Actual Class → Wrong Predicted Class")
+						outerDiv.append("p").style("font-size", "10px").text("Class Prediction Error is presented as Actual Class → Wrong Predicted Class");
+						outerDiv.append("p").style("font-size", "10px").attr("id", "count").text("Total of number of classification error for the selected option is "+matrixes[0].missingMatrixes[0].quantity+" ("+parseFloat(((matrixes[0].missingMatrixes[0].quantity / matrixes[0].missingMatrixes[0].total) * 100).toFixed(2))+"%)");
 					});
 				</script>
 			</div>
