@@ -54,20 +54,23 @@ def strategy_comparison(df):
 	def run_baseline(df):
 		# Select only the entries with no missing values and generate report
 		
+		global strategy_count
 		df = df.copy()
 		
 		df = df.dropna()
 		
 		report = decision_tree_report(df)
 		
-		report['strat_code'] = 0
 		report['strat_name'] = "Baseline (without missing values)"
+		report['strat_code'] = strategy_count
+		strategy_count += 1
 		
 		return report
 	
 	def run_strategy(strategy, df):
 		# Impute missing values and generate report
 		
+		global strategy_count
 		df = df.copy()
 		
 		df.iloc[:,:-1] = SimpleImputer(strategy=strategy).fit_transform(df.iloc[:, :-1].values) # Imputes all the missing entries using the requested strategy
@@ -75,17 +78,15 @@ def strategy_comparison(df):
 		report = decision_tree_report(df)
 		
 		if(strategy == "mean"):
-			report['strat_code'] = 1
 			report['strat_name'] = "Mean Imputation"
 		elif(strategy == "median"):
-			report['strat_code'] = 2
 			report['strat_name'] = "Median Imputation"
 		elif(strategy == "most_frequent"):
-			report['strat_code'] = 3
 			report['strat_name'] = "Most Frequent Imputation"
 		elif(strategy == "constant"):
-			report['strat_code'] = 4
 			report['strat_name'] = "Constant Imputation (= zero)"
+		report['strat_code'] = strategy_count
+		strategy_count += 1
 		
 		return report
 	
@@ -94,6 +95,9 @@ def strategy_comparison(df):
 	
 	global seed
 	seed = random.randint(1, 1000000)
+	
+	global strategy_count
+	strategy_count = 0
 	
 	report = {"dataframe":{"original": df}}
 	
