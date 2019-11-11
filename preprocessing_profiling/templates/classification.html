@@ -119,7 +119,7 @@
 								div.append("p")
 									.style("font-size", "12px")
 									.style("white-space", "pre")
-									.text("Strategy: {{ classification['strat_name'] }}          " + data.nodes[data.links[i].source].name + " → " + data.nodes[data.links[i].target].name + "          " + data.links[i].value + " records of " + total + " (" + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "%)");
+									.text("Strategy: {{ classification['strat_name'] }}          Flow: Actual " + data.nodes[data.links[i].source].name + " → Predicted " + data.nodes[data.links[i].target].name + "          " + data.links[i].value + " records of " + total + " (" + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "%)");
 								var table = div.append("table")
 									.attr("border", 1)
 									.attr("class", "dataframe sample")
