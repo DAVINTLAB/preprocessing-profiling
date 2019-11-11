@@ -90,8 +90,7 @@
 						}
 						select2[0].style("display", "");
 						outerDiv.append("img").attr("src", matrixes[0].missingMatrixes[0].image).style("margin-top", "0");
-						outerDiv.append("p").style("font-size", "10px").text("Class Prediction Error is presented as Actual Class → Wrong Predicted Class");
-						outerDiv.append("p").style("font-size", "10px").attr("id", "count").text("Total of number of classification error for the selected option is "+matrixes[0].missingMatrixes[0].quantity+" ("+parseFloat(((matrixes[0].missingMatrixes[0].quantity / matrixes[0].missingMatrixes[0].total) * 100).toFixed(2))+"%)");
+						outerDiv.append("p").style("font-size", "12px").attr("id", "count").text("Total of number of classification error for the selected option is "+matrixes[0].missingMatrixes[0].quantity+" ("+parseFloat(((matrixes[0].missingMatrixes[0].quantity / matrixes[0].missingMatrixes[0].total) * 100).toFixed(2))+"%)");
 					});
 				</script>
 			</div>
