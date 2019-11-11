@@ -390,7 +390,8 @@
 				.data(links)
 				.enter()
 				.append("g")
-				.style("mix-blend-mode", "multiply");
+				.style("mix-blend-mode", "multiply")
+				.style("cursor", "pointer");
 
 			var edgeColor = "none";
 			
@@ -535,7 +536,8 @@
 					.data(links)
 					.enter()
 					.append("g")
-					.style("mix-blend-mode", "multiply");
+					.style("mix-blend-mode", "multiply")
+					.style("cursor", "pointer");
 				link.append("path")
 					.attr("d", d3sankey.sankeyLinkHorizontal())
 					.attr("stroke", function(d) {
