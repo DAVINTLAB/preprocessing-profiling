@@ -69,7 +69,7 @@
 						var div = outerDiv.append("div")
 							.attr("class", "col-md-6");
 						div.append("p").text("Preprocessing Strategy: ").style("margin-top", "20px").style("font-size", "12px");
-						var select1 = div.append("select").style("font-size", "12px").on("change", function() {
+						var select1 = div.append("select").style("font-size", "12px").style("width", "202px").on("change", function() {
 							for(let i = 0; i < select2.length; i++) {
 								select2[i].style("display", "none");
 							}
