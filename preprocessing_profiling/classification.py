@@ -111,10 +111,10 @@ def strategy_comparison(df):
 	report['dataframe']['test'][df.columns[-1]] = y_test
 	
 	report['strategy_classifications'] = {}
-	report['strategy_classifications']['mean'] = run_strategy("mean", df)
 	if(not has_bool(df)):
+		report['strategy_classifications']['mean'] = run_strategy("mean", df)
 		report['strategy_classifications']['median'] = run_strategy("median", df)
-		report['strategy_classifications']['mode'] = run_strategy("most_frequent", df)
-	report['strategy_classifications']['zero'] = run_strategy("constant", df)
+		report['strategy_classifications']['zero'] = run_strategy("constant", df)
+	report['strategy_classifications']['mode'] = run_strategy("most_frequent", df)
 	
 	return report
