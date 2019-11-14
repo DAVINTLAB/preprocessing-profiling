@@ -102,6 +102,7 @@
 			delete data["macro avg"];
 			delete data["micro avg"];
 			delete data["weighted avg"];
+			delete data["accuracy"];
 			
 			for(row in data) {
 				data[row] = {"precision": data[row].precision, "recall": data[row].recall, "f1-score": data[row]["f1-score"], "support": data[row].support}

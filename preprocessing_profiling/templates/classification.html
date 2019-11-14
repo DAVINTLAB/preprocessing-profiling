@@ -56,6 +56,7 @@
 						require(['d3'], function(d3){
 							var table = d3.select("#classificationReportText{{ classification['strat_code'] }}-"+id).append("table");
 							var data = {{ classification['classification_report'] }};
+							delete data["accuracy"];
 							var tr = table.append("tr");
 							tr.append("th");
 							for(column in data[Object.keys(data)[0]]) {
