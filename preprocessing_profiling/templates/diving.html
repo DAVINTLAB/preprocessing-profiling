@@ -32,13 +32,48 @@
 										.attr("class", "tableContainer")
 										.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
 										.style("margin-top", "30px")
-										.style("overflow", "auto")
 										.style("display", "none");
 									div.append("p")
 										.style("font-size", "12px")
 										.style("white-space", "pre")
 										.text("Strategy: "+data[i].strategy+"          Flow: Actual "+data[i].nodes[data[i].links[j].source].name+" → Predicted "+data[i].nodes[data[i].links[j].target].name+"          "+data[i].links[j].value+" records of "+total+" ("+parseFloat(((data[i].links[j].value / total) * 100).toFixed(2))+"%)");
-									var table = div.append("table")
+									
+									div.append("div")
+										.attr("class", "wrapper1")
+										.append("div")
+										.attr("class", "div1");
+									var div2 = div.append("div")
+										.attr("class", "wrapper2")
+										.append("div")
+										.attr("class", "div2");
+									
+									let wrapper1 = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .wrapper1")._groups[0][0];
+									let wrapper2 = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .wrapper2")._groups[0][0];
+									wrapper1.onscroll = function() {
+										wrapper2.scrollLeft = wrapper1.scrollLeft;
+									};
+									wrapper2.onscroll = function() {
+										wrapper1.scrollLeft = wrapper2.scrollLeft;
+									};
+									
+									var table = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .div1").append("table")
+										.attr("border", 1)
+										.attr("class", "dataframe sample")
+										.style("visibility", "hidden")
+										.append("tbody");
+									var tr = table.append("tr");
+									for(var k = 0; k < data[0].variables.length; k++) {
+										tr.append("th")
+											.text(data[0].variables[k]);
+									}
+									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
+										tr = table.append("tr");
+										for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
+											tr.append("td")
+												.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
+										}
+									}
+									var table = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .div2").append("table")
 										.attr("border", 1)
 										.attr("class", "dataframe sample")
 										.append("tbody");
