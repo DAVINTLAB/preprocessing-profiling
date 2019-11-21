@@ -1,377 +1,498 @@
 <script>
 	function plotErrorDistribution(data, svg, width) {
-		require(['d3'], function(d3) {
-			function mostPredicted(data) {
-				var sums = Array(data.nodes.length / 2).fill(0);
-				for(var i = 0; i < data.links.length; i++) {
-					sums[data.links[i].target - data.nodes.length / 2] += data.links[i].value;
-				}
-				var highest = 0;
-				for(var i = 0; i < sums.length; i++) {
-					if(sums[i] > sums[highest]) {
-						highest = i;
-					}
-				}
-				return sums[highest];
-			}
-			
-			var spectral = (t) => d3.interpolateSpectral((t / ((data.nodes.length / 2) - 1)) * 0.8 + 0.1);
-			
-			var scale = width / 1000;
-			width = 1000;
-			var height = 750;
-			svg.attr("width", width * scale)
-				.attr("height", height * scale);
-			var all = svg.append("g")
-				.attr("transform", "scale("+scale+", "+scale+")");
-			
-			var margin = {"top": 50, "left": 100, "bottom": 100, "right": 200};
-			var textSize = 25;
-			
-			all.append("text")
-				.text("Predicted Class")
-				.attr("text-anchor", "middle")
-				.attr("font-family", "sans-serif")
-				.attr("font-size", textSize)
-				.attr("x", width / 2)
-				.attr("y", height - 3);
-			all.append("text")
-				.text("Actual Class")
-				.attr("text-anchor", "middle")
-				.attr("font-family", "sans-serif")
-				.attr("font-size", textSize)
-				.attr("x", textSize + 3)
-				.attr("y", height / 2)
-				.attr("transform", "rotate("+(-90)+", "+(textSize + 3)+", "+(height / 2)+")");
-			
-			var y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, mostPredicted(data)]);
-			all.append("g")
-				.attr("transform", "translate("+margin.left+",0)")
-				.call(d3.axisLeft(y))
-				.attr("font-size", textSize * 0.7);
-			
-			var bar = {"width": ((width - margin.left - margin.right)/ (data.nodes.length / 2)) * 0.8, "margin": ((width - margin.left - margin.right)/ (data.nodes.length / 2)) * 0.1}
-			
+		function mostPredicted(data) {
 			var sums = Array(data.nodes.length / 2).fill(0);
 			for(var i = 0; i < data.links.length; i++) {
-				var column = data.links[i].target - (data.nodes.length / 2);
-				all.append("rect")
-					.attr("x", margin.left + bar.width * column + bar.margin * (2 * column + 1))
-					.attr("y", y(sums[column] + data.links[i].value))
-					.attr("width", bar.width)
-					.attr("height", y(0) - y(data.links[i].value))
-					.attr("fill", spectral(data.links[i].source));
-				all.append("text")
-					.text(data.links[i].value)
-					.attr("text-anchor", "middle")
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize * 0.8)
-					.attr("x", margin.left + bar.width * (column + 0.5) + bar.margin * (2 * column + 1))
-					.attr("y", y(sums[column] + data.links[i].value) + textSize * 0.8 + 3)
-					.style("font-weight", "bold");
-				sums[column] += data.links[i].value;
+				sums[data.links[i].target - data.nodes.length / 2] += data.links[i].value;
 			}
+			var highest = 0;
+			for(var i = 0; i < sums.length; i++) {
+				if(sums[i] > sums[highest]) {
+					highest = i;
+				}
+			}
+			return sums[highest];
+		}
+		
+		var spectral = (t) => d3.interpolateSpectral((t / ((data.nodes.length / 2) - 1)) * 0.8 + 0.1);
+		
+		var scale = width / 1000;
+		width = 1000;
+		var height = 750;
+		svg.attr("width", width * scale)
+			.attr("height", height * scale);
+		var all = svg.append("g")
+			.attr("transform", "scale("+scale+", "+scale+")");
+		
+		var margin = {"top": 50, "left": 100, "bottom": 100, "right": 200};
+		var textSize = 25;
+		
+		all.append("text")
+			.text("Predicted Class")
+			.attr("text-anchor", "middle")
+			.attr("font-family", "sans-serif")
+			.attr("font-size", textSize)
+			.attr("x", width / 2)
+			.attr("y", height - 3);
+		all.append("text")
+			.text("Actual Class")
+			.attr("text-anchor", "middle")
+			.attr("font-family", "sans-serif")
+			.attr("font-size", textSize)
+			.attr("x", textSize + 3)
+			.attr("y", height / 2)
+			.attr("transform", "rotate("+(-90)+", "+(textSize + 3)+", "+(height / 2)+")");
+		
+		var y = d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, mostPredicted(data)]);
+		all.append("g")
+			.attr("transform", "translate("+margin.left+",0)")
+			.call(d3.axisLeft(y))
+			.attr("font-size", textSize * 0.7);
+		
+		var bar = {"width": ((width - margin.left - margin.right)/ (data.nodes.length / 2)) * 0.8, "margin": ((width - margin.left - margin.right)/ (data.nodes.length / 2)) * 0.1}
+		
+		var sums = Array(data.nodes.length / 2).fill(0);
+		for(var i = 0; i < data.links.length; i++) {
+			var column = data.links[i].target - (data.nodes.length / 2);
+			all.append("rect")
+				.attr("x", margin.left + bar.width * column + bar.margin * (2 * column + 1))
+				.attr("y", y(sums[column] + data.links[i].value))
+				.attr("width", bar.width)
+				.attr("height", y(0) - y(data.links[i].value))
+				.attr("fill", spectral(data.links[i].source));
+			all.append("text")
+				.text(data.links[i].value)
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize * 0.8)
+				.attr("x", margin.left + bar.width * (column + 0.5) + bar.margin * (2 * column + 1))
+				.attr("y", y(sums[column] + data.links[i].value) + textSize * 0.8 + 3)
+				.style("font-weight", "bold");
+			sums[column] += data.links[i].value;
+		}
+		
+		for(var i = 0; i < data.nodes.length / 2; i++) {
+			all.append("text")
+				.text(data.nodes[i].name)
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", margin.left + ((2 * i) + 1) * bar.margin + (i + 0.5) * bar.width)
+				.attr("y", height - margin.bottom + textSize + 20);
 			
-			for(var i = 0; i < data.nodes.length / 2; i++) {
-				all.append("text")
-					.text(data.nodes[i].name)
-					.attr("text-anchor", "middle")
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize)
-					.attr("x", margin.left + ((2 * i) + 1) * bar.margin + (i + 0.5) * bar.width)
-					.attr("y", height - margin.bottom + textSize + 20);
-				
-				all.append("rect")
-					.attr("x", (width - margin.right) + 20)
-					.attr("y", height / 2 + i * (textSize + 20))
-					.attr("width", 40)
-					.attr("height", textSize)
-					.attr("fill", spectral(i));
-				
-				all.append("text")
-					.text(data.nodes[i].name)
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize)
-					.attr("x", (width - margin.right) + 65)
-					.attr("y", height / 2 + i * (textSize + 20) + textSize - 3);
-			}
-		});
+			all.append("rect")
+				.attr("x", (width - margin.right) + 20)
+				.attr("y", height / 2 + i * (textSize + 20))
+				.attr("width", 40)
+				.attr("height", textSize)
+				.attr("fill", spectral(i));
+			
+			all.append("text")
+				.text(data.nodes[i].name)
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", (width - margin.right) + 65)
+				.attr("y", height / 2 + i * (textSize + 20) + textSize - 3);
+		}
 	}
 	
 	function plotClassificationReport(data, svg, width) {
-		require(['d3'], function(d3) {
-			delete data["macro avg"];
-			delete data["micro avg"];
-			delete data["weighted avg"];
-			delete data["accuracy"];
-			
-			for(row in data) {
-				data[row] = {"precision": data[row].precision, "recall": data[row].recall, "f1-score": data[row]["f1-score"], "support": data[row].support}
-			}
-			
-			var scale = width / 1000;
-			width = 1000;
-			var height = 750;
-			svg.attr("width", width * scale)
-				.attr("height", height * scale);
-			var all = svg.append("g")
-				.attr("transform", "scale("+scale+", "+scale+")");
-			
-			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 150};
-			var textSize = 25;
-			
-			var rwb = d3.interpolateRdBu;
-			var rwbLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
-			rwbLegend.element = all.append("g");
-			for(var i = 0; i < rwbLegend.nColors; i++) {
-				rwbLegend.element.append("rect")
-					.attr("x", rwbLegend.x)
-					.attr("y", rwbLegend.yScale((i+1) / rwbLegend.nColors))
-					.attr("width", rwbLegend.width)
-					.attr("height", rwbLegend.height / rwbLegend.nColors)
-					.attr("fill", rwb(i / (rwbLegend.nColors - 1)));
-			}
-			rwbLegend.element.append("g")
-				.attr("transform", "translate("+(rwbLegend.x + rwbLegend.width)+",0)")
-				.call(d3.axisRight(rwbLegend.yScale))
-				.attr("font-size", textSize * 0.7);
-			
-			var cell = {"height": (height - margin.top - margin.bottom) / Object.keys(data).length, "width": (width - margin.left - margin.right) / 4}
-			
-			var i = 0;
-			for(stat in data[Object.keys(data)[0]]) {
+		delete data["macro avg"];
+		delete data["micro avg"];
+		delete data["weighted avg"];
+		delete data["accuracy"];
+		
+		for(row in data) {
+			data[row] = {"precision": data[row].precision, "recall": data[row].recall, "f1-score": data[row]["f1-score"], "support": data[row].support}
+		}
+		
+		var scale = width / 1000;
+		width = 1000;
+		var height = 750;
+		svg.attr("width", width * scale)
+			.attr("height", height * scale);
+		var all = svg.append("g")
+			.attr("transform", "scale("+scale+", "+scale+")");
+		
+		var margin = {"top": 50, "left": 200, "bottom": 100, "right": 150};
+		var textSize = 25;
+		
+		var rwb = d3.interpolateRdBu;
+		var rwbLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+		rwbLegend.element = all.append("g");
+		for(var i = 0; i < rwbLegend.nColors; i++) {
+			rwbLegend.element.append("rect")
+				.attr("x", rwbLegend.x)
+				.attr("y", rwbLegend.yScale((i+1) / rwbLegend.nColors))
+				.attr("width", rwbLegend.width)
+				.attr("height", rwbLegend.height / rwbLegend.nColors)
+				.attr("fill", rwb(i / (rwbLegend.nColors - 1)));
+		}
+		rwbLegend.element.append("g")
+			.attr("transform", "translate("+(rwbLegend.x + rwbLegend.width)+",0)")
+			.call(d3.axisRight(rwbLegend.yScale))
+			.attr("font-size", textSize * 0.7);
+		
+		var cell = {"height": (height - margin.top - margin.bottom) / Object.keys(data).length, "width": (width - margin.left - margin.right) / 4}
+		
+		var i = 0;
+		for(stat in data[Object.keys(data)[0]]) {
+			all.append("text")
+				.text(stat)
+				.attr("text-anchor", "middle")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", margin.left + (i + 0.5) * cell.width)
+				.attr("y", margin.top + Object.keys(data).length * cell.height + textSize + 20);
+			i++;
+		}
+		
+		var i = 0;
+		for(var classification in data) {
+			all.append("text")
+				.text(classification)
+				.attr("text-anchor", "end")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", margin.left - 20)
+				.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+			var j = 0;
+			for(var stat in data[classification]) {
+				all.append("rect")
+					.attr("x", margin.left + j * cell.width)
+					.attr("y", margin.top + i * cell.height)
+					.attr("width", cell.width)
+					.attr("height", cell.height)
+					.attr("fill", () => stat != "support" ? rwb(data[classification][stat]) : "#ddd");
 				all.append("text")
-					.text(stat)
+					.text(parseFloat((data[classification][stat]).toFixed(2)))
 					.attr("text-anchor", "middle")
 					.attr("font-family", "sans-serif")
 					.attr("font-size", textSize)
-					.attr("x", margin.left + (i + 0.5) * cell.width)
-					.attr("y", margin.top + Object.keys(data).length * cell.height + textSize + 20);
-				i++;
+					.attr("x", margin.left + (j + 0.5) * cell.width)
+					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
+					.attr("fill", () => stat != "support" && (data[classification][stat] >= 0.9 || data[classification][stat] <= 0.1) ? "white" : "black");
+				j++;
 			}
-			
-			var i = 0;
-			for(var classification in data) {
-				all.append("text")
-					.text(classification)
-					.attr("text-anchor", "end")
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize)
-					.attr("x", margin.left - 20)
-					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
-				var j = 0;
-				for(var stat in data[classification]) {
-					all.append("rect")
-						.attr("x", margin.left + j * cell.width)
-						.attr("y", margin.top + i * cell.height)
-						.attr("width", cell.width)
-						.attr("height", cell.height)
-						.attr("fill", () => stat != "support" ? rwb(data[classification][stat]) : "#ddd");
-					all.append("text")
-						.text(parseFloat((data[classification][stat]).toFixed(2)))
-						.attr("text-anchor", "middle")
-						.attr("font-family", "sans-serif")
-						.attr("font-size", textSize)
-						.attr("x", margin.left + (j + 0.5) * cell.width)
-						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
-						.attr("fill", () => stat != "support" && (data[classification][stat] >= 0.9 || data[classification][stat] <= 0.1) ? "white" : "black");
-					j++;
-				}
-				i++;
-			}
-		});
+			i++;
+		}
 	}
 	
 	function plotConfusionMatrix(data, svg, width) {
-		require(['d3'], function(d3) {			
-			var scale = width / 1000;
-			width = 1000;
-			var height = 750;
-			svg.attr("width", width * scale)
-				.attr("height", height * scale);
-			var all = svg.append("g")
-				.attr("transform", "scale("+scale+", "+scale+")");
-			
-			var margin = {"top": 50, "left": 200, "bottom": 100, "right": 200};
-			var textSize = 25;
-			
+		var scale = width / 1000;
+		width = 1000;
+		var height = 750;
+		svg.attr("width", width * scale)
+			.attr("height", height * scale);
+		var all = svg.append("g")
+			.attr("transform", "scale("+scale+", "+scale+")");
+		
+		var margin = {"top": 50, "left": 200, "bottom": 100, "right": 200};
+		var textSize = 25;
+		
+		all.append("text")
+			.text("Predicted Class")
+			.attr("text-anchor", "middle")
+			.attr("font-family", "sans-serif")
+			.attr("font-size", textSize)
+			.attr("x", width / 2)
+			.attr("y", height - 3);
+		all.append("text")
+			.text("Actual Class")
+			.attr("text-anchor", "middle")
+			.attr("font-family", "sans-serif")
+			.attr("font-size", textSize)
+			.attr("x", textSize + 3)
+			.attr("y", height / 2)
+			.attr("transform", "rotate("+(-90)+", "+(textSize + 3)+", "+(height / 2)+")");
+		
+		var links = data.links;
+		var nodes = data.nodes;
+		
+		var matrixSize = nodes.length / 2;
+		var matrix = [];
+		for(var i = 0; i < matrixSize; i++) {
+			matrix.push(Array(matrixSize).fill(0));
+		}
+		for(var i = 0; i < links.length; i++) {
+			matrix[links[i].source][links[i].target - matrixSize] = links[i].value;
+		}
+		
+		var reds = d3.interpolateReds;
+		var redsLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+		redsLegend.element = all.append("g");
+		for(var i = 0; i < redsLegend.nColors; i++) {
+			redsLegend.element.append("rect")
+				.attr("x", redsLegend.x)
+				.attr("y", redsLegend.yScale((i+1) / redsLegend.nColors))
+				.attr("width", redsLegend.width)
+				.attr("height", redsLegend.height / redsLegend.nColors)
+				.attr("fill", reds(i / (redsLegend.nColors - 1)));
+		}
+		redsLegend.element.append("g")
+			.attr("transform", "translate("+(redsLegend.x + redsLegend.width)+",0)")
+			.call(d3.axisRight(redsLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
+			.attr("font-size", textSize * 0.6);
+		redsLegend.element.append("text")
+				.text("Incorrect")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize * 0.7)
+				.attr("x", redsLegend.x + redsLegend.width / 2)
+				.attr("y", (height - margin.bottom) + textSize * 0.7)
+				.attr("transform", "rotate(45, "+(redsLegend.x + redsLegend.width / 2)+", "+((height - margin.bottom) + textSize * 0.7)+")");
+		var blues = d3.interpolateBlues;
+		var bluesLegend = {"x": (width - margin.right) + 70 + redsLegend.width, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
+		bluesLegend.element = all.append("g");
+		for(var i = 0; i < bluesLegend.nColors; i++) {
+			bluesLegend.element.append("rect")
+				.attr("x", bluesLegend.x)
+				.attr("y", bluesLegend.yScale((i+1) / bluesLegend.nColors))
+				.attr("width", bluesLegend.width)
+				.attr("height", bluesLegend.height / bluesLegend.nColors)
+				.attr("fill", blues(i / (bluesLegend.nColors - 1)));
+		}
+		bluesLegend.element.append("g")
+			.attr("transform", "translate("+(bluesLegend.x + bluesLegend.width)+",0)")
+			.call(d3.axisRight(bluesLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
+			.attr("font-size", textSize * 0.6);
+		bluesLegend.element.append("text")
+				.text("Correct")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize * 0.7)
+				.attr("x", bluesLegend.x + bluesLegend.width / 2)
+				.attr("y", (height - margin.bottom) + textSize * 0.7)
+				.attr("transform", "rotate(45, "+(bluesLegend.x + bluesLegend.width / 2)+", "+((height - margin.bottom) + textSize * 0.7)+")");
+		
+		var cell = {"height": (height - margin.top - margin.bottom) / matrixSize, "width": (width - margin.left - margin.right) / matrixSize}
+		
+		for(var i = 0; i < matrixSize; i++) {
 			all.append("text")
-				.text("Predicted Class")
+				.text(nodes[i].name)
+				.attr("text-anchor", "end")
+				.attr("font-family", "sans-serif")
+				.attr("font-size", textSize)
+				.attr("x", margin.left - 20)
+				.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
+			all.append("text")
+				.text(nodes[i].name)
 				.attr("text-anchor", "middle")
 				.attr("font-family", "sans-serif")
 				.attr("font-size", textSize)
-				.attr("x", width / 2)
-				.attr("y", height - 3);
-			all.append("text")
-				.text("Actual Class")
-				.attr("text-anchor", "middle")
-				.attr("font-family", "sans-serif")
-				.attr("font-size", textSize)
-				.attr("x", textSize + 3)
-				.attr("y", height / 2)
-				.attr("transform", "rotate("+(-90)+", "+(textSize + 3)+", "+(height / 2)+")");
-			
-			var links = data.links;
-			var nodes = data.nodes;
-			
-			var matrixSize = nodes.length / 2;
-			var matrix = [];
-			for(var i = 0; i < matrixSize; i++) {
-				matrix.push(Array(matrixSize).fill(0));
-			}
-			for(var i = 0; i < links.length; i++) {
-				matrix[links[i].source][links[i].target - matrixSize] = links[i].value;
-			}
-			
-			var reds = d3.interpolateReds;
-			var redsLegend = {"x": (width - margin.right) + 20, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
-			redsLegend.element = all.append("g");
-			for(var i = 0; i < redsLegend.nColors; i++) {
-				redsLegend.element.append("rect")
-					.attr("x", redsLegend.x)
-					.attr("y", redsLegend.yScale((i+1) / redsLegend.nColors))
-					.attr("width", redsLegend.width)
-					.attr("height", redsLegend.height / redsLegend.nColors)
-					.attr("fill", reds(i / (redsLegend.nColors - 1)));
-			}
-			redsLegend.element.append("g")
-				.attr("transform", "translate("+(redsLegend.x + redsLegend.width)+",0)")
-				.call(d3.axisRight(redsLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
-				.attr("font-size", textSize * 0.6);
-			redsLegend.element.append("text")
-					.text("Incorrect")
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize * 0.7)
-					.attr("x", redsLegend.x + redsLegend.width / 2)
-					.attr("y", (height - margin.bottom) + textSize * 0.7)
-					.attr("transform", "rotate(45, "+(redsLegend.x + redsLegend.width / 2)+", "+((height - margin.bottom) + textSize * 0.7)+")");
-			var blues = d3.interpolateBlues;
-			var bluesLegend = {"x": (width - margin.right) + 70 + redsLegend.width, "yScale": d3.scaleLinear().range([height - margin.bottom, margin.top]).domain([0, 1]), "height": height - margin.bottom - margin.top, "width": 40, "nColors": 11};
-			bluesLegend.element = all.append("g");
-			for(var i = 0; i < bluesLegend.nColors; i++) {
-				bluesLegend.element.append("rect")
-					.attr("x", bluesLegend.x)
-					.attr("y", bluesLegend.yScale((i+1) / bluesLegend.nColors))
-					.attr("width", bluesLegend.width)
-					.attr("height", bluesLegend.height / bluesLegend.nColors)
-					.attr("fill", blues(i / (bluesLegend.nColors - 1)));
-			}
-			bluesLegend.element.append("g")
-				.attr("transform", "translate("+(bluesLegend.x + bluesLegend.width)+",0)")
-				.call(d3.axisRight(bluesLegend.yScale).tickFormat((d) => (d*100) + "%").ticks(1))
-				.attr("font-size", textSize * 0.6);
-			bluesLegend.element.append("text")
-					.text("Correct")
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize * 0.7)
-					.attr("x", bluesLegend.x + bluesLegend.width / 2)
-					.attr("y", (height - margin.bottom) + textSize * 0.7)
-					.attr("transform", "rotate(45, "+(bluesLegend.x + bluesLegend.width / 2)+", "+((height - margin.bottom) + textSize * 0.7)+")");
-			
-			var cell = {"height": (height - margin.top - margin.bottom) / matrixSize, "width": (width - margin.left - margin.right) / matrixSize}
-			
-			for(var i = 0; i < matrixSize; i++) {
+				.attr("x", margin.left + (i + 0.5) * cell.width)
+				.attr("y", margin.top + matrixSize * cell.height + textSize + 20);
+		}
+		
+		for(var i = 0; i < matrixSize; i++) {
+			var total = matrix[i].reduce((sum, element) => sum + element);
+			for(var j = 0; j < matrixSize; j++) {
+				all.append("rect")
+					.attr("x", margin.left + j * cell.width)
+					.attr("y", margin.top + i * cell.height)
+					.attr("width", cell.width)
+					.attr("height", cell.height)
+					.attr("fill", function() {if(i==j) {return blues(matrix[i][j] / total);} if(matrix[i][j] == 0) {return "#fff";} return reds(matrix[i][j] / total);});
+				
 				all.append("text")
-					.text(nodes[i].name)
-					.attr("text-anchor", "end")
-					.attr("font-family", "sans-serif")
-					.attr("font-size", textSize)
-					.attr("x", margin.left - 20)
-					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2);
-				all.append("text")
-					.text(nodes[i].name)
+					.text(matrix[i][j])
 					.attr("text-anchor", "middle")
 					.attr("font-family", "sans-serif")
 					.attr("font-size", textSize)
-					.attr("x", margin.left + (i + 0.5) * cell.width)
-					.attr("y", margin.top + matrixSize * cell.height + textSize + 20);
+					.attr("x", margin.left + (j + 0.5) * cell.width)
+					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
+					.attr("fill", () => matrix[i][j] / total >= 0.8 ? "white" : "black");
 			}
-			
-			for(var i = 0; i < matrixSize; i++) {
-				var total = matrix[i].reduce((sum, element) => sum + element);
-				for(var j = 0; j < matrixSize; j++) {
-					all.append("rect")
-						.attr("x", margin.left + j * cell.width)
-						.attr("y", margin.top + i * cell.height)
-						.attr("width", cell.width)
-						.attr("height", cell.height)
-						.attr("fill", function() {if(i==j) {return blues(matrix[i][j] / total);} if(matrix[i][j] == 0) {return "#fff";} return reds(matrix[i][j] / total);});
-					
-					all.append("text")
-						.text(matrix[i][j])
-						.attr("text-anchor", "middle")
-						.attr("font-family", "sans-serif")
-						.attr("font-size", textSize)
-						.attr("x", margin.left + (j + 0.5) * cell.width)
-						.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
-						.attr("fill", () => matrix[i][j] / total >= 0.8 ? "white" : "black");
-				}
-			}
-		});
+		}
 	}
 	
 	function plotSankey(data, svg) {
-		require(['d3', 'sankey'], function(d3, d3sankey) {
-			var tooltip = d3.select("body")
-				.append("div")
-				.style("position", "absolute")
-				.style("z-index", "10")
-				.style("display", "none")
-				.style("background-color", "white")
-				.style("border-radius", "3px")
-				.style("border-style", "solid")
-				.style("border-color", "black")
-				.style("border-width", "thin")
-				.style("padding", "2px");
+		var tooltip = d3.select("body")
+			.append("div")
+			.style("position", "absolute")
+			.style("z-index", "10")
+			.style("display", "none")
+			.style("background-color", "white")
+			.style("border-radius", "3px")
+			.style("border-style", "solid")
+			.style("border-color", "black")
+			.style("border-width", "thin")
+			.style("padding", "2px");
+		
+		var margin = {left: 80, right: 80, top: 20, bottom: 20};
+		var height = 300;
+		var width = 400;
+		var textSize = 14;
+		var nodeWidth = 5;
+		var nodePadding = 20;
+		var sankey = d3sankey.sankey()
+			.extent([[nodePadding/2 + margin.left, nodePadding/2 + margin.top], [width + margin.left - nodePadding/2, height + margin.top - nodePadding/2]])
+			.nodeWidth(nodeWidth)
+			.nodePadding(nodePadding)
+			.nodeSort(null);
+		
+		svg.attr("height", height + margin.top + margin.bottom)
+			.attr("width", width + margin.left + margin.right);
+		
+		svg.append("rect")
+			.attr("x", nodePadding/4 + margin.left)
+			.attr("y", nodePadding/4 + margin.top)
+			.attr("width", nodeWidth + nodePadding/2)
+			.attr("height", height - nodePadding/2)
+			.attr("fill", "#ddd");
+		svg.append("rect")
+			.attr("x", width + margin.left - nodeWidth - nodePadding*0.75)
+			.attr("y", nodePadding/4 + margin.top)
+			.attr("width", nodeWidth + nodePadding/2)
+			.attr("height", height - nodePadding/2)
+			.attr("fill", "#ddd");
+		svg.append("text")
+			.attr("text-anchor", "middle")
+			.attr("x", nodePadding/4 + margin.left + (nodeWidth + nodePadding/2)/2)
+			.attr("y", height + margin.top + 10)
+			.attr("font-family", "sans-serif")
+			.attr("font-size", textSize)
+			.text("Actual");
+		svg.append("text")
+			.attr("text-anchor", "middle")
+			.attr("x", width + margin.left - nodeWidth - nodePadding*0.75 + (nodeWidth + nodePadding/2)/2)
+			.attr("y", height + margin.top + 10)
+			.attr("font-family", "sans-serif")
+			.attr("font-size", textSize)
+			.text("Predicted");
+		
+		data = sankey(data);
+		
+		var nodes = data.nodes;
+		var links = data.links;
+		
+		svg.append("g")
+			.attr("stroke", "#000")
+			.selectAll("rect")
+			.data(nodes)
+			.enter()
+			.append("rect")
+			.attr("x", d => d.x0)
+			.attr("y", d => d.y0)
+			.attr("height", d => d.y1 - d.y0)
+			.attr("width", d => d.x1 - d.x0)
+			.attr("fill", d => "#777")
+			.append("title")
+			.text(d => `${d.name}\n${d.value}`);
+
+		const link = svg.append("g")
+			.attr("fill", "none")
+			.attr("stroke-opacity", 0.5)
+			.selectAll("g")
+			.data(links)
+			.enter()
+			.append("g")
+			.style("mix-blend-mode", "multiply")
+			.style("cursor", "pointer");
+
+		var edgeColor = "none";
+		
+		svg.append("g")
+			.selectAll("text")
+			.data(links)
+			.enter()
+			.append("text")
+			.text(d => parseFloat(((d.value / d.source.value) * 100).toFixed(2)) + "%")
+			.attr("x", d => margin.left + nodePadding + nodeWidth)
+			.attr("y", d => d.y0 + textSize / 2)
+			.attr("font-size", textSize)
+			.attr("font-family", "sans-serif");
+		svg.append("g")
+			.selectAll("text")
+			.data(links)
+			.enter()
+			.append("text")
+			.attr("text-anchor", "end")
+			.text(d => parseFloat(((d.value / d.target.value) * 100).toFixed(2)) + "%")
+			.attr("x", d => margin.left + width - nodePadding - nodeWidth)
+			.attr("y", d => d.y1 + textSize / 2)
+			.attr("font-size", textSize)
+			.attr("font-family", "sans-serif");
+		
+		link.append("path")
+			.attr("d", d3sankey.sankeyLinkHorizontal())
+			.attr("stroke", function(d) {
+				if(d.target.name === d.source.name) {
+					return "#1565c0";
+				}
+				return "#e6ac00";
+			})
+			.attr("stroke-width", d => Math.max(1, d.width));
+
+		link.on("mouseover", d => tooltip.style("display", "").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
+			.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
+			.on("mouseout", function(){return tooltip.style("display", "none");})
+			.on("click", function(d) {d3.select(svg.node().parentNode).selectAll(".tableContainer").style("display", "none");d3.select(svg.node().parentNode).select("#table"+d.source.index+"-"+d.target.index+"-"+id).style("display", "block");});
+
+		svg.append("g")
+			.style("font", textSize + "px sans-serif")
+			.selectAll("text")
+			.data(nodes)
+			.enter()
+			.append("text")
+			.attr("x", d => d.x0 < width / 2 ? d.x1 - nodeWidth - nodePadding/2 : d.x0 + nodeWidth + nodePadding/2)
+			.attr("y", d => (d.y1 + d.y0) / 2 + textSize / 2)
+			.attr("text-anchor", d => d.x0 < width / 2 ? "end" : "start")
+			.text(d => d.name);
+	}
+		
+	function plotMultiSankey(data, svg) {
+		var tooltip = d3.select("body")
+			.append("div")
+			.style("position", "absolute")
+			.style("z-index", "10")
+			.style("display", "none")
+			.style("background-color", "white")
+			.style("border-radius", "3px")
+			.style("border-style", "solid")
+			.style("border-color", "black")
+			.style("border-width", "thin")
+			.style("padding", "2px");
+		var margin = {left: 55, right: 40};
+		var height = 150;
+		var width = 100;
+		var nodeWidth = 5;
+		var nodePadding = 10;
+		var sankeyPadding = 10;
+		var all = svg.append("g")
+		var diagram = all.append("g");
+		var scale = 1.2
+		
+		diagram.append("rect")
+			.attr("x", nodePadding/4)
+			.attr("y", nodePadding/4)
+			.attr("width", nodeWidth + nodePadding/2)
+			.attr("height", height * data.length - nodePadding/2)
+			.attr("fill", "#ddd");
+		
+		for(let i = 0; i < data.length; i++) {
+			diagram.append("rect")
+				.attr("x", width - nodeWidth - nodePadding*0.75)
+				.attr("y", height * i + nodePadding/4)
+				.attr("width", nodeWidth + nodePadding/2)
+				.attr("height", height - nodePadding/2)
+				.attr("fill", "#ddd");
+			all.append("text")
+				.text(data[i].strategy)
+				.attr("x", height * (i + 0.5))
+				.attr("y", margin.right + width + 25)
+				.attr("font-size", 10)
+				.attr("font-family", "sans-serif")
+				.attr("text-anchor", "middle");
 			
-			var margin = {left: 80, right: 80, top: 20, bottom: 20};
-			var height = 300;
-			var width = 400;
-			var textSize = 14;
-			var nodeWidth = 5;
-			var nodePadding = 20;
 			var sankey = d3sankey.sankey()
-				.extent([[nodePadding/2 + margin.left, nodePadding/2 + margin.top], [width + margin.left - nodePadding/2, height + margin.top - nodePadding/2]])
+				.extent([[nodePadding/2, nodePadding/2 + height * i + sankeyPadding], [width - nodePadding/2, height * (i + 1) - nodePadding/2 - sankeyPadding]])
 				.nodeWidth(nodeWidth)
 				.nodePadding(nodePadding)
 				.nodeSort(null);
+			data[i] = sankey(data[i]);
+			var nodes = data[i].nodes;
+			var links = data[i].links;
 			
-			svg.attr("height", height + margin.top + margin.bottom)
-				.attr("width", width + margin.left + margin.right);
-			
-			svg.append("rect")
-				.attr("x", nodePadding/4 + margin.left)
-				.attr("y", nodePadding/4 + margin.top)
-				.attr("width", nodeWidth + nodePadding/2)
-				.attr("height", height - nodePadding/2)
-				.attr("fill", "#ddd");
-			svg.append("rect")
-				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75)
-				.attr("y", nodePadding/4 + margin.top)
-				.attr("width", nodeWidth + nodePadding/2)
-				.attr("height", height - nodePadding/2)
-				.attr("fill", "#ddd");
-			svg.append("text")
-				.attr("text-anchor", "middle")
-				.attr("x", nodePadding/4 + margin.left + (nodeWidth + nodePadding/2)/2)
-				.attr("y", height + margin.top + 10)
-				.attr("font-family", "sans-serif")
-				.attr("font-size", textSize)
-				.text("Actual");
-			svg.append("text")
-				.attr("text-anchor", "middle")
-				.attr("x", width + margin.left - nodeWidth - nodePadding*0.75 + (nodeWidth + nodePadding/2)/2)
-				.attr("y", height + margin.top + 10)
-				.attr("font-family", "sans-serif")
-				.attr("font-size", textSize)
-				.text("Predicted");
-			
-			data = sankey(data);
-			
-			var nodes = data.nodes;
-			var links = data.links;
-			
-			svg.append("g")
+			diagram.append("g")
 				.attr("stroke", "#000")
 				.selectAll("rect")
 				.data(nodes)
@@ -382,10 +503,26 @@
 				.attr("height", d => d.y1 - d.y0)
 				.attr("width", d => d.x1 - d.x0)
 				.attr("fill", d => "#777")
-				.append("title")
-				.text(d => `${d.name}\n${d.value}`);
-
-			const link = svg.append("g")
+				.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
+				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+				.on("mouseout", function(){return tooltip.style("display", "none");});
+			
+			all.append("g")
+				.selectAll("text")
+				.data(nodes)
+				.enter()
+				.append("text")
+				.text(function(d) {if(d.name.length > 4){return d.name.substr(0, 3) + ".";}else{return d.name;}})
+				.attr("x", d => ((d.y0 + d.y1)/2))
+				.attr("y", function(d) {if(d.targetLinks.length != 0){return margin.right + width + 6}else{return margin.right - 1}})
+				.attr("font-size", 10)
+				.attr("font-family", "sans-serif")
+				.attr("text-anchor", "middle")
+				.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
+				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+				.on("mouseout", function(){return tooltip.style("display", "none");});
+			
+			var link = diagram.append("g")
 				.attr("fill", "none")
 				.attr("stroke-opacity", 0.5)
 				.selectAll("g")
@@ -394,31 +531,6 @@
 				.append("g")
 				.style("mix-blend-mode", "multiply")
 				.style("cursor", "pointer");
-
-			var edgeColor = "none";
-			
-			svg.append("g")
-				.selectAll("text")
-				.data(links)
-				.enter()
-				.append("text")
-				.text(d => parseFloat(((d.value / d.source.value) * 100).toFixed(2)) + "%")
-				.attr("x", d => margin.left + nodePadding + nodeWidth)
-				.attr("y", d => d.y0 + textSize / 2)
-				.attr("font-size", textSize)
-				.attr("font-family", "sans-serif");
-			svg.append("g")
-				.selectAll("text")
-				.data(links)
-				.enter()
-				.append("text")
-				.attr("text-anchor", "end")
-				.text(d => parseFloat(((d.value / d.target.value) * 100).toFixed(2)) + "%")
-				.attr("x", d => margin.left + width - nodePadding - nodeWidth)
-				.attr("y", d => d.y1 + textSize / 2)
-				.attr("font-size", textSize)
-				.attr("font-family", "sans-serif");
-			
 			link.append("path")
 				.attr("d", d3sankey.sankeyLinkHorizontal())
 				.attr("stroke", function(d) {
@@ -428,155 +540,33 @@
 					return "#e6ac00";
 				})
 				.attr("stroke-width", d => Math.max(1, d.width));
-
-			link.on("mouseover", d => tooltip.style("display", "").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
+			link.on("mouseover", d => tooltip.style("display", "block").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
 				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
 				.on("mouseout", function(){return tooltip.style("display", "none");})
-				.on("click", function(d) {d3.select(svg.node().parentNode).selectAll(".tableContainer").style("display", "none");d3.select(svg.node().parentNode).select("#table"+d.source.index+"-"+d.target.index+"-"+id).style("display", "block");});
-
-			svg.append("g")
-				.style("font", textSize + "px sans-serif")
-				.selectAll("text")
-				.data(nodes)
-				.enter()
-				.append("text")
-				.attr("x", d => d.x0 < width / 2 ? d.x1 - nodeWidth - nodePadding/2 : d.x0 + nodeWidth + nodePadding/2)
-				.attr("y", d => (d.y1 + d.y0) / 2 + textSize / 2)
-				.attr("text-anchor", d => d.x0 < width / 2 ? "end" : "start")
-				.text(d => d.name);
-		});
-	}
+				.on("click", function(d) {d3.selectAll("#classFlow"+id+" .tableContainer").style("display", "none");d3.select("#table"+d.source.index+"-"+d.target.index+"-"+i+"-"+id).style("display", "block");});
+		}
 		
-	function plotMultiSankey(data, svg) {
-		require(['d3', 'sankey'], function(d3, d3sankey) {
-			var tooltip = d3.select("body")
-				.append("div")
-				.style("position", "absolute")
-				.style("z-index", "10")
-				.style("display", "none")
-				.style("background-color", "white")
-				.style("border-radius", "3px")
-				.style("border-style", "solid")
-				.style("border-color", "black")
-				.style("border-width", "thin")
-				.style("padding", "2px");
-			var margin = {left: 55, right: 40};
-			var height = 150;
-			var width = 100;
-			var nodeWidth = 5;
-			var nodePadding = 10;
-			var sankeyPadding = 10;
-			var all = svg.append("g")
-			var diagram = all.append("g");
-			var scale = 1.2
-			
-			diagram.append("rect")
-				.attr("x", nodePadding/4)
-				.attr("y", nodePadding/4)
-				.attr("width", nodeWidth + nodePadding/2)
-				.attr("height", height * data.length - nodePadding/2)
-				.attr("fill", "#ddd");
-			
-			for(let i = 0; i < data.length; i++) {
-				diagram.append("rect")
-					.attr("x", width - nodeWidth - nodePadding*0.75)
-					.attr("y", height * i + nodePadding/4)
-					.attr("width", nodeWidth + nodePadding/2)
-					.attr("height", height - nodePadding/2)
-					.attr("fill", "#ddd");
-				all.append("text")
-					.text(data[i].strategy)
-					.attr("x", height * (i + 0.5))
-					.attr("y", margin.right + width + 25)
-					.attr("font-size", 10)
-					.attr("font-family", "sans-serif")
-					.attr("text-anchor", "middle");
-				
-				var sankey = d3sankey.sankey()
-					.extent([[nodePadding/2, nodePadding/2 + height * i + sankeyPadding], [width - nodePadding/2, height * (i + 1) - nodePadding/2 - sankeyPadding]])
-					.nodeWidth(nodeWidth)
-					.nodePadding(nodePadding)
-					.nodeSort(null);
-				data[i] = sankey(data[i]);
-				var nodes = data[i].nodes;
-				var links = data[i].links;
-				
-				diagram.append("g")
-					.attr("stroke", "#000")
-					.selectAll("rect")
-					.data(nodes)
-					.enter()
-					.append("rect")
-					.attr("x", d => d.x0)
-					.attr("y", d => d.y0)
-					.attr("height", d => d.y1 - d.y0)
-					.attr("width", d => d.x1 - d.x0)
-					.attr("fill", d => "#777")
-					.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
-					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-					.on("mouseout", function(){return tooltip.style("display", "none");});
-				
-				all.append("g")
-					.selectAll("text")
-					.data(nodes)
-					.enter()
-					.append("text")
-					.text(function(d) {if(d.name.length > 4){return d.name.substr(0, 3) + ".";}else{return d.name;}})
-					.attr("x", d => ((d.y0 + d.y1)/2))
-					.attr("y", function(d) {if(d.targetLinks.length != 0){return margin.right + width + 6}else{return margin.right - 1}})
-					.attr("font-size", 10)
-					.attr("font-family", "sans-serif")
-					.attr("text-anchor", "middle")
-					.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
-					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-					.on("mouseout", function(){return tooltip.style("display", "none");});
-				
-				var link = diagram.append("g")
-					.attr("fill", "none")
-					.attr("stroke-opacity", 0.5)
-					.selectAll("g")
-					.data(links)
-					.enter()
-					.append("g")
-					.style("mix-blend-mode", "multiply")
-					.style("cursor", "pointer");
-				link.append("path")
-					.attr("d", d3sankey.sankeyLinkHorizontal())
-					.attr("stroke", function(d) {
-						if(d.target.name === d.source.name) {
-							return "#1565c0";
-						}
-						return "#e6ac00";
-					})
-					.attr("stroke-width", d => Math.max(1, d.width));
-				link.on("mouseover", d => tooltip.style("display", "block").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
-					.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
-					.on("mouseout", function(){return tooltip.style("display", "none");})
-					.on("click", function(d) {d3.selectAll("#classFlow"+id+" .tableContainer").style("display", "none");d3.select("#table"+d.source.index+"-"+d.target.index+"-"+i+"-"+id).style("display", "block");});
-			}
-			
-			all.append("text")
-				.text("Actual Class")
-				.attr("x", (height * data.length)/2)
-				.attr("y", 20)
-				.attr("font-size", 10)
-				.attr("font-family", "sans-serif")
-				.attr("text-anchor", "middle")
-				.attr("font-weight", "bold");
-			all.append("text")
-				.text("Predicted Class")
-				.attr("x", (height * data.length)/2)
-				.attr("y", margin.right + width + margin.left - 6)
-				.attr("font-size", 10)
-				.attr("font-family", "sans-serif")
-				.attr("text-anchor", "middle")
-				.attr("font-weight", "bold");
-			
-			diagram.attr("transform", "scale(-1, 1) translate(0 "+margin.right+") rotate(90)");
-			all.attr("transform", "translate(0 20) scale("+scale+", "+scale+")");
-			
-			svg.attr("width", (height * data.length) * scale)
-				.attr("height", (width + margin.left + margin.right) * scale + 20);
-		});
+		all.append("text")
+			.text("Actual Class")
+			.attr("x", (height * data.length)/2)
+			.attr("y", 20)
+			.attr("font-size", 10)
+			.attr("font-family", "sans-serif")
+			.attr("text-anchor", "middle")
+			.attr("font-weight", "bold");
+		all.append("text")
+			.text("Predicted Class")
+			.attr("x", (height * data.length)/2)
+			.attr("y", margin.right + width + margin.left - 6)
+			.attr("font-size", 10)
+			.attr("font-family", "sans-serif")
+			.attr("text-anchor", "middle")
+			.attr("font-weight", "bold");
+		
+		diagram.attr("transform", "scale(-1, 1) translate(0 "+margin.right+") rotate(90)");
+		all.attr("transform", "translate(0 20) scale("+scale+", "+scale+")");
+		
+		svg.attr("width", (height * data.length) * scale)
+			.attr("height", (width + margin.left + margin.right) * scale + 20);
 	}
 </script>

@@ -282,25 +282,6 @@
 				height: 17px;
 			}
 </style>
-<script>
-	require.config({
-		paths: {
-			'd3': "https://d3js.org/d3.v5.min",
-			'd3-array': "https://unpkg.com/d3-array@1.2.4/dist/d3-array.min",
-			'd3-path': "https://unpkg.com/d3-path@1.0.7/dist/d3-path.min",
-			'd3-shape': "https://unpkg.com/d3-shape@1.3.5/dist/d3-shape.min",
-			'sankey': "https://unpkg.com/d3-sankey@0.12.1/dist/d3-sankey.min"
-		},
-		shim: {
-			'd3-shape': {
-				deps: ['d3-path']
-			},
-			'sankey': {
-				deps: ['d3-array', 'd3-shape']
-			}
-		}
-	});
-</script>
 {% include 'plot.html' %}
 <div class="container preprocessing-profiling"> 
 	<script>
@@ -314,16 +295,14 @@
 		<h1 style="font-size: 36px;">Preprocessing Profiling</h1>
 	</div>
 	<script>
-		require(['d3'], function(d3){
-			d3.select("#infoLink").attr("href", "#info"+id).attr("id", "infoLink"+id);
-			d3.select("#info").attr("id", "info"+id);
-			d3.select("#overviewLink").attr("href", "#overview"+id).attr("id", "overviewLink"+id);
-			d3.select("#overview").attr("id", "overview"+id);
-			d3.select("#classificationsLink").attr("href", "#classifications"+id).attr("id", "classificationsLink"+id);
-			d3.select("#classifications").attr("id", "classifications"+id);
-			d3.select("#divingLink").attr("href", "#diving"+id).attr("id", "divingLink"+id);
-			d3.select("#diving").attr("id", "diving"+id);
-		});
+		d3.select("#infoLink").attr("href", "#info"+id).attr("id", "infoLink"+id);
+		d3.select("#info").attr("id", "info"+id);
+		d3.select("#overviewLink").attr("href", "#overview"+id).attr("id", "overviewLink"+id);
+		d3.select("#overview").attr("id", "overview"+id);
+		d3.select("#classificationsLink").attr("href", "#classifications"+id).attr("id", "classificationsLink"+id);
+		d3.select("#classifications").attr("id", "classifications"+id);
+		d3.select("#divingLink").attr("href", "#diving"+id).attr("id", "divingLink"+id);
+		d3.select("#diving").attr("id", "diving"+id);
 	</script>
 	<div class="row variablerow">
 		<p class="h4" style="font-weight: bold;">Contents</p>
@@ -352,4 +331,4 @@
 	{{ diving_html }}
 </div>
 <p style="color: white;">Classification Report, Confusion Matrix, Class Prediction Error, Sankey Diagram, Missing Matrix gerados a partir do mesmo fit. 
-Precision-Recall Curves, Precision-Recall Curves Multi-Label usam cada um o próprio modelo porque as classes do yellowbrick para essas visualizações não suportam um fit feito por fora delas.<p>
+Precision-Recall Curves, Precision-Recall Curves Multi-Label usam cada um o próprio modelo porque as classes do yellowbrick para essas visualizações não suportam um fit feito por fora delas.</p>

@@ -1,0 +1,23 @@
+<script>
+	require.config({
+		paths: {
+			'd3': "https://d3js.org/d3.v5.min",
+			'd3-array': "https://unpkg.com/d3-array@1.2.4/dist/d3-array.min",
+			'd3-path': "https://unpkg.com/d3-path@1.0.7/dist/d3-path.min",
+			'd3-shape': "https://unpkg.com/d3-shape@1.3.5/dist/d3-shape.min",
+			'sankey': "https://unpkg.com/d3-sankey@0.12.1/dist/d3-sankey.min"
+		},
+		shim: {
+			'd3-shape': {
+				deps: ['d3-path']
+			},
+			'sankey': {
+				deps: ['d3-array', 'd3-shape']
+			}
+		}
+	});
+	require(['d3', 'sankey'], function(d3, d3sankey) {
+		window.d3 = d3;
+		window.d3sankey = d3sankey;
+	});
+</script>

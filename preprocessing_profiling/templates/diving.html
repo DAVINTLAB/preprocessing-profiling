@@ -1,12 +1,10 @@
 <div class="row variablerow">
 	<div class="row col-md-12" id="descriptives">
 		<script>
-			require(['d3'], function(d3){
-				d3.select("#classFlowLink").attr("href", "#classFlow"+id).attr("aria-controls", "classFlow"+id).attr("id", "classFlowLink"+id);
-				d3.select("#classFlow").attr("id", "classFlow"+id);
-				d3.select("#matrixLink").attr("href", "#matrix"+id).attr("aria-controls", "matrix"+id).attr("id", "matrixLink"+id);
-				d3.select("#matrix").attr("id", "matrix"+id);
-			});
+			d3.select("#classFlowLink").attr("href", "#classFlow"+id).attr("aria-controls", "classFlow"+id).attr("id", "classFlowLink"+id);
+			d3.select("#classFlow").attr("id", "classFlow"+id);
+			d3.select("#matrixLink").attr("href", "#matrix"+id).attr("aria-controls", "matrix"+id).attr("id", "matrixLink"+id);
+			d3.select("#matrix").attr("id", "matrix"+id);
 		</script>
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active">
@@ -20,113 +18,110 @@
 			<div role="tabpanel" class="tab-pane active" id="classFlow">
 				<svg>
 					<script>
-						require(['d3'], function(d3){
-							var data = {{ error_distribution_dicts }};
-							var svg = d3.select("#classFlow"+id+" svg");
-							plotMultiSankey(data, svg);
-							for(var i = 0; i < data.length; i++) {
-								var total = data[i].links.map(d => d.value).reduce((sum, element) => sum + element);
-								for(var j = 0; j < data[i].links.length; j++) {
-									var div = d3.select("#classFlow"+id)
-										.append("div")
-										.attr("class", "tableContainer")
-										.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
-										.style("margin-top", "30px")
-										.style("display", "none");
-									div.append("p")
-										.style("font-size", "12px")
-										.style("white-space", "pre")
-										.text("Strategy: "+data[i].strategy+"          Flow: Actual "+data[i].nodes[data[i].links[j].source].name+" → Predicted "+data[i].nodes[data[i].links[j].target].name+"          "+data[i].links[j].value+" records of "+total+" ("+parseFloat(((data[i].links[j].value / total) * 100).toFixed(2))+"%)");
-									
-									div.append("div")
-										.attr("class", "wrapper1")
-										.append("div")
-										.attr("class", "div1");
-									var div2 = div.append("div")
-										.attr("class", "wrapper2")
-										.append("div")
-										.attr("class", "div2");
-									
-									let wrapper1 = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .wrapper1")._groups[0][0];
-									let wrapper2 = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .wrapper2")._groups[0][0];
-									wrapper1.onscroll = function() {
-										wrapper2.scrollLeft = wrapper1.scrollLeft;
-									};
-									wrapper2.onscroll = function() {
-										wrapper1.scrollLeft = wrapper2.scrollLeft;
-									};
-									
-									var table = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .div1").append("table")
-										.attr("border", 1)
-										.attr("class", "dataframe sample")
-										.style("visibility", "hidden")
-										.append("tbody");
-									var tr = table.append("tr");
-									for(var k = 0; k < data[0].variables.length; k++) {
-										tr.append("th")
-											.text(data[0].variables[k]);
+						var data = {{ error_distribution_dicts }};
+						var svg = d3.select("#classFlow"+id+" svg");
+						plotMultiSankey(data, svg);
+						var data = {{ error_distribution_dicts }};
+						for(var i = 0; i < data.length; i++) {
+							var total = data[i].links.map(d => d.value).reduce((sum, element) => sum + element);
+							for(var j = 0; j < data[i].links.length; j++) {
+								var div = d3.select("#classFlow"+id)
+									.append("div")
+									.attr("class", "tableContainer")
+									.attr("id", "table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id)
+									.style("margin-top", "30px")
+									.style("display", "none");
+								div.append("p")
+									.style("font-size", "12px")
+									.style("white-space", "pre")
+									.text("Strategy: "+data[i].strategy+"          Flow: Actual "+data[i].nodes[data[i].links[j].source].name+" → Predicted "+data[i].nodes[data[i].links[j].target].name+"          "+data[i].links[j].value+" records of "+total+" ("+parseFloat(((data[i].links[j].value / total) * 100).toFixed(2))+"%)");
+								
+								div.append("div")
+									.attr("class", "wrapper1")
+									.append("div")
+									.attr("class", "div1");
+								var div2 = div.append("div")
+									.attr("class", "wrapper2")
+									.append("div")
+									.attr("class", "div2");
+								
+								let wrapper1 = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .wrapper1")._groups[0][0];
+								let wrapper2 = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .wrapper2")._groups[0][0];
+								wrapper1.onscroll = function() {
+									wrapper2.scrollLeft = wrapper1.scrollLeft;
+								};
+								wrapper2.onscroll = function() {
+									wrapper1.scrollLeft = wrapper2.scrollLeft;
+								};
+								
+								var table = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .div1").append("table")
+									.attr("border", 1)
+									.attr("class", "dataframe sample")
+									.style("visibility", "hidden")
+									.append("tbody");
+								var tr = table.append("tr");
+								for(var k = 0; k < data[0].variables.length; k++) {
+									tr.append("th")
+										.text(data[0].variables[k]);
+								}
+								for(var k = 0; k < data[i].links[j].occurences.length; k++) {
+									tr = table.append("tr");
+									for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
+										tr.append("td")
+											.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
 									}
-									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
-										tr = table.append("tr");
-										for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
-											tr.append("td")
-												.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
-										}
-									}
-									var table = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .div2").append("table")
-										.attr("border", 1)
-										.attr("class", "dataframe sample")
-										.append("tbody");
-									var tr = table.append("tr");
-									for(var k = 0; k < data[0].variables.length; k++) {
-										tr.append("th")
-											.text(data[0].variables[k]);
-									}
-									for(var k = 0; k < data[i].links[j].occurences.length; k++) {
-										tr = table.append("tr");
-										for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
-											tr.append("td")
-												.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
-										}
+								}
+								var table = div.select("#table" + data[i].links[j].source + "-" + data[i].links[j].target + "-" + i + "-" + id+" .div2").append("table")
+									.attr("border", 1)
+									.attr("class", "dataframe sample")
+									.append("tbody");
+								var tr = table.append("tr");
+								for(var k = 0; k < data[0].variables.length; k++) {
+									tr.append("th")
+										.text(data[0].variables[k]);
+								}
+								for(var k = 0; k < data[i].links[j].occurences.length; k++) {
+									tr = table.append("tr");
+									for(var l = 0; l < data[i].links[j].occurences[k].length; l++) {
+										tr.append("td")
+											.text(parseFloat((data[i].links[j].occurences[k][l]).toFixed(2)));
 									}
 								}
 							}
-						});
+						}
 					</script>
 				</svg>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="matrix">
 				<script>
-					require(['d3'], function(d3){
-						var matrixes = {{ missing_matrixes }};
-						var select2 = [];
-						var outerDiv = d3.select("#matrix"+id);
-						var div = outerDiv.append("div")
-							.attr("class", "col-md-6");
-						div.append("p").text("Preprocessing Strategy: ").style("margin-top", "20px").style("font-size", "12px");
-						var select1 = div.append("select").style("font-size", "12px").style("width", "202px").on("change", function() {
-							for(let i = 0; i < select2.length; i++) {
-								select2[i].style("display", "none");
-							}
-							select2[this.selectedIndex].dispatch("change").style("display", "");
-						});
-						div = outerDiv.append("div")
-							.attr("class", "col-md-6");
-						div.append("p").text("Order Lines by: ").style("margin-top", "20px").style("font-size", "12px");
-						for(let i = 0; i < matrixes.length; i++) {
-							select2.push(div.append("select").style("font-size", "12px").style("width", "202px").style("display", "none").on("change", function() {
-								d3.select("#matrix"+id+" img").attr("src", matrixes[i].missingMatrixes[this.selectedIndex].image);
-								d3.select("#matrix"+id+" #count").text("Total of number of classification error for the selected option is "+matrixes[i].missingMatrixes[this.selectedIndex].quantity+" ("+parseFloat(((matrixes[i].missingMatrixes[this.selectedIndex].quantity / matrixes[i].missingMatrixes[this.selectedIndex].total) * 100).toFixed(2))+"%)");
-							}));
-							select1.append("option").text(matrixes[i].name).attr("value", i);
-							for(let j = 0; j < matrixes[i].missingMatrixes.length; j++) {
-								select2[i].append("option").text(matrixes[i].missingMatrixes[j].name);
-							}
+					var matrixes = {{ missing_matrixes }};
+					var select2 = [];
+					var outerDiv = d3.select("#matrix"+id);
+					var div = outerDiv.append("div")
+						.attr("class", "col-md-6");
+					div.append("p").text("Preprocessing Strategy: ").style("margin-top", "20px").style("font-size", "12px");
+					var select1 = div.append("select").style("font-size", "12px").style("width", "202px").on("change", function() {
+						for(let i = 0; i < select2.length; i++) {
+							select2[i].style("display", "none");
 						}
-						select2[0].style("display", "");
-						outerDiv.append("img").attr("src", matrixes[0].missingMatrixes[0].image).style("margin-top", "0");
-						outerDiv.append("p").style("font-size", "12px").attr("id", "count").text("Total of number of classification error for the selected option is "+matrixes[0].missingMatrixes[0].quantity+" ("+parseFloat(((matrixes[0].missingMatrixes[0].quantity / matrixes[0].missingMatrixes[0].total) * 100).toFixed(2))+"%)");
+						select2[this.selectedIndex].dispatch("change").style("display", "");
 					});
+					div = outerDiv.append("div")
+						.attr("class", "col-md-6");
+					div.append("p").text("Order Lines by: ").style("margin-top", "20px").style("font-size", "12px");
+					for(let i = 0; i < matrixes.length; i++) {
+						select2.push(div.append("select").style("font-size", "12px").style("width", "202px").style("display", "none").on("change", function() {
+							d3.select("#matrix"+id+" img").attr("src", matrixes[i].missingMatrixes[this.selectedIndex].image);
+							d3.select("#matrix"+id+" #count").text("Total of number of classification error for the selected option is "+matrixes[i].missingMatrixes[this.selectedIndex].quantity+" ("+parseFloat(((matrixes[i].missingMatrixes[this.selectedIndex].quantity / matrixes[i].missingMatrixes[this.selectedIndex].total) * 100).toFixed(2))+"%)");
+						}));
+						select1.append("option").text(matrixes[i].name).attr("value", i);
+						for(let j = 0; j < matrixes[i].missingMatrixes.length; j++) {
+							select2[i].append("option").text(matrixes[i].missingMatrixes[j].name);
+						}
+					}
+					select2[0].style("display", "");
+					outerDiv.append("img").attr("src", matrixes[0].missingMatrixes[0].image).style("margin-top", "0");
+					outerDiv.append("p").style("font-size", "12px").attr("id", "count").text("Total of number of classification error for the selected option is "+matrixes[0].missingMatrixes[0].quantity+" ("+parseFloat(((matrixes[0].missingMatrixes[0].quantity / matrixes[0].missingMatrixes[0].total) * 100).toFixed(2))+"%)");
 				</script>
 			</div>
 		</div>

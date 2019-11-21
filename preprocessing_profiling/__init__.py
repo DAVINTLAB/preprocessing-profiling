@@ -2,9 +2,10 @@
 import codecs
 import pandas as pd
 from .classification import strategy_comparison
-from .html import to_html
+from .html import to_html, importer_html
 from .base import infer_missing_entries
 from .plot import generate_report_visualizations
+from IPython.display import display
 
 NO_OUTPUTFILE = "preprocessing_profiling.no_outputfile"
 DEFAULT_OUTPUTFILE = "preprocessing_profiling.default_outputfile"
@@ -102,6 +103,13 @@ class ProfileReport(object):
 		str
 			The HTML internal representation.
 		"""
+		
+		class Importer:
+			def __init__(self):
+				self.html = importer_html()
+			def _repr_html_(self):
+				return self.html
+		display(Importer())
 		return self.html
 
 	def __str__(self):

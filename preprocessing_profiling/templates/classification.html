@@ -2,20 +2,18 @@
 	<p class="h4">{{ classification['strat_name'] }}</p>
 	<div class="row col-md-12" id="descriptives">
 		<script>
-			require(['d3'], function(d3){
-				d3.select("#classificationReportLink{{ classification['strat_code'] }}").attr("href", "#classificationReport{{ classification['strat_code'] }}-"+id).attr("aria-controls", "classificationReport{{ classification['strat_code'] }}-"+id).attr("id", "classificationReportLink{{ classification['strat_code'] }}-"+id);
-				d3.select("#classificationReport{{ classification['strat_code'] }}").attr("id", "classificationReport{{ classification['strat_code'] }}-"+id);
-				d3.select("#confusionMatrixLink{{ classification['strat_code'] }}").attr("href", "#confusionMatrix{{ classification['strat_code'] }}-"+id).attr("aria-controls", "confusionMatrix{{ classification['strat_code'] }}-"+id).attr("id", "confusionMatrixLink{{ classification['strat_code'] }}-"+id);
-				d3.select("#confusionMatrix{{ classification['strat_code'] }}").attr("id", "confusionMatrix{{ classification['strat_code'] }}-"+id);
-				d3.select("#errorDistributionLink{{ classification['strat_code'] }}").attr("href", "#errorDistribution{{ classification['strat_code'] }}-"+id).attr("aria-controls", "errorDistribution{{ classification['strat_code'] }}-"+id).attr("id", "errorDistributionLink{{ classification['strat_code'] }}-"+id);
-				d3.select("#errorDistribution{{ classification['strat_code'] }}").attr("id", "errorDistribution{{ classification['strat_code'] }}-"+id);
-				d3.select("#precisionRecallLink{{ classification['strat_code'] }}").attr("href", "#precisionRecall{{ classification['strat_code'] }}-"+id).attr("aria-controls", "precisionRecall{{ classification['strat_code'] }}-"+id).attr("id", "precisionRecallLink{{ classification['strat_code'] }}-"+id);
-				d3.select("#precisionRecall{{ classification['strat_code'] }}").attr("id", "precisionRecall{{ classification['strat_code'] }}-"+id);
-				d3.select("#sankeyLink{{ classification['strat_code'] }}").attr("href", "#sankey{{ classification['strat_code'] }}-"+id).attr("aria-controls", "sankey{{ classification['strat_code'] }}-"+id).attr("id", "sankeyLink{{ classification['strat_code'] }}-"+id);
-				d3.select("#sankey{{ classification['strat_code'] }}").attr("id", "sankey{{ classification['strat_code'] }}-"+id);
-				d3.select("#classificationReportText{{ classification['strat_code'] }}").attr("id", "classificationReportText{{ classification['strat_code'] }}-"+id);
-				d3.select("#classificationReportTextToggle{{ classification['strat_code'] }}").attr("data-target", "#classificationReportText{{ classification['strat_code'] }}-"+id).attr("id", "classificationReportTextToggle{{ classification['strat_code'] }}-"+id);
-			});
+			d3.select("#classificationReportLink{{ classification['strat_code'] }}").attr("href", "#classificationReport{{ classification['strat_code'] }}-"+id).attr("aria-controls", "classificationReport{{ classification['strat_code'] }}-"+id).attr("id", "classificationReportLink{{ classification['strat_code'] }}-"+id);
+			d3.select("#classificationReport{{ classification['strat_code'] }}").attr("id", "classificationReport{{ classification['strat_code'] }}-"+id);
+			d3.select("#confusionMatrixLink{{ classification['strat_code'] }}").attr("href", "#confusionMatrix{{ classification['strat_code'] }}-"+id).attr("aria-controls", "confusionMatrix{{ classification['strat_code'] }}-"+id).attr("id", "confusionMatrixLink{{ classification['strat_code'] }}-"+id);
+			d3.select("#confusionMatrix{{ classification['strat_code'] }}").attr("id", "confusionMatrix{{ classification['strat_code'] }}-"+id);
+			d3.select("#errorDistributionLink{{ classification['strat_code'] }}").attr("href", "#errorDistribution{{ classification['strat_code'] }}-"+id).attr("aria-controls", "errorDistribution{{ classification['strat_code'] }}-"+id).attr("id", "errorDistributionLink{{ classification['strat_code'] }}-"+id);
+			d3.select("#errorDistribution{{ classification['strat_code'] }}").attr("id", "errorDistribution{{ classification['strat_code'] }}-"+id);
+			d3.select("#precisionRecallLink{{ classification['strat_code'] }}").attr("href", "#precisionRecall{{ classification['strat_code'] }}-"+id).attr("aria-controls", "precisionRecall{{ classification['strat_code'] }}-"+id).attr("id", "precisionRecallLink{{ classification['strat_code'] }}-"+id);
+			d3.select("#precisionRecall{{ classification['strat_code'] }}").attr("id", "precisionRecall{{ classification['strat_code'] }}-"+id);
+			d3.select("#sankeyLink{{ classification['strat_code'] }}").attr("href", "#sankey{{ classification['strat_code'] }}-"+id).attr("aria-controls", "sankey{{ classification['strat_code'] }}-"+id).attr("id", "sankeyLink{{ classification['strat_code'] }}-"+id);
+			d3.select("#sankey{{ classification['strat_code'] }}").attr("id", "sankey{{ classification['strat_code'] }}-"+id);
+			d3.select("#classificationReportText{{ classification['strat_code'] }}").attr("id", "classificationReportText{{ classification['strat_code'] }}-"+id);
+			d3.select("#classificationReportTextToggle{{ classification['strat_code'] }}").attr("data-target", "#classificationReportText{{ classification['strat_code'] }}-"+id).attr("id", "classificationReportTextToggle{{ classification['strat_code'] }}-"+id);
 		</script>
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active">
@@ -38,11 +36,9 @@
 			<div role="tabpanel" class="tab-pane active" id="classificationReport{{ classification['strat_code'] }}">
 				<svg>
 					<script>
-						require(['d3'], function(d3){
-							var svg = d3.select("#classificationReport{{ classification['strat_code'] }}-"+id+" svg");
-							var data = {{ classification['classification_report'] }};
-							plotClassificationReport(data, svg, 600);
-						});
+						var svg = d3.select("#classificationReport{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['classification_report'] }};
+						plotClassificationReport(data, svg, 600);
 					</script>
 				</svg>
 				<div class="panel-heading">
@@ -53,48 +49,42 @@
 				</div>
 				<div id="classificationReportText{{ classification['strat_code'] }}" class="pannel-collapse collapse" align="center" style="overflow:auto; overflow-y: hidden;">
 					<script>
-						require(['d3'], function(d3){
-							var table = d3.select("#classificationReportText{{ classification['strat_code'] }}-"+id).append("table");
-							var data = {{ classification['classification_report'] }};
-							delete data["accuracy"];
-							var tr = table.append("tr");
-							tr.append("th");
-							for(column in data[Object.keys(data)[0]]) {
-								tr.append("th").text(column)
-							}
-							for(row in data) {
-								tr = table.append("tr");
-								tr.append("th").text(row);
-								for(column in data[row]) {
-									if(column != "support") {
-										data[row][column] = data[row][column].toFixed(2)
-									}
-									tr.append("td").text(data[row][column]);
+						var table = d3.select("#classificationReportText{{ classification['strat_code'] }}-"+id).append("table");
+						var data = {{ classification['classification_report'] }};
+						delete data["accuracy"];
+						var tr = table.append("tr");
+						tr.append("th");
+						for(column in data[Object.keys(data)[0]]) {
+							tr.append("th").text(column)
+						}
+						for(row in data) {
+							tr = table.append("tr");
+							tr.append("th").text(row);
+							for(column in data[row]) {
+								if(column != "support") {
+									data[row][column] = data[row][column].toFixed(2)
 								}
+								tr.append("td").text(data[row][column]);
 							}
-						});
+						}
 					</script>
 				</div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="confusionMatrix{{ classification['strat_code'] }}">
 				<svg>
 					<script>
-						require(['d3'], function(d3){
-							var svg = d3.select("#confusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
-							var data = {{ classification['error_distribution_dict'] }};
-							plotConfusionMatrix(data, svg, 600);
-						});
+						var svg = d3.select("#confusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['error_distribution_dict'] }};
+						plotConfusionMatrix(data, svg, 600);
 					</script>
 				</svg>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="errorDistribution{{ classification['strat_code'] }}">
 				<svg>
 					<script>
-						require(['d3'], function(d3){
-							var svg = d3.select("#errorDistribution{{ classification['strat_code'] }}-"+id+" svg");
-							var data = {{ classification['error_distribution_dict'] }};
-							plotErrorDistribution(data, svg, 600);
-						});
+						var svg = d3.select("#errorDistribution{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['error_distribution_dict'] }};
+						plotErrorDistribution(data, svg, 600);
 					</script>
 				</svg>
 			</div>
@@ -104,76 +94,75 @@
 			<div role="tabpanel" class="tab-pane"  id="sankey{{ classification['strat_code'] }}">
 				<svg>
 					<script>
-						require(['d3'], function(d3){
-							var svg = d3.select("#sankey{{ classification['strat_code'] }}-"+id+" svg");
-							var data = {{ classification['error_distribution_dict'] }};
-							plotSankey(data, svg);
-							for(var i = 0; i < data.links.length; i++) {
-								var total = data.links.map(d => d.value).reduce((sum, element) => sum + element);
-								var div = d3.select("#sankey{{ classification['strat_code'] }}-"+id)
-									.append("div")
-									.attr("class", "tableContainer")
-									.attr("id", "table" + data.links[i].source + "-" + data.links[i].target + "-" + id)
-									.style("margin-top", "30px")
-									.style("display", "none");
-								div.append("p")
-									.style("font-size", "12px")
-									.style("white-space", "pre")
-									.text("Strategy: {{ classification['strat_name'] }}          Flow: Actual " + data.nodes[data.links[i].source].name + " → Predicted " + data.nodes[data.links[i].target].name + "          " + data.links[i].value + " records of " + total + " (" + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "%)");
-								
-								div.append("div")
-									.attr("class", "wrapper1")
-									.append("div")
-									.attr("class", "div1");
-								div.append("div")
-									.attr("class", "wrapper2")
-									.append("div")
-									.attr("class", "div2");
-								
-								let wrapper1 = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .wrapper1")._groups[0][0];
-								let wrapper2 = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .wrapper2")._groups[0][0];
-								wrapper1.onscroll = function() {
-									wrapper2.scrollLeft = wrapper1.scrollLeft;
-								};
-								wrapper2.onscroll = function() {
-									wrapper1.scrollLeft = wrapper2.scrollLeft;
-								};
-								
-								var table = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .div1").append("table")
-									.attr("border", 1)
-									.attr("class", "dataframe sample")
-									.style("visibility", "hidden")
-									.append("tbody");
-								var tr = table.append("tr");
-								for(var j = 0; j < data.variables.length; j++) {
-									tr.append("th")
-										.text(data.variables[j]);
-								}
-								for(var j = 0; j < data.links[i].occurences.length; j++) {
-									tr = table.append("tr");
-									for(var k = 0; k < data.links[i].occurences[j].length; k++) {
-										tr.append("td")
-											.text(parseFloat((data.links[i].occurences[j][k]).toFixed(2)));
-									}
-								}
-								var table = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .div2").append("table")
-									.attr("border", 1)
-									.attr("class", "dataframe sample")
-									.append("tbody");
-								var tr = table.append("tr");
-								for(var j = 0; j < data.variables.length; j++) {
-									tr.append("th")
-										.text(data.variables[j]);
-								}
-								for(var j = 0; j < data.links[i].occurences.length; j++) {
-									tr = table.append("tr");
-									for(var k = 0; k < data.links[i].occurences[j].length; k++) {
-										tr.append("td")
-											.text(parseFloat((data.links[i].occurences[j][k]).toFixed(2)));
-									}
+						var svg = d3.select("#sankey{{ classification['strat_code'] }}-"+id+" svg");
+						var data = {{ classification['error_distribution_dict'] }};
+						plotSankey(data, svg);
+						var data = {{ classification['error_distribution_dict'] }};
+						for(var i = 0; i < data.links.length; i++) {
+							var total = data.links.map(d => d.value).reduce((sum, element) => sum + element);
+							var div = d3.select("#sankey{{ classification['strat_code'] }}-"+id)
+								.append("div")
+								.attr("class", "tableContainer")
+								.attr("id", "table" + data.links[i].source + "-" + data.links[i].target + "-" + id)
+								.style("margin-top", "30px")
+								.style("display", "none");
+							div.append("p")
+								.style("font-size", "12px")
+								.style("white-space", "pre")
+								.text("Strategy: {{ classification['strat_name'] }}          Flow: Actual " + data.nodes[data.links[i].source].name + " → Predicted " + data.nodes[data.links[i].target].name + "          " + data.links[i].value + " records of " + total + " (" + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "%)");
+							
+							div.append("div")
+								.attr("class", "wrapper1")
+								.append("div")
+								.attr("class", "div1");
+							div.append("div")
+								.attr("class", "wrapper2")
+								.append("div")
+								.attr("class", "div2");
+							
+							let wrapper1 = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .wrapper1")._groups[0][0];
+							let wrapper2 = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .wrapper2")._groups[0][0];
+							wrapper1.onscroll = function() {
+								wrapper2.scrollLeft = wrapper1.scrollLeft;
+							};
+							wrapper2.onscroll = function() {
+								wrapper1.scrollLeft = wrapper2.scrollLeft;
+							};
+							
+							var table = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .div1").append("table")
+								.attr("border", 1)
+								.attr("class", "dataframe sample")
+								.style("visibility", "hidden")
+								.append("tbody");
+							var tr = table.append("tr");
+							for(var j = 0; j < data.variables.length; j++) {
+								tr.append("th")
+									.text(data.variables[j]);
+							}
+							for(var j = 0; j < data.links[i].occurences.length; j++) {
+								tr = table.append("tr");
+								for(var k = 0; k < data.links[i].occurences[j].length; k++) {
+									tr.append("td")
+										.text(parseFloat((data.links[i].occurences[j][k]).toFixed(2)));
 								}
 							}
-						});
+							var table = div.select("#table" + data.links[i].source + "-" + data.links[i].target + "-" + id+" .div2").append("table")
+								.attr("border", 1)
+								.attr("class", "dataframe sample")
+								.append("tbody");
+							var tr = table.append("tr");
+							for(var j = 0; j < data.variables.length; j++) {
+								tr.append("th")
+									.text(data.variables[j]);
+							}
+							for(var j = 0; j < data.links[i].occurences.length; j++) {
+								tr = table.append("tr");
+								for(var k = 0; k < data.links[i].occurences[j].length; k++) {
+									tr.append("td")
+										.text(parseFloat((data.links[i].occurences[j][k]).toFixed(2)));
+								}
+							}
+						}
 					</script>
 				<svg>
 			</div>

@@ -3,8 +3,6 @@
 	<p class="h4" style="text-align: center;">Show More Classifications <button id="moreClassificationsToggle" data-toggle="collapse" data-target="#moreClassifications" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button></p>
 </div>
 <script>
-	require(['d3'], function(d3){
-		d3.select("#moreClassificationsToggle").attr("data-target", "#moreClassifications"+id).attr("id", "moreClassificationsToggle"+id);
-		d3.select("#moreClassifications").classed("in", false).attr("id", "moreClassifications"+id);
-	});
+	d3.select("#moreClassificationsToggle").attr("data-target", "#moreClassifications"+id).attr("id", "moreClassificationsToggle"+id);
+	d3.select("#moreClassifications").classed("in", false).attr("id", "moreClassifications"+id);
 </script>
