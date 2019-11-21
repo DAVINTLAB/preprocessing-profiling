@@ -2,13 +2,12 @@
 import codecs
 import pandas as pd
 from .classification import strategy_comparison
-from .html import to_html, importer_html
+import preprocessing_profiling.html as html
 from .base import infer_missing_entries
 from .plot import generate_report_visualizations
 from IPython.display import display
 
-NO_OUTPUTFILE = "preprocessing_profiling.no_outputfile"
-DEFAULT_OUTPUTFILE = "preprocessing_profiling.default_outputfile"
+DEFAULT_OUTPUTFILE = "report.html"
 
 class ProfileReport(object):
 	html = ''
@@ -28,7 +27,7 @@ class ProfileReport(object):
 		report = strategy_comparison(df, **kwargs)
 		report = generate_report_visualizations(report)
 		
-		self.html = to_html(report)
+		self.html = html.report(report)
 
 		self.description_set = report
 		
@@ -76,14 +75,10 @@ class ProfileReport(object):
 		outputfile : str
 			The name or the path of the file to generale including the extension (.html).
 		"""
+		file = open(outputfile, "w")
+		file.write(self.to_html())
+		file.close()
 	
-		if outputfile != NO_OUTPUTFILE:
-			if outputfile == DEFAULT_OUTPUTFILE:
-				outputfile = 'profile_' + str(hash(self)) + ".html"
-			# TODO: should be done in the template
-			with codecs.open(outputfile, 'w+b', encoding='utf8') as self.file:
-				self.file.write(templates.template('wrapper').render(content=self.html))
-
 	def to_html(self):
 		"""Generate and return complete template as lengthy string
 			for using with frameworks.
@@ -93,7 +88,7 @@ class ProfileReport(object):
 		str
 			The HTML output.
 		"""
-		return templates.template('wrapper').render(content=self.html)
+		return html.wrap(self.html)
 
 	def _repr_html_(self):
 		"""Used to output the HTML representation to a Jupyter notebook
@@ -106,7 +101,7 @@ class ProfileReport(object):
 		
 		class Importer:
 			def __init__(self):
-				self.html = importer_html()
+				self.html = html.importer()
 			def _repr_html_(self):
 				return self.html
 		display(Importer())
