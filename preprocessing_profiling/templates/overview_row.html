@@ -1,4 +1,4 @@
-<script>
+<script type="text/delayscript">
 	d3.select("#miniClassificationReport{{ classification['strat_code'] }}").attr("id", "miniClassificationReport{{ classification['strat_code'] }}-"+id);
 	d3.select("#miniConfusionMatrix{{ classification['strat_code'] }}").attr("id", "miniConfusionMatrix{{ classification['strat_code'] }}-"+id);
 	d3.select("#miniErrorDistribution{{ classification['strat_code'] }}").attr("id", "miniErrorDistribution{{ classification['strat_code'] }}-"+id);
@@ -8,7 +8,7 @@
 	<td>
 		<div id="miniClassificationReport{{ classification['strat_code'] }}" style="background-color:white">
 			<svg style="cursor: pointer">
-				<script>
+				<script type="text/delayscript">
 					var svg = d3.select("#miniClassificationReport{{ classification['strat_code'] }}-"+id+" svg");
 					svg.on("click", async function() {
 						{% if(classification['strat_code'] > 2) %}
@@ -29,7 +29,7 @@
 	<td>
 		<div id="miniConfusionMatrix{{ classification['strat_code'] }}" style="background-color:white">
 			<svg style="cursor: pointer">
-				<script>
+				<script type="text/delayscript">
 					var svg = d3.select("#miniConfusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
 					svg.on("click", async function() {
 						{% if(classification['strat_code'] > 2) %}
@@ -50,7 +50,7 @@
 	<td>
 		<div id="miniErrorDistribution{{ classification['strat_code'] }}" style="background-color:white">
 			<svg style="cursor: pointer">
-				<script>
+				<script type="text/delayscript">
 					var svg = d3.select("#miniErrorDistribution{{ classification['strat_code'] }}-"+id+" svg");
 					svg.on("click", async function() {
 						{% if(classification['strat_code'] > 2) %}

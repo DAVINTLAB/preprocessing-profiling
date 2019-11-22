@@ -284,7 +284,7 @@
 </style>
 {% include 'plot.html' %}
 <div class="container preprocessing-profiling"> 
-	<script>
+	<script type="text/delayscript">
 		if (typeof id !== 'undefined') {
 			id++;
 		} else {
@@ -294,7 +294,7 @@
 	<div class="row headerrow highlight">
 		<h1 style="font-size: 36px;">Preprocessing Profiling</h1>
 	</div>
-	<script>
+	<script type="text/delayscript">
 		d3.select("#infoLink").attr("href", "#info"+id).attr("id", "infoLink"+id);
 		d3.select("#info").attr("id", "info"+id);
 		d3.select("#overviewLink").attr("href", "#overview"+id).attr("id", "overviewLink"+id);
@@ -332,3 +332,29 @@
 </div>
 <p style="color: white;">Classification Report, Confusion Matrix, Class Prediction Error, Sankey Diagram, Missing Matrix gerados a partir do mesmo fit. 
 Precision-Recall Curves, Precision-Recall Curves Multi-Label usam cada um o próprio modelo porque as classes do yellowbrick para essas visualizações não suportam um fit feito por fora delas.</p>
+<script>
+	(function start() {
+		if (window.jQuery) {
+			runInlineScripts();
+		} else {
+			setTimeout( start, 50 );
+		}
+	})();
+
+	function runInlineScripts() {
+		var scripts = document.getElementsByTagName("script")
+
+		for (var i = 0; i < scripts.length; i++) {
+			var type = scripts[i].getAttribute("type");
+			if (type && type.toLowerCase() == 'text/delayscript') {
+				scripts[i].parentNode.replaceChild((function (delayscript) {
+					var script = document.createElement('script');
+					script.type = 'text/javascript';
+					script.innerHTML = delayscript.innerHTML.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+
+					return script;
+				})(scripts[i]), scripts[i]);
+			}
+		}
+	}
+</script>

@@ -1,7 +1,7 @@
 <div class="row variablerow">
 	<p class="h4">{{ classification['strat_name'] }}</p>
 	<div class="row col-md-12" id="descriptives">
-		<script>
+		<script type="text/delayscript">
 			d3.select("#classificationReportLink{{ classification['strat_code'] }}").attr("href", "#classificationReport{{ classification['strat_code'] }}-"+id).attr("aria-controls", "classificationReport{{ classification['strat_code'] }}-"+id).attr("id", "classificationReportLink{{ classification['strat_code'] }}-"+id);
 			d3.select("#classificationReport{{ classification['strat_code'] }}").attr("id", "classificationReport{{ classification['strat_code'] }}-"+id);
 			d3.select("#confusionMatrixLink{{ classification['strat_code'] }}").attr("href", "#confusionMatrix{{ classification['strat_code'] }}-"+id).attr("aria-controls", "confusionMatrix{{ classification['strat_code'] }}-"+id).attr("id", "confusionMatrixLink{{ classification['strat_code'] }}-"+id);
@@ -35,7 +35,7 @@
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="classificationReport{{ classification['strat_code'] }}">
 				<svg>
-					<script>
+					<script type="text/delayscript">
 						var svg = d3.select("#classificationReport{{ classification['strat_code'] }}-"+id+" svg");
 						var data = {{ classification['classification_report'] }};
 						plotClassificationReport(data, svg, 600);
@@ -48,7 +48,7 @@
 					</p>
 				</div>
 				<div id="classificationReportText{{ classification['strat_code'] }}" class="pannel-collapse collapse" align="center" style="overflow:auto; overflow-y: hidden;">
-					<script>
+					<script type="text/delayscript">
 						var table = d3.select("#classificationReportText{{ classification['strat_code'] }}-"+id).append("table");
 						var data = {{ classification['classification_report'] }};
 						delete data["accuracy"];
@@ -72,7 +72,7 @@
 			</div>
 			<div role="tabpanel" class="tab-pane" id="confusionMatrix{{ classification['strat_code'] }}">
 				<svg>
-					<script>
+					<script type="text/delayscript">
 						var svg = d3.select("#confusionMatrix{{ classification['strat_code'] }}-"+id+" svg");
 						var data = {{ classification['error_distribution_dict'] }};
 						plotConfusionMatrix(data, svg, 600);
@@ -81,7 +81,7 @@
 			</div>
 			<div role="tabpanel" class="tab-pane" id="errorDistribution{{ classification['strat_code'] }}">
 				<svg>
-					<script>
+					<script type="text/delayscript">
 						var svg = d3.select("#errorDistribution{{ classification['strat_code'] }}-"+id+" svg");
 						var data = {{ classification['error_distribution_dict'] }};
 						plotErrorDistribution(data, svg, 600);
@@ -93,7 +93,7 @@
 			</div>
 			<div role="tabpanel" class="tab-pane"  id="sankey{{ classification['strat_code'] }}">
 				<svg>
-					<script>
+					<script type="text/delayscript">
 						var svg = d3.select("#sankey{{ classification['strat_code'] }}-"+id+" svg");
 						var data = {{ classification['error_distribution_dict'] }};
 						plotSankey(data, svg);

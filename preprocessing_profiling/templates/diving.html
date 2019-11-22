@@ -1,6 +1,6 @@
 <div class="row variablerow">
 	<div class="row col-md-12" id="descriptives">
-		<script>
+		<script type="text/delayscript">
 			d3.select("#classFlowLink").attr("href", "#classFlow"+id).attr("aria-controls", "classFlow"+id).attr("id", "classFlowLink"+id);
 			d3.select("#classFlow").attr("id", "classFlow"+id);
 			d3.select("#matrixLink").attr("href", "#matrix"+id).attr("aria-controls", "matrix"+id).attr("id", "matrixLink"+id);
@@ -17,7 +17,7 @@
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="classFlow">
 				<svg>
-					<script>
+					<script type="text/delayscript">
 						var data = {{ error_distribution_dicts }};
 						var svg = d3.select("#classFlow"+id+" svg");
 						plotMultiSankey(data, svg);
@@ -93,7 +93,7 @@
 				</svg>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="matrix">
-				<script>
+				<script type="text/delayscript">
 					var matrixes = {{ missing_matrixes }};
 					var select2 = [];
 					var outerDiv = d3.select("#matrix"+id);
