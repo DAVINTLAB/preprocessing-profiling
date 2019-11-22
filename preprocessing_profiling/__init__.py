@@ -75,7 +75,7 @@ class ProfileReport(object):
 		outputfile : str
 			The name or the path of the file to generale including the extension (.html).
 		"""
-		file = open(outputfile, "w")
+		file = open(outputfile, "w", encoding="utf8")
 		file.write(self.to_html())
 		file.close()
 	
