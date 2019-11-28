@@ -39,3 +39,6 @@ def importer():
 
 def wrap(content):
 	return template('wrapper').render(content = content)
+
+def downloadable():
+	return template('downloadable').render()

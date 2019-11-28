@@ -17,7 +17,8 @@ templates = {'info': 'info.html',
 			 'overview_row': 'overview_row.html',
 			 'diving': 'diving.html',
 			 'importer': 'importer.html',
-			 'wrapper': 'wrapper.html'
+			 'wrapper': 'wrapper.html',
+			 'downloadable': 'downloadable.html'
 			 }
 
 # Mapping between row type and var type

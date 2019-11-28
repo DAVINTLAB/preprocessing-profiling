@@ -105,7 +105,12 @@ class ProfileReport(object):
 			def _repr_html_(self):
 				return self.html
 		display(Importer())
-		return self.html
+		
+		file = open("report.html", "w", encoding="utf8")
+		file.write(self.to_html())
+		file.close()
+		
+		return html.downloadable() + self.html
 
 	def __str__(self):
 		"""Overwrite of the str method.
