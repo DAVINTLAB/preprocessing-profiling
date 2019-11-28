@@ -1,1 +1,10 @@
-<a href="report.html" download="report.html">Download</a>
+<script type="text/delayscript">
+	d3.select("#mainheader"+id+" h1")
+		.style("float", "left");
+	d3.select("#mainheader"+id)
+		.append("a")
+		.attr("href", "report.html")
+		.attr("download", "report.html")
+		.text("Download")
+		.style("float", "right");
+</script>

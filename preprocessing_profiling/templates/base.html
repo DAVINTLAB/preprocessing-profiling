@@ -291,10 +291,11 @@
 			var id = 0;
 		}
 	</script>
-	<div class="row headerrow highlight">
+	<div id="mainheader" class="row headerrow highlight">
 		<h1 style="font-size: 36px;">Preprocessing Profiling</h1>
 	</div>
 	<script type="text/delayscript">
+		d3.select("#mainheader").attr("id", "mainheader"+id);
 		d3.select("#infoLink").attr("href", "#info"+id).attr("id", "infoLink"+id);
 		d3.select("#info").attr("id", "info"+id);
 		d3.select("#overviewLink").attr("href", "#overview"+id).attr("id", "overviewLink"+id);

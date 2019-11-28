@@ -110,7 +110,7 @@ class ProfileReport(object):
 		file.write(self.to_html())
 		file.close()
 		
-		return html.downloadable() + self.html
+		return self.html + html.downloadable()
 
 	def __str__(self):
 		"""Overwrite of the str method.
