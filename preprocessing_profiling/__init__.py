@@ -13,18 +13,16 @@ class ProfileReport(object):
 	html = ''
 	file = None
 
-	def __init__(self, df, **kwargs):
+	def __init__(self, df, format_missing_values = True, model="DecisionTreeClassifier"):
 		if not isinstance(df, pd.DataFrame):
 			raise TypeError("df must be of type pandas.DataFrame")
 		if df.empty:
 			raise ValueError("df can not be empty")
 		
-		if kwargs.get("format_missing_values", True):
+		if (format_missing_values):
 			df = infer_missing_entries(df)
-		if "format_missing_values" in kwargs:
-			kwargs.pop("format_missing_values")
 
-		report = strategy_comparison(df, **kwargs)
+		report = strategy_comparison(df, model)
 		report = generate_report_visualizations(report)
 		
 		self.html = html.report(report)

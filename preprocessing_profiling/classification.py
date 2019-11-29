@@ -4,12 +4,20 @@ import numpy as np
 import pandas as pd
 import random
 from sklearn.impute import SimpleImputer
-from sklearn import tree
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.dummy import DummyClassifier
 from preprocessing_profiling.base import generate_missing_values, clear_cache, has_bool
 
-def decision_tree_report(df):
+def model_report(df, model):
 	# Run predictions using a decision tree and generate a report of the results
 	
 	report = {"dataframe": df}
@@ -19,7 +27,6 @@ def decision_tree_report(df):
 	y = np.array(df.iloc[:, -1])
 	x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3, random_state = seed)
 	
-	model = tree.tree.DecisionTreeClassifier()
 	model.fit(x_train, y_train)
 	y_pred = model.predict(x_test)
 	
@@ -49,7 +56,7 @@ def decision_tree_report(df):
 	
 	return report
 
-def strategy_comparison(df):
+def strategy_comparison(df, model):
 
 	def run_baseline(df):
 		# Select only the entries with no missing values and generate report
@@ -59,7 +66,7 @@ def strategy_comparison(df):
 		
 		df = df.dropna()
 		
-		report = decision_tree_report(df)
+		report = model_report(df, model)
 		
 		report['strat_name'] = "Baseline (without missing values)"
 		report['strat_code'] = strategy_count
@@ -75,7 +82,7 @@ def strategy_comparison(df):
 		
 		df.iloc[:,:-1] = SimpleImputer(strategy=strategy).fit_transform(df.iloc[:, :-1].values) # Imputes all the missing entries using the requested strategy
 		
-		report = decision_tree_report(df)
+		report = model_report(df, model)
 		
 		if(strategy == "mean"):
 			report['strat_name'] = "Mean Imputation"
@@ -98,6 +105,28 @@ def strategy_comparison(df):
 	
 	global strategy_count
 	strategy_count = 0
+	
+	if(type(model) == str):
+		if(model == "DecisionTreeClassifier"):
+			model = DecisionTreeClassifier()
+		elif(model == "DummyClassifier"):
+			model = DummyClassifier()
+		elif(model == "MLPClassifier"):
+			model = MLPClassifier()
+		elif(model == "KNeighborsClassifier"):
+			model = KNeighborsClassifier()
+		elif(model == "SVC"):
+			model = SVC()
+		elif(model == "GaussianProcessClassifier"):
+			model = GaussianProcessClassifier()
+		elif(model == "AdaBoostClassifier"):
+			model = AdaBoostClassifier()
+		elif(model == "RandomForestClassifier"):
+			model = RandomForestClassifier()
+		elif(model == "GaussianNB"):
+			model = GaussianNB()
+		elif(model == "QuadraticDiscriminantAnalysis"):
+			model = QuadraticDiscriminantAnalysis()
 	
 	report = {"dataframe":{"original": df}}
 	
