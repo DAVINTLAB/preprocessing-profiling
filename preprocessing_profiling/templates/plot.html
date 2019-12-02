@@ -290,7 +290,15 @@
 					.attr("y", margin.top + i * cell.height)
 					.attr("width", cell.width)
 					.attr("height", cell.height)
-					.attr("fill", function() {if(i==j) {return blues(matrix[i][j] / total);} if(matrix[i][j] == 0) {return "#fff";} return reds(matrix[i][j] / total);});
+					.attr("fill", function() {
+						if(i==j) {
+							return blues(matrix[i][j] / total);
+						}
+						if(matrix[i][j] == 0) {
+							return "#fff";
+						}
+						return reds(matrix[i][j] / total);
+					});
 				
 				all.append("text")
 					.text(matrix[i][j])
@@ -299,7 +307,7 @@
 					.attr("font-size", textSize)
 					.attr("x", margin.left + (j + 0.5) * cell.width)
 					.attr("y", margin.top + (i + 0.5) * cell.height + textSize / 2)
-					.attr("fill", () => matrix[i][j] / total >= 0.8 ? "white" : "black");
+					.attr("fill", matrix[i][j] / total >= 0.8 ? "white" : "black");
 			}
 		}
 	}
@@ -414,18 +422,16 @@
 		
 		link.append("path")
 			.attr("d", d3sankey.sankeyLinkHorizontal())
-			.attr("stroke", function(d) {
-				if(d.target.name === d.source.name) {
-					return "#1565c0";
-				}
-				return "#e6ac00";
-			})
+			.attr("stroke", (d) => d.target.name === d.source.name ? "#1565c0" : "#e6ac00")
 			.attr("stroke-width", d => Math.max(1, d.width));
 
 		link.on("mouseover", d => tooltip.style("display", "").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
-			.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
-			.on("mouseout", function(){return tooltip.style("display", "none");})
-			.on("click", function(d) {d3.select(svg.node().parentNode).selectAll(".tableContainer").style("display", "none");d3.select(svg.node().parentNode).select("#table"+d.source.index+"-"+d.target.index+"-"+id).style("display", "block");});
+			.on("mousemove", () => tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px"))
+			.on("mouseout", () => tooltip.style("display", "none"))
+			.on("click", function(d) {
+				d3.select(svg.node().parentNode).selectAll(".tableContainer").style("display", "none");
+				d3.select(svg.node().parentNode).select("#table"+d.source.index+"-"+d.target.index+"-"+id).style("display", "block");
+			});
 
 		svg.append("g")
 			.style("font", textSize + "px sans-serif")
@@ -436,7 +442,7 @@
 			.attr("x", d => d.x0 < width / 2 ? d.x1 - nodeWidth - nodePadding/2 : d.x0 + nodeWidth + nodePadding/2)
 			.attr("y", d => (d.y1 + d.y0) / 2 + textSize / 2)
 			.attr("text-anchor", d => d.x0 < width / 2 ? "end" : "start")
-			.text(d => d.name);
+			.text(d => (d.targetLinks.length == 0 && d.sourceLinks.length == 0) ? "" : d.name);
 	}
 		
 	function plotMultiSankey(data, svg) {
@@ -504,23 +510,31 @@
 				.attr("width", d => d.x1 - d.x0)
 				.attr("fill", d => "#777")
 				.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
-				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-				.on("mouseout", function(){return tooltip.style("display", "none");});
+				.on("mousemove", () => tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
+				.on("mouseout", () => tooltip.style("display", "none"));
 			
 			all.append("g")
 				.selectAll("text")
 				.data(nodes)
 				.enter()
 				.append("text")
-				.text(function(d) {if(d.name.length > 4){return d.name.substr(0, 3) + ".";}else{return d.name;}})
+				.text(function(d) {
+					if(d.targetLinks.length == 0 && d.sourceLinks.length == 0) {
+						return "";
+					}
+					if(d.name.length > 4) {
+						return d.name.substr(0, 3) + ".";
+					}
+					return d.name;
+				})
 				.attr("x", d => ((d.y0 + d.y1)/2))
-				.attr("y", function(d) {if(d.targetLinks.length != 0){return margin.right + width + 6}else{return margin.right - 1}})
+				.attr("y", d => d.targetLinks.length != 0 ? margin.right + width + 6 : margin.right - 1)
 				.attr("font-size", 10)
 				.attr("font-family", "sans-serif")
 				.attr("text-anchor", "middle")
 				.on("mouseover", d => tooltip.style("display", "").html(d.name+"<br/>"+d.value))
-				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-				.on("mouseout", function(){return tooltip.style("display", "none");});
+				.on("mousemove", () => tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"))
+				.on("mouseout", () => tooltip.style("display", "none"));
 			
 			var link = diagram.append("g")
 				.attr("fill", "none")
@@ -533,17 +547,15 @@
 				.style("cursor", "pointer");
 			link.append("path")
 				.attr("d", d3sankey.sankeyLinkHorizontal())
-				.attr("stroke", function(d) {
-					if(d.target.name === d.source.name) {
-						return "#1565c0";
-					}
-					return "#e6ac00";
-				})
+				.attr("stroke", d => d.target.name === d.source.name ? "#1565c0" : "#e6ac00")
 				.attr("stroke-width", d => Math.max(1, d.width));
 			link.on("mouseover", d => tooltip.style("display", "block").html(d.source.name+" → "+d.target.name+"<br/>"+parseFloat(((d.value / d.source.value) * 100).toFixed(2))+"%"))
-				.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px");})
-				.on("mouseout", function(){return tooltip.style("display", "none");})
-				.on("click", function(d) {d3.selectAll("#classFlow"+id+" .tableContainer").style("display", "none");d3.select("#table"+d.source.index+"-"+d.target.index+"-"+i+"-"+id).style("display", "block");});
+				.on("mousemove", () => tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+20)+"px"))
+				.on("mouseout", () => tooltip.style("display", "none"))
+				.on("click", function(d) {
+					d3.selectAll("#classFlow"+id+" .tableContainer").style("display", "none");
+					d3.select("#table"+d.source.index+"-"+d.target.index+"-"+i+"-"+id).style("display", "block");
+				});
 		}
 		
 		all.append("text")
