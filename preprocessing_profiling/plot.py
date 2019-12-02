@@ -288,14 +288,14 @@ def generate_report_visualizations(report):
 			report['strategy_classifications'][strategy]['prediction_matrixes'].append(matrix)
 	
 	split = report['baseline'].pop("split")
-	pc = PrecisionRecallCurve(tree.tree.DecisionTreeClassifier(), classes = np.unique(split['y_train']))
+	pc = PrecisionRecallCurve(report['model'], classes = np.unique(split['y_train']))
 	pc.fit(split['x_train'], split['y_train'])
 	pc.score(split['x_test'], split['y_test'])
 	report['baseline']['precision_recall_curve'] = yellowbrick_to_img(pc)
 	plt.close()
 	for strategy in report['strategy_classifications']:
 		split = report['strategy_classifications'][strategy].pop("split")
-		pc = PrecisionRecallCurve(tree.tree.DecisionTreeClassifier(), classes = np.unique(split['y_train']))
+		pc = PrecisionRecallCurve(report['model'], classes = np.unique(split['y_train']))
 		pc.fit(split['x_train'], split['y_train'])
 		pc.score(split['x_test'], split['y_test'])
 		report['strategy_classifications'][strategy]['precision_recall_curve'] = yellowbrick_to_img(pc)
