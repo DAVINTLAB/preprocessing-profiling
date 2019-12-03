@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import warnings
 import codecs
 import pandas as pd
 from .classification import strategy_comparison
@@ -12,7 +13,7 @@ DEFAULT_OUTPUTFILE = "report.html"
 class ProfileReport(object):
 	html = ''
 	file = None
-
+	
 	def __init__(self, df, format_missing_values = True, model="DecisionTreeClassifier"):
 		if not isinstance(df, pd.DataFrame):
 			raise TypeError("df must be of type pandas.DataFrame")
@@ -21,18 +22,21 @@ class ProfileReport(object):
 		
 		if (format_missing_values):
 			df = infer_missing_entries(df)
-
-		report = strategy_comparison(df, model)
+		
+		with warnings.catch_warnings(record=True) as w:
+			report = strategy_comparison(df, model)
+		messages = set(map(lambda warning: warning.message.__str__(), w))
+		
 		report = generate_report_visualizations(report)
 		
-		self.html = html.report(report)
-
+		self.html = html.report(report, messages)
+		
 		self.description_set = report
 		
-
+	
 	def get_description(self):
 		"""Return the description (a raw statistical summary) of the dataset.
-
+	
 		Returns
 		-------
 		dict
@@ -42,11 +46,11 @@ class ProfileReport(object):
 				* freq: frequency table
 		"""
 		return self.description_set
-
+	
 	def get_rejected_variables(self, threshold=0.9):
 		"""Return a list of variable names being rejected for high
 		correlation with one of remaining variables.
-
+	
 		Parameters:
 		----------
 		threshold : float
@@ -62,12 +66,12 @@ class ProfileReport(object):
 		if hasattr(variable_profile, 'correlation'):
 			result = variable_profile.index[variable_profile.correlation > threshold].tolist()
 		return  result
-
+	
 	def to_file(self, outputfile=DEFAULT_OUTPUTFILE):
 		"""Write the report to a file.
 		
 		By default a name is generated.
-
+		
 		Parameters:
 		----------
 		outputfile : str
@@ -87,7 +91,7 @@ class ProfileReport(object):
 			The HTML output.
 		"""
 		return html.wrap(self.html)
-
+	
 	def _repr_html_(self):
 		"""Used to output the HTML representation to a Jupyter notebook
 		
@@ -109,7 +113,7 @@ class ProfileReport(object):
 		file.close()
 		
 		return self.html + html.downloadable()
-
+	
 	def __str__(self):
 		"""Overwrite of the str method.
 		

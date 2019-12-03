@@ -1,0 +1,15 @@
+<div style="margin-bottom: 20px;">
+	<script type="text/delayscript">
+		d3.select("#warnings").attr("id", "warnings"+id);
+		d3.select("#warningsToggle").attr("data-target", "#warnings"+id).attr("id", "warningsToggle"+id);
+	</script>
+	<div class="panel-heading">
+		<p style="font-size: 12px;">
+			Scikit-learn warnings
+			<button id="warningsToggle" data-toggle="collapse" data-target="#warnings" class="collapseButton btn btn-xs btn-secondary btn-hover-dark collapsed"></button>
+		</p>
+	</div>
+	<div id="warnings" class="pannel-collapse collapse" align="center" style="overflow:auto; overflow-y: hidden; padding: 15px;">
+		{{ messages_html }}
+	</div>
+</div>

@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 from preprocessing_profiling.templates import template
 
-def report(report):
+def report(report, messages):
+	
+	messages_html = ""
+	if(len(messages) > 0):
+		for message in messages:
+			messages_html += template('message').render(message = message)
+		messages_html = template('messages').render(messages_html = messages_html)
 	
 	info_html = template('info').render(sample_table_html = report['dataframe']['modified'].head().to_html(classes="sample"), missing_matrix = report['missing_matrix'], generated_missing_values = report['generated_missing_values'])
 	
@@ -32,7 +38,7 @@ def report(report):
 	
 	diving_html = template('diving').render(missing_matrixes = missing_matrixes, error_distribution_dicts = error_distribution_dicts)
 	
-	return template('base').render(info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html, model_name = report['model_name'])
+	return template('base').render(messages_html = messages_html, info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html, model_name = report['model_name'])
 
 def importer():
 	return template('importer').render()
