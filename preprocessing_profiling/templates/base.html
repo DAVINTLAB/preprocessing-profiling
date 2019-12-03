@@ -320,14 +320,17 @@
 	{{ info_html }}
 	<div id="overview" class="row headerrow highlight">
 		<h1>Overview</h1>
+		<p class="h4">{{ model_name }}</p>
 	</div>
 	{{ overview_html }}
 	<div id="classifications" class="row headerrow highlight">
 		<h1>Results of Classification for each Imputation Strategy</h1>
+		<p class="h4">{{ model_name }}</p>
 	</div>
 	{{ classifications_html }}
 	<div id="diving" class="row headerrow highlight">
 		<h1>Diving into the classification results</h1>
+		<p class="h4">{{ model_name }}</p>
 	</div>
 	{{ diving_html }}
 </div>
@@ -341,10 +344,10 @@ Precision-Recall Curves, Precision-Recall Curves Multi-Label usam cada um o pró
 			setTimeout( start, 50 );
 		}
 	})();
-
+	
 	function runInlineScripts() {
-		var scripts = document.getElementsByTagName("script")
-
+		var scripts = document.getElementsByTagName("script");
+		
 		for (var i = 0; i < scripts.length; i++) {
 			var type = scripts[i].getAttribute("type");
 			if (type && type.toLowerCase() == 'text/delayscript') {
@@ -352,7 +355,7 @@ Precision-Recall Curves, Precision-Recall Curves Multi-Label usam cada um o pró
 					var script = document.createElement('script');
 					script.type = 'text/javascript';
 					script.innerHTML = delayscript.innerHTML.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-
+					
 					return script;
 				})(scripts[i]), scripts[i]);
 			}

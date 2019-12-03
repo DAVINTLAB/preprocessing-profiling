@@ -32,7 +32,7 @@ def report(report):
 	
 	diving_html = template('diving').render(missing_matrixes = missing_matrixes, error_distribution_dicts = error_distribution_dicts)
 	
-	return template('base').render(info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html)
+	return template('base').render(info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html, model_name = report['model_name'])
 
 def importer():
 	return template('importer').render()

@@ -151,5 +151,5 @@ def strategy_comparison(df, model):
 	report['strategy_classifications']['mode'] = run_strategy("most_frequent", df)
 	
 	report['model'] = model # The model is later used to create the precision-recall curve
-	
+	report['model_name'] = type(model).__name__
 	return report
