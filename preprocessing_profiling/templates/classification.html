@@ -8,8 +8,6 @@
 			d3.select("#confusionMatrix{{ classification['strat_code'] }}").attr("id", "confusionMatrix{{ classification['strat_code'] }}-"+id);
 			d3.select("#errorDistributionLink{{ classification['strat_code'] }}").attr("href", "#errorDistribution{{ classification['strat_code'] }}-"+id).attr("aria-controls", "errorDistribution{{ classification['strat_code'] }}-"+id).attr("id", "errorDistributionLink{{ classification['strat_code'] }}-"+id);
 			d3.select("#errorDistribution{{ classification['strat_code'] }}").attr("id", "errorDistribution{{ classification['strat_code'] }}-"+id);
-			d3.select("#precisionRecallLink{{ classification['strat_code'] }}").attr("href", "#precisionRecall{{ classification['strat_code'] }}-"+id).attr("aria-controls", "precisionRecall{{ classification['strat_code'] }}-"+id).attr("id", "precisionRecallLink{{ classification['strat_code'] }}-"+id);
-			d3.select("#precisionRecall{{ classification['strat_code'] }}").attr("id", "precisionRecall{{ classification['strat_code'] }}-"+id);
 			d3.select("#sankeyLink{{ classification['strat_code'] }}").attr("href", "#sankey{{ classification['strat_code'] }}-"+id).attr("aria-controls", "sankey{{ classification['strat_code'] }}-"+id).attr("id", "sankeyLink{{ classification['strat_code'] }}-"+id);
 			d3.select("#sankey{{ classification['strat_code'] }}").attr("id", "sankey{{ classification['strat_code'] }}-"+id);
 			d3.select("#classificationReportText{{ classification['strat_code'] }}").attr("id", "classificationReportText{{ classification['strat_code'] }}-"+id);
@@ -24,9 +22,6 @@
 			</li>
 			<li role="presentation">
 				<a id="errorDistributionLink{{ classification['strat_code'] }}" href="#errorDistribution{{ classification['strat_code'] }}" aria-controls="errorDistribution{{ classification['strat_code'] }}" role="tab" data-toggle="tab">Error Distribution</a>
-			</li>
-			<li role="presentation">
-				<a id="precisionRecallLink{{ classification['strat_code'] }}" href="#precisionRecall{{ classification['strat_code'] }}" aria-controls="precisionRecall{{ classification['strat_code'] }}" role="tab" data-toggle="tab">Precision-Recall Curves</a>
 			</li>
 			<li role="presentation">
 				<a id="sankeyLink{{ classification['strat_code'] }}" href="#sankey{{ classification['strat_code'] }}" aria-controls="sankey{{ classification['strat_code'] }}" role="tab" data-toggle="tab">Flow of Classes</a>
@@ -87,9 +82,6 @@
 						plotErrorDistribution(data, svg, 600);
 					</script>
 				</svg>
-			</div>
-			<div role="tabpanel" class="tab-pane"  id="precisionRecall{{ classification['strat_code'] }}">
-				<img src="{{ classification['precision_recall_curve'] }}" style="height: 450px;">
 			</div>
 			<div role="tabpanel" class="tab-pane"  id="sankey{{ classification['strat_code'] }}">
 				<svg>

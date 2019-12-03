@@ -9,7 +9,6 @@ import matplotlib
 import numpy as np
 from matplotlib.colors import ListedColormap
 import missingno as msno
-from yellowbrick.classifier import PrecisionRecallCurve
 from sklearn.model_selection import train_test_split
 from sklearn import tree
 
@@ -26,16 +25,6 @@ try:
 	from urllib import quote
 except ImportError:
 	from urllib.parse import quote
-
-def yellowbrick_to_img(plot, **kwargs):
-	if kwargs.get("rearrange_x_labels", False):
-		plt.xticks(rotation=0)
-	imgdata = BytesIO()
-	plot.poof(outpath=imgdata)
-	imgdata.seek(0)
-	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))
-	plot.finalize()
-	return result_string
 
 def _plot_histogram(series, bins=10, figsize=(6, 4), facecolor='#337ab7'):
 	"""Plot an histogram from the data and return the AxesSubplot object.
@@ -286,19 +275,5 @@ def generate_report_visualizations(report):
 			matrix['quantity'] = df[(df.iloc[:, -2] == pair[0]) & (df.iloc[:, -1] == pair[-1])].shape[0]
 			matrix['total'] = df.shape[0]
 			report['strategy_classifications'][strategy]['prediction_matrixes'].append(matrix)
-	
-	split = report['baseline'].pop("split")
-	pc = PrecisionRecallCurve(report['model'], classes = np.unique(split['y_train']))
-	pc.fit(split['x_train'], split['y_train'])
-	pc.score(split['x_test'], split['y_test'])
-	report['baseline']['precision_recall_curve'] = yellowbrick_to_img(pc)
-	plt.close()
-	for strategy in report['strategy_classifications']:
-		split = report['strategy_classifications'][strategy].pop("split")
-		pc = PrecisionRecallCurve(report['model'], classes = np.unique(split['y_train']))
-		pc.fit(split['x_train'], split['y_train'])
-		pc.score(split['x_test'], split['y_test'])
-		report['strategy_classifications'][strategy]['precision_recall_curve'] = yellowbrick_to_img(pc)
-		plt.close()
 	
 	return report
