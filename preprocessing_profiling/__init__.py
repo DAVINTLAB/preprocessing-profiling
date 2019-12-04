@@ -7,6 +7,7 @@ import preprocessing_profiling.html as html
 from .base import infer_missing_entries
 from .plot import generate_report_visualizations
 from IPython.display import display
+from time import sleep
 
 DEFAULT_OUTPUTFILE = "report.html"
 
@@ -107,6 +108,7 @@ class ProfileReport(object):
 			def _repr_html_(self):
 				return self.html
 		display(Importer())
+		sleep(1)
 		
 		file = open("report.html", "w", encoding="utf8")
 		file.write(self.to_html())
