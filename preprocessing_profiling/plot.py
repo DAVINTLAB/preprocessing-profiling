@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Plot distribution of datasets"""
 
-import random
 import base64
 from distutils.version import LooseVersion
 import preprocessing_profiling.base as base
@@ -10,13 +9,8 @@ import matplotlib
 from matplotlib import gridspec
 from matplotlib.patches import Patch
 from matplotlib import cm
-import numpy as np
 from matplotlib.colors import ListedColormap
-import missingno as msno
-from scipy.cluster import hierarchy
-import seaborn as sns
-from sklearn.model_selection import train_test_split
-from sklearn import tree
+import numpy as np
 import pandas as pd
 import warnings
 
@@ -419,69 +413,6 @@ def missing_matrix(df, predictions = False):
 		plot = matrix(df, predictions = True)
 	else:
 		plot = matrix(df)
-	plot.figure.savefig(imgdata)
-	imgdata.seek(0)
-	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))
-	plt.close(plot.figure)
-	return result_string
-
-def missing_bar(df):
-	"""Plot a missingno bar chart
-	
-	Parameters
-	----------
-	df: DataFrame
-		The dataframe.
-	
-	Returns
-	-------
-	str
-		The resulting image encoded as a string.
-	"""
-	imgdata = BytesIO()
-	plot = msno.bar(df)
-	plot.figure.savefig(imgdata)
-	imgdata.seek(0)
-	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))
-	plt.close(plot.figure)
-	return result_string
-
-def missing_heat(df):
-	"""Plot a missingno heat map
-	
-	Parameters
-	----------
-	df: DataFrame
-		The dataframe.
-	
-	Returns
-	-------
-	str
-		The resulting image encoded as a string.
-	"""
-	imgdata = BytesIO()
-	plot = msno.heatmap(df)
-	plot.figure.savefig(imgdata)
-	imgdata.seek(0)
-	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))
-	plt.close(plot.figure)
-	return result_string
-
-def missing_dendrogram(df):
-	"""Plot a missingno dendrogram
-	
-	Parameters
-	----------
-	df: DataFrame
-		The dataframe.
-	
-	Returns
-	-------
-	str
-		The resulting image encoded as a string.
-	"""
-	imgdata = BytesIO()
-	plot = msno.dendrogram(df)
 	plot.figure.savefig(imgdata)
 	imgdata.seek(0)
 	result_string = 'data:image/png;base64,' + quote(base64.b64encode(imgdata.getvalue()))
