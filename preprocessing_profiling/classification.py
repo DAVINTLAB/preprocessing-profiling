@@ -127,6 +127,8 @@ def strategy_comparison(df, model):
 			model = GaussianNB()
 		elif(model == "QuadraticDiscriminantAnalysis"):
 			model = QuadraticDiscriminantAnalysis()
+		else:
+			raise Exception("\""+ model +"\" is not a valid model name. Please check the documentation for a list of valid names or directly use a scikit-learn classifier instead.")
 	
 	report = {"dataframe":{"original": df}}
 	
