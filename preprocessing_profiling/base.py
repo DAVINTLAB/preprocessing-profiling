@@ -193,30 +193,24 @@ def clear_cache():
 
 def infer_missing_entries(df):
 	# Finds strings that represent a missing entry and replace them with missing values
-	# TO DO: Rewrite this method without converting the data into a csv and parsing it again
-	missingCount = {'?' : 0, 'na' : 0, 'n/a' : 0, 'empty' : 0, 'null' : 0}
-	is_datetime = []
-	for column in df:
-		if(type(df[column][0]) == str):
-			df[column] = df[column].str.strip()
-	for column in df:
-		for j in range(len(df[column])):
-			if(type(df[column][j]) == str):
-				if(df[column][j] == "?"):
-					missingCount['?'] += 1
-					df.loc[j, column] = np.nan
-				elif(df[column][j].lower() == "na"):
-					missingCount['na'] += 1
-					df.loc[j, column] = np.nan
-				elif(df[column][j].lower() == "n/a"):
-					missingCount['n/a'] += 1
-					df.loc[j, column] = np.nan
-				elif(df[column][j].lower() == "empty"):
-					missingCount['empty'] += 1
-					df.loc[j, column] = np.nan
-				elif(df[column][j].lower() == "null"):
-					missingCount['null'] += 1
-					df.loc[j, column] = np.nan
+	
+	def replace_if_missing(v):
+		if(type(v) == str):
+			v = v.strip()
+			lower = v.lower()
+			if(lower == "?"):
+				return np.nan
+			if(lower == "na"):
+				return np.nan
+			if(lower == "n/a"):
+				return np.nan
+			if(lower == "null"):
+				return np.nan
+			if(lower == "empty"):
+				return np.nan
+		return v
+	df = df.applymap(replace_if_missing)
+	
 	return pd.read_csv(StringIO(df.to_csv(index=False, date_format='%Y-%m-%d %H:%M:%S')), parse_dates=list(df.select_dtypes(include=[np.datetime64]).columns))
 
 def generate_missing_values(df, p):
