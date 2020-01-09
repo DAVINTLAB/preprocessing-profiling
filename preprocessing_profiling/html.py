@@ -14,7 +14,7 @@ def report(report, messages):
 	overview_rows_html = template('overview_row').render(classification = report['baseline'])
 	for strategy in report['strategy_classifications']:
 		overview_rows_html += template('overview_row').render(classification = report['strategy_classifications'][strategy])
-	overview_html = template('overview').render(tableContent = overview_rows_html)
+	overview_html = template('overview').render(tableContent = overview_rows_html, model_name = report['model_name'])
 	
 	classifications_html = template('classification').render(classification = report['baseline'])
 	count = 1
@@ -38,7 +38,7 @@ def report(report, messages):
 	
 	diving_html = template('diving').render(missing_matrixes = missing_matrixes, error_distribution_dicts = error_distribution_dicts)
 	
-	return template('base').render(messages_html = messages_html, info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html, model_name = report['model_name'])
+	return template('base').render(messages_html = messages_html, info_html = info_html, overview_html = overview_html, classifications_html = classifications_html, diving_html = diving_html)
 
 def importer():
 	return template('importer').render()

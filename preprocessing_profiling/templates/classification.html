@@ -90,8 +90,11 @@
 						var data = {{ classification['error_distribution_dict'] }};
 						plotSankey(data, svg);
 						var data = {{ classification['error_distribution_dict'] }};
+						var total = data.links.map(d => d.value).reduce((sum, element) => sum + element);
+						for(var i = 0; i < data.nodes.length; i++) {
+							data.nodes[i].total = data.links.filter(d => d.source == i || d.target == i).map(d => d.value).reduce((sum, element) => sum + element)
+						}
 						for(var i = 0; i < data.links.length; i++) {
-							var total = data.links.map(d => d.value).reduce((sum, element) => sum + element);
 							var div = d3.select("#sankey{{ classification['strat_code'] }}-"+id)
 								.append("div")
 								.attr("class", "tableContainer")
@@ -101,7 +104,7 @@
 							div.append("p")
 								.style("font-size", "12px")
 								.style("white-space", "pre")
-								.text("Strategy: {{ classification['strat_name'] }}          Flow: Actual " + data.nodes[data.links[i].source].name + " → Predicted " + data.nodes[data.links[i].target].name + "          " + data.links[i].value + " records of " + total + " (" + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "%)");
+								.text("Strategy: {{ classification['strat_name'] }}          Flow: Actual " + data.nodes[data.links[i].source].name + " → Predicted " + data.nodes[data.links[i].target].name + "\n" + data.links[i].value + " of " + data.nodes[data.links[i].source].total + " records with the same label in Actual (" + parseFloat(((data.links[i].value / data.nodes[data.links[i].source].total) * 100).toFixed(2)) + "%), which represents " + parseFloat(((data.links[i].value / total) * 100).toFixed(2)) + "% of the total number of records in this dataset ("+total+").");
 							
 							div.append("div")
 								.attr("class", "wrapper1")

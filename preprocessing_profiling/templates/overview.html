@@ -1,13 +1,14 @@
 <div class="row variablerow">
-	<p class="h4">Summary table of Classification Reports</p>
+	<p class="h4">Summary Table of Classification Reports</p>
 	<table class="overviewTable">
 		<tr>
-			<th width="150px">Strategy</th>
-			<td width="212px">Classification Report</td>
-			<td width="212px">Confusion Matrix</td>
-			<td width="212px">Class Prediction Error Distribution</td>
-			<td width="100px">Accuracy</td>
+			<th width="150px" style="text-align: center;">Strategy</th>
+			<th width="212px" style="text-align: center;">Classification Report</th>
+			<th width="212px" style="text-align: center;">Confusion Matrix</th>
+			<th width="212px" style="text-align: center;">Class Prediction Error Distribution</th>
+			<th width="100px" style="text-align: center;">Accuracy</th>
 		</tr>
 		{{ tableContent }}
 	</table>
+	<p style="font-size: 12px;">The Prediction Model in use for all executions is the {{ model_name }}</p>
 </div>

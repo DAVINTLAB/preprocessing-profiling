@@ -264,7 +264,7 @@
 				background-color: #f5f5f5 !important;
 			}
 			
-			.overviewTable td {
+			.overviewTable td,th {
 				text-align: center;
 			}
 			
@@ -309,34 +309,29 @@
 	<div class="row variablerow">
 		<p class="h4" style="font-weight: bold;">Contents</p>
 		<ul>
-			<li><a id="infoLink" href="#info">Dataset (dataframe) Details</a></li>
+			<li><a id="infoLink" href="#info">Dataset/Dataframe</a></li>
 			<li><a id="overviewLink" href="#overview">Overview</a></li>
 			<li><a id="classificationsLink" href="#classifications">Results of Classification for each Imputation Strategy</a></li>
 			<li><a id="divingLink" href="#diving">Diving into the classification results</a></li>
 		</ul>
 	</div>
 	<div id="info" class="row headerrow highlight">
-		<h1>Dataset (dataframe) Details</h1>
+		<h1>Dataset/Dataframe</h1>
 	</div>
 	{{ info_html }}
 	<div id="overview" class="row headerrow highlight">
 		<h1>Overview</h1>
-		<p class="h4">{{ model_name }}</p>
 	</div>
 	{{ overview_html }}
 	<div id="classifications" class="row headerrow highlight">
 		<h1>Results of Classification for each Imputation Strategy</h1>
-		<p class="h4">{{ model_name }}</p>
 	</div>
 	{{ classifications_html }}
 	<div id="diving" class="row headerrow highlight">
 		<h1>Diving into the classification results</h1>
-		<p class="h4">{{ model_name }}</p>
 	</div>
 	{{ diving_html }}
 </div>
-<p style="color: white;">Classification Report, Confusion Matrix, Class Prediction Error, Sankey Diagram, Missing Matrix gerados a partir do mesmo fit. 
-Precision-Recall Curves, Precision-Recall Curves Multi-Label usam cada um o próprio modelo porque as classes do yellowbrick para essas visualizações não suportam um fit feito por fora delas.</p>
 <script>
 	(function start() {
 		if (window.jQuery) {
