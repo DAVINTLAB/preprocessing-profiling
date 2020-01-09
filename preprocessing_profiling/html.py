@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Uses the test results and the templates to create an HTML page with the information"""
 from preprocessing_profiling.templates import template
 
 def report(report, messages):
