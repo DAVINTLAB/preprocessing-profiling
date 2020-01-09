@@ -48,26 +48,6 @@ class ProfileReport(object):
 		"""
 		return self.description_set
 	
-	def get_rejected_variables(self, threshold=0.9):
-		"""Return a list of variable names being rejected for high
-		correlation with one of remaining variables.
-	
-		Parameters:
-		----------
-		threshold : float
-			Correlation value which is above the threshold are rejected
-		
-		Returns
-		-------
-		list
-			The list of rejected variables or an empty list if the correlation has not been computed.
-		"""
-		variable_profile = self.description_set['variables']
-		result = []
-		if hasattr(variable_profile, 'correlation'):
-			result = variable_profile.index[variable_profile.correlation > threshold].tolist()
-		return  result
-	
 	def to_file(self, outputfile=DEFAULT_OUTPUTFILE):
 		"""Write the report to a file.
 		
@@ -115,13 +95,3 @@ class ProfileReport(object):
 		file.close()
 		
 		return self.html + html.downloadable()
-	
-	def __str__(self):
-		"""Overwrite of the str method.
-		
-		Returns
-		-------
-		str
-			A string representation of the object.
-		"""
-		return "Output written to file " + str(self.file.name)
