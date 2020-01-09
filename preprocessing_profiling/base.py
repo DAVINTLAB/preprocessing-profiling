@@ -186,7 +186,6 @@ def has_bool(df):
 
 def clear_cache():
 	"""Clear the cache stored as global variables"""
-	print("Can you hear me?")
 	global _MEMO, _VALUE_COUNTS_MEMO
 	_MEMO = {}
 	_VALUE_COUNTS_MEMO = {}
