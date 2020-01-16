@@ -124,19 +124,15 @@ ProfileReport(df, model = svc)
 
 ### Overview of the Results
 
-![alt text][cervical_generation]
+| ![alt text][cervical_generation] | ![alt text][cervical_loading] |
+|----------------------------------|-------------------------------|
+| ![alt text][iris_generation]     | ![alt text][iris_loading]     |
 
 [cervical_generation]: https://imgur.com/zEVoOFv.png
 
-![alt text][iris_generation]
-
 [iris_generation]: https://imgur.com/WUARvEN.png
 
-![alt text][cervical_loading]
-
 [cervical_loading]: https://imgur.com/OoHOmH4.png
-
-![alt text][iris_loading]
 
 [iris_loading]: https://imgur.com/avmpDnC.png
 
