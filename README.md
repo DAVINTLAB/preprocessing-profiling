@@ -179,6 +179,7 @@ It is the first version of this tool. However, we have already identified differ
 ## Citation
 
 Please refer to this work by citing the dissertation indicate below.
+
 Milani, A. M. P.. Preprocessing profiling model for visual analytics. http://tede2.pucrs.br/tede2/handle/tede/9007. 2019.
 
 
