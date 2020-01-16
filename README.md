@@ -128,13 +128,13 @@ ProfileReport(df, model = svc)
 |----------------------------------|-------------------------------|
 | ![alt text][iris_generation]     | ![alt text][iris_loading]     |
 
-[cervical_generation]: https://imgur.com/zEVoOFv.png
+[cervical_generation]: https://imgur.com/CgnkMRb.png
 
-[iris_generation]: https://imgur.com/WUARvEN.png
+[iris_generation]: https://imgur.com/pHlrqWx.png
 
-[cervical_loading]: https://imgur.com/OoHOmH4.png
+[cervical_loading]: https://imgur.com/HzAYQNi.png
 
-[iris_loading]: https://imgur.com/avmpDnC.png
+[iris_loading]: https://imgur.com/2JNZKrP.png
 
 Please find more details about the tests perfomed on [here](https://docs.google.com/spreadsheets/d/1DT6cxFVpfRAD2uzwX8e0A_pXuf1M-1XP2zUKO0os3SY/edit?usp=sharing).
 
