@@ -23,11 +23,11 @@ Preprocessing Profiling is a tool for evaluating the results of different prepro
 
 ## Installation
 
-Preprocessing Profiling can be installed by running *TBC*```pip install https://github.com/alesspaz/preprocessing-profiling/archive/master.zip```.
+Preprocessing Profiling can be installed by running ```pip install https://github.com/DAVINTLAB/preprocessing-profiling/archive/master.zip```.
 
 ## Usage
 
-Preprocessing Profiling will return its report in the form of a page written in HTML like *TBC* [this one](http://htmlpreview.github.io/?https://github.com/lucasAL1000/Teste/example_report.html).
+Preprocessing Profiling will return its report in the form of a page written in HTML like [this one](https://github.com/DAVINTLAB/preprocessing-profiling/blob/master/example_report.html).
 
 ### Getting started
 
