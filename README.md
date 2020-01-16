@@ -144,7 +144,7 @@ Please find more details about the tests perfomed on [here](https://docs.google.
 
 ## Documentation
 
-The documentation can be found [here](https://github.com/lucasAL1000/Teste/blob/master/Documentation.md).
+The documentation can be found [here](https://github.com/DAVINTLAB/preprocessing-profiling/blob/master/Documentation.md).
 
 ## Dependencies
 
